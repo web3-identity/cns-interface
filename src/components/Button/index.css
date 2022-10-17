@@ -1,0 +1,113 @@
+/** common **/
+.button {
+  @apply relative inline-flex justify-center items-center whitespace-nowrap outline-none transition-colors font-bold cursor-pointer;
+}
+
+button.button {
+  flex: 0 0 auto;
+}
+
+button.absolute {
+  position: absolute;
+}
+
+.button--fullWidth {
+  @apply flex w-full;
+}
+
+.button--small {
+  @apply text-[16px] h-[44px] px-[32px] rounded-10px leading-44px;
+}
+
+.button--normal {
+  @apply text-[16px] h-[44px] px-[32px] rounded-10px leading-44px;
+}
+
+.button--medium {
+  @apply text-[28px] h-[60px] px-[72px] rounded-16px leading-60px;
+}
+
+
+/** disabled & loading **/
+.button.is-disabled,
+.button.is-loading {
+  @apply pointer-events-none;
+}
+
+.is-loading {
+  @apply hover:opacity-90;
+}
+
+button.button.is-disabled:not(.is-loading),
+a.button.is-disabled:not(.is-loading) {
+  @apply bg-#F0F1F1 text-#A9ABB2 border-transparent;
+}
+
+a.button--text.is-disabled,
+button.button--text.is-disabled {
+  @apply bg-transparent text-#A9ABB2;
+}
+
+/* contained button */
+.button--contained {
+  @apply border-none;
+}
+
+.button--contained.button--purple {
+  @apply bg-purple-normal text-grey-normal;
+}
+
+.button--contained.button--purple:hover,
+.button--contained.button--purple:focus-visible {
+  @apply bg-purple-normal-hover text-grey-normal-hover;
+}
+
+
+.button__content {
+  @apply inline-flex items-center h-full;
+}
+
+/** loading **/
+.is-loading > .button__content,
+.is-loading > .button__icon {
+  @apply opacity-0;
+}
+
+.button__loading {
+  @apply !absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[calc(50%-0.14em)] text-[1.6em];
+}
+
+/** start end icon **/
+.button__icon + .button__content {
+  @apply ml-[.25em];
+}
+
+.button__content + .button__icon {
+  @apply ml-[.25em];
+}
+
+.button__icon {
+  @apply w-fit h-fit;
+}
+
+.button__icon > svg {
+  @apply w-[1.6em] h-[1.6em];
+}
+
+/** click effect **/
+.button::after {
+  @apply absolute inset-0 rounded-[inherit] opacity-0;
+  box-shadow: 0 0 0 6px currentColor;
+  transition: 0.4s;
+  content: '';
+}
+
+.button.button:active:not(.button--text):not(.button--link)::after {
+  @apply opacity-60;
+  box-shadow: none;
+  transition: 0s;
+}
+
+.button--contained.button--purple::after {
+  box-shadow: 0 0 0 6px #d0d0e5;
+}

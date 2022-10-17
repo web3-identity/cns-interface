@@ -1,0 +1,24 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import CustomScrollbar from 'custom-react-scrollbar';
+import ErrorBoundary from '@modules/ErrorBoundary';
+import Navbar from '@modules/Navbar';
+import HomePage from '@pages/Home';
+
+const AppRouter: React.FC = () => {
+  return (
+    <Router>
+      <ErrorBoundary>
+        <Navbar />
+        <CustomScrollbar className="main-scroller" contentClassName="pb-100px">
+          <Routes>
+            <Route index element={<HomePage />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </CustomScrollbar>
+      </ErrorBoundary>
+    </Router>
+  );
+};
+
+export default AppRouter;
