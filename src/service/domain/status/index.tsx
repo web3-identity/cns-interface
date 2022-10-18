@@ -2,11 +2,20 @@ import { selectorFamily, useRecoilValue } from 'recoil';
 import { fetchChain } from '@utils/fetchChain';
 import { Web3Controller } from '@contracts/index';
 
+export enum DomainStatus {
+  Valid = 0,
+  TooShort,
+  Reserved,
+  IllegalChar,
+  Locked,
+  Registered
+}
+
 const domainStatusQuery = selectorFamily({
   key: 'domainStatus',
-  get: (domain) => async () => {
+  get: (domain: string) => async () => {
     const response = await fetchChain({
-      params: [{ data: Web3Controller.func.encodeFunctionData('labelStatus', ['qweaxc']), to: Web3Controller.address }, 'latest_state'],
+      params: [{ data: Web3Controller.func.encodeFunctionData('labelStatus', [domain]), to: Web3Controller.address }, 'latest_state'],
     });
     
     const NumRes = Number(response);

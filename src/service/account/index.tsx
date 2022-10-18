@@ -23,7 +23,7 @@ const accountMethodFilter = atom<Methods | null>({
   effects_UNSTABLE: [localStorageEffect('accountFilter')],
 });
 
-const accountState = selector({
+export const accountState = selector({
   key: 'accountState',
   get: ({ get }) => {
     const filter = get(accountMethodFilter);

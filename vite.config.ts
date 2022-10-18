@@ -29,6 +29,7 @@ export default defineConfig({
           purple: {
             normal: '#6667ab', // className="bg-purple-primary"
             normalHover: '#5a5c9a',
+            darkActive: '#2E2E4D'
           },
           green: {
             normal: '#96d8de',
