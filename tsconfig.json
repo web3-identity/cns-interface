@@ -27,6 +27,7 @@
       "@components/*": ["./src/components/*"],
       "@service/*": ["./src/service/*"],
       "@contracts/*": ["./src/contracts/*"],
+      "@functions/*": ["./src/functions/*"],
     }
   },
   "include": ["src"],

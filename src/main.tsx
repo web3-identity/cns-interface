@@ -9,6 +9,8 @@ import 'uno.css';
 import 'reseter.css/css/reseter.css';
 import 'custom-react-scrollbar/dist/style.css';
 import './index.css';
+import {Buffer} from 'buffer'
+window.Buffer=Buffer
 
 if (isMobile()) {
   document.styleSheets[0].insertRule('.scrollbar__thumbPlaceholder--vertical { display:none; }', 0);

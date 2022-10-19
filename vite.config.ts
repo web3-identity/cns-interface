@@ -7,6 +7,7 @@ import presetWind from '@unocss/preset-wind';
 import transformerDirective from '@unocss/transformer-directives';
 import svgr from 'vite-plugin-svgr';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -59,6 +60,7 @@ export default defineConfig({
       '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@components': path.resolve(__dirname, 'src/components'),
       '@service': path.resolve(__dirname, 'src/service'),
+      '@functions': path.resolve(__dirname, 'src/functions'),
     },
   },
   build: {
@@ -66,4 +68,20 @@ export default defineConfig({
       plugins: [visualizer()],
     },
   },
+  optimizeDeps: {
+    esbuildOptions: {
+        // Node.js global to browser globalThis
+        define: {
+            global: 'globalThis',
+            Buffer:'Buffer'
+        },
+        // Enable esbuild polyfill plugins
+        plugins: [
+            NodeGlobalsPolyfillPlugin({
+                process: true,
+                buffer: true
+            })
+        ]
+    }
+}
 });
