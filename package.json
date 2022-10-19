@@ -16,6 +16,7 @@
     "@react-spring/web": "^9.5.5",
     "@tippyjs/react": "^4.2.6",
     "@web3identity/address-encoder": "^0.2.20",
+    "@web3identity/cns-contracts": "^0.1.4",
     "@web3identity/web3ns": "^0.1.0",
     "buffer": "^6.0.3",
     "clsx": "^1.2.1",
