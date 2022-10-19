@@ -1,51 +1,114 @@
 import React, { useState, useCallback, useEffect, memo, Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import cx from 'clsx';
 import { useForm } from 'react-hook-form';
+import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
+import cx from 'clsx';
 import LinearBorderBox from '@components/LinearBorderBox';
 import Input from '@components/Input';
 import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
-import { useDomainStatus, DomainStatus } from '@service/domain/status';
+import { useDomainStatus, useRefreshDomainStatus, DomainStatus } from '@service/domain/status';
+import { ReactComponent as StatusLocked } from '@assets/icons/StatusLocked.svg';
+import { ReactComponent as StatusRegistered } from '@assets/icons/StatusRegistered.svg';
+import { ReactComponent as StatusReserved } from '@assets/icons/StatusReserved.svg';
+import { ReactComponent as StatusValid } from '@assets/icons/StatusValid.svg';
 
 interface Props {
   where?: 'home' | 'header';
 }
 
 const StatusSearch: React.FC<Props> = () => {
-  const { register, handleSubmit: withForm, formState: { errors }, watch } = useForm();
-  
+  const { register, handleSubmit: withForm, watch } = useForm();
   const [domain, setDomain] = useState('');
   useEffect(() => setDomain(''), [watch('domain')]);
 
-  const handleContinue = useCallback(withForm(({ domain }) => setDomain((domain as string).toLowerCase())), []);
+  const handleSearch = useCallback(withForm(({ domain }) => setDomain((domain as string).toLowerCase().trim())), []);
+  const handleRefresh = useRefreshDomainStatus(domain);
 
   return (
-    <form onSubmit={handleContinue}>
+    <form onSubmit={handleSearch}>
       <LinearBorderBox className="relative flex items-center h-92px pl-16px pr-12px rounded-24px" withInput>
         <Input
           className="lowercase"
           size="medium"
           prefixIcon="i-charm:search"
           placeholder="获取您的.web3"
-          {...register('domain', {
-            required: true,
-            // pattern: /^[0-9A-Za-z]+$/,
-          })}
+          {...register('domain', { required: true })}
         />
-        {/* {errors?.domain?.type === 'pattern' && <span className="absolute bottom-0 translate-y-3/2 text-red-500">域名包含不支持的字符</span>} */}
-        <Button size="medium">搜索</Button>
+        {!domain && <Button size="medium">搜索</Button>}
       </LinearBorderBox>
 
       {domain &&
-        <Suspense fallback={<StatusLoading />}>
-          <Status domain={domain}/>
-        </Suspense>
+        <ErrorBoundary FallbackComponent={ErrorBoundaryFallback} onReset={handleRefresh}>
+          <Suspense fallback={<StatusLoading />}>
+            <Status domain={domain}/>
+          </Suspense>
+        </ErrorBoundary>
       }
     </form>
   );
 };
+
+const statusMap = {
+  [DomainStatus.Valid]: {
+    icon: StatusValid,
+    text: '可注册',
+    color: 'text-green-normal'
+  },
+  [DomainStatus.Registered]: {
+    icon: StatusRegistered,
+    text: '已注册',
+    color: 'text-#FF9900',
+  },
+  [DomainStatus.Reserved]: {
+    icon: StatusReserved,
+    text: '未开放',
+    color: 'text-#83828F'
+  },
+  [DomainStatus.Locked]: {
+    icon: StatusLocked,
+    text: '已锁定',
+    color: 'text-purple-normal'
+  },
+  [DomainStatus.TooShort]: {
+    icon: StatusLocked,
+    text: '域名太短',
+    color: 'text-red-500'
+  },
+  [DomainStatus.IllegalChar]: {
+    icon: StatusLocked,
+    text: '域名包含不支持的字符',
+    color: 'text-red-500'
+  }
+} as const;
+
+const Status: React.FC<{ domain: string }> = ({ domain }) => {
+  const status = useDomainStatus(domain);
+  
+  const Icon = statusMap[status].icon;
+  return (
+    <div
+      className={cx("mt-16px flex items-center h-92px pl-24px pr-12px rounded-24px text-22px bg-purple-dark-active", statusMap[status].color)}
+    >
+      <Icon className='mr-12px w-40px h-40px -translate-y-2px'/>
+      <span>{statusMap[status].text}</span>
+      <span className='ml-8px mr-auto font-bold'>{domain}.web3</span>
+      
+      {status === DomainStatus.Valid && 
+        <Link to={`/register/${domain}`}>
+          <Button>注册</Button>
+        </Link>
+      }
+      {status === DomainStatus.Registered && 
+        <Link to={`/setting/${domain}`}>
+          <Button>查看</Button>
+        </Link>
+      }
+    </div>
+  );
+};
+
 
 const StatusLoading: React.FC = () => (
   <Delay>
@@ -55,33 +118,12 @@ const StatusLoading: React.FC = () => (
   </Delay>
 );
 
-const Status: React.FC<{ domain: string }> = ({ domain }) => {
-  const status = useDomainStatus(domain);
-
-  return (
-    <div
-      className={cx("mt-16px flex items-center h-92px pl-24px pr-12px rounded-24px bg-purple-dark-active", {
-        "text-green-normal": status === DomainStatus.Valid,
-        "text-#FF9900": status === DomainStatus.Registered,
-        "text-#83828F": status === DomainStatus.Reserved,
-        "text-purple-normal": status === DomainStatus.Reserved,
-        "text-red-500": status === DomainStatus.TooShort || status === DomainStatus.IllegalChar,
-      })}
-    >
-      <span>
-        {status === DomainStatus.Valid && '可注册'}
-        {status === DomainStatus.Registered && '已注册'}
-        {status === DomainStatus.Reserved && '未开放'}
-        {status === DomainStatus.Locked && '已锁定'}
-        {status === DomainStatus.TooShort && '域名太短'}
-        {status === DomainStatus.IllegalChar && '域名包含不支持的字符'}
-      </span>
-      <span className='ml-8px'>{domain}.web3</span>
-      
-      {status === DomainStatus.Valid && <Button className='ml-auto'>注册</Button>}
-      {status === DomainStatus.Registered && <Button className='ml-auto'>查看</Button>}
-    </div>
-  );
-};
+const ErrorBoundaryFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => (
+  <div className="mt-16px flex items-center h-92px pl-24px pr-12px rounded-24px text-22px text-red-500 bg-purple-dark-active cursor-pointer">
+    <StatusLocked className='mr-12px w-40px h-40px -translate-y-2px'/>
+    <span className='mr-auto'>网络错误</span>
+    <Button onClick={resetErrorBoundary}>重试</Button>
+  </div>
+);
 
 export default memo(StatusSearch);

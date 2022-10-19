@@ -11,4 +11,4 @@ const createContract = (address: string, ABI: ContractInterface) => {
     } as const;
 }
 
-export const Web3Controller = createContract('cfxtest:acc44su6m7sm6mksmdbvcnh9rp6ukj2yva7ee43nzy', Web3ControllerABI);
+export const Web3Controller = createContract('cfxtest:acbrnwph2609zbf21np0501d87xb9dnvuakpv911xk', Web3ControllerABI);
