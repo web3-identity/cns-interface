@@ -1,4 +1,4 @@
-import { HttpProvider } from '@utils/contracts';
+import { HttpProvider } from '@contracts/index';
 
 type TranscationReceipt = Awaited<ReturnType<typeof HttpProvider.getTransactionReceipt>>;
 

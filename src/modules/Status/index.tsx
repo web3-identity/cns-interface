@@ -1,8 +1,8 @@
-import React, { useMemo, Suspense, type PropsWithChildren, type HTMLAttributes } from 'react';
+import React, { Suspense, type HTMLAttributes } from 'react';
 import { Link } from 'react-router-dom';
 import cx from 'clsx';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
-import LinearBorderBox from '@components/LinearBorderBox';
+import BorderBox from '@components/Box/BorderBox';
 import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
@@ -18,18 +18,16 @@ interface Props {
   where: 'home' | 'header' | 'register';
 }
 
-const DivBox = ({ children, ...props }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>;
-
 const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, where, className, ...props }) => {
-  const Container = useMemo(() => (where === 'register' ? LinearBorderBox : DivBox), []);
   const handleRefresh = useRefreshDomainStatus(domain);
 
   return (
-    <Container
-      className={cx('flex items-center pl-24px rounded-24px bg-purple-dark-active', className, {
-        'w-fit min-w-328px h-80px px-12px text-22px ': where === 'register',
-        'h-92px pr-12px text-22px ': where === 'home',
-        'h-48px text-16px': where === 'header',
+    <BorderBox
+      variant={where === 'register' ? 'linear' : 'none'}
+      className={cx('flex items-center pl-24px bg-purple-dark-active', className, {
+        'w-fit min-w-328px h-80px px-12px text-22px rounded-24px': where === 'register',
+        'h-92px pr-12px text-22px rounded-24px': where === 'home',
+        'h-48px text-16px rounded-10px': where === 'header',
       })}
       {...props}
     >
@@ -38,7 +36,7 @@ const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, wher
           <StatusContent domain={domain} where={where} />
         </Suspense>
       </ErrorBoundary>
-    </Container>
+    </BorderBox>
   );
 };
 
@@ -91,12 +89,12 @@ const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) 
         <>
           {status === DomainStatus.Valid && (
             <Link to={`/register/${domain}`} className="no-underline">
-              <Button>注册</Button>
+              <Button size={where === 'header' ? 'small' : 'medium'}>注册</Button>
             </Link>
           )}
           {status === DomainStatus.Registered && (
             <Link to={`/setting/${domain}`} className="no-underline">
-              <Button>查看</Button>
+              <Button size={where === 'header' ? 'small' : 'medium'}>查看</Button>
             </Link>
           )}
         </>
