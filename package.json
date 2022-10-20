@@ -13,6 +13,7 @@
     "@idealight-labs/anyweb-js-sdk": "^1.3.3",
     "@react-spring/web": "^9.5.5",
     "@tippyjs/react": "^4.2.6",
+    "@web3identity/cns-contracts": "^0.1.4",
     "clsx": "^1.2.1",
     "custom-react-scrollbar": "0.0.3",
     "ethers": "^5.7.1",
