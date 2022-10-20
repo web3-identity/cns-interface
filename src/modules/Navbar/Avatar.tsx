@@ -5,7 +5,7 @@ import { ReactComponent as AvatarIcon } from '@assets/images/Avatar.svg';
 
 const AvatarDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, onClick }) => {
   return (
-    <div onClick={onClick} className="w-160px h-48px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-colors cursor-pointer">
+    <div onClick={onClick} className="w-230px h-50px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-colors cursor-pointer">
       {children}
     </div>
   );

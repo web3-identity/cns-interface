@@ -37,7 +37,7 @@ export const accountState = atom<string | null | undefined>({
                 .then((result) => {
                   const account = result as Account;
                   const { address } = account;
-                  setSelf(address);
+                  setSelf(address?.[0]);
                 });
             }
           });
