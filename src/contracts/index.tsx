@@ -18,3 +18,4 @@ const createContract = (address: string, ABI: ContractInterface) => {
 }
 
 export const Web3Controller = createContract(WEB3_CONTROLLER_ADDRESS, Web3ControllerABI);
+

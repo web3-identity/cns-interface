@@ -63,7 +63,7 @@ const PopupContainer = forwardRef<PopupMethods>((_, ref) => {
   const [listClassName, setListClassName] = useState<string | undefined>(undefined);
   const [itemWrapperStyle, setItemWrapperStyle] = useState<CSSProperties | undefined>(undefined);
   const [itemWrapperClassName, setItemWrapperClassName] = useState<string | undefined>(undefined);
-  const [animatedSize, setAnimatedSize] = useState(true);
+  const [animatedSize, setAnimatedSize] = useState(false);
   const popupListRef = useRef<PopupProps[]>([]);
   useEffect(() => {
     popupListRef.current = popupList;

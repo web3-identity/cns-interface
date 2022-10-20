@@ -20,12 +20,10 @@ type Methods = keyof typeof methodsMap;
 const accountMethodFilter = atom<Methods | null>({
   key: 'accountFilter',
   default: null,
-  effects_UNSTABLE: [
-    localStorageEffect('accountFilter'),
-  ]
+  effects_UNSTABLE: [localStorageEffect('accountFilter')],
 });
 
-const accountState = selector({
+export const accountState = selector({
   key: 'accountState',
   get: ({ get }) => {
     const filter = get(accountMethodFilter);

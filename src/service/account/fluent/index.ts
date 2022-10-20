@@ -7,12 +7,15 @@ export const accountState = atom<string | null | undefined>({
   default: undefined,
   effects_UNSTABLE: [
     ({ setSelf, trigger }) => {
-      if (trigger === 'get') { 
+      if (trigger === 'get') {
         setSelf(fluentStore.getState().accounts?.[0]);
       }
 
-      const unsubFluentAccount = fluentStore.subscribe((state) => state.accounts, (accounts) => setSelf(accounts?.[0]));
+      const unsubFluentAccount = fluentStore.subscribe(
+        (state) => state.accounts,
+        (accounts) => setSelf(accounts?.[0])
+      );
       return unsubFluentAccount;
-    }
+    },
   ],
 });
