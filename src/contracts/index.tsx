@@ -1,6 +1,6 @@
 import { Contract, providers, type ContractInterface } from 'ethers';
 import { Web3RegistrarController as Web3ControllerABI } from '@web3identity/cns-contracts'
-const HttpProvider = new providers.JsonRpcProvider(import.meta.env.VITE_CoreSpaceRpcUrl);
+export const HttpProvider = new providers.JsonRpcProvider(import.meta.env.VITE_CoreSpaceRpcUrl);
 
 const createContract = (address: string, ABI: ContractInterface) => {
     const _Contract = new Contract('', ABI, HttpProvider);
