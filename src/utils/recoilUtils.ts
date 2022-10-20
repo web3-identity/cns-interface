@@ -1,4 +1,3 @@
-import { AtomEffect } from 'recoil';
 import LocalStorage from 'localstorage-enhance';
 
 export const localStorageEffect =
