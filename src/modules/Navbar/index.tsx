@@ -68,7 +68,7 @@ const showConnectModal = () => showModal({ Content: <ConnectModalContent />, cla
 
 const AvatarDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, onClick }) => {
   return (
-    <div onClick={onClick} className="w-160px h-48px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-color cursor-pointer">
+    <div onClick={onClick} className="w-230px h-50px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-color cursor-pointer">
       {children}
     </div>
   );
@@ -76,7 +76,7 @@ const AvatarDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children
 
 const AvatarDropdown: React.FC = () => {
   return (
-    <div className="mt-24px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow">
+    <div className="mt-24px p-24px flex flex-col gap-16px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow">
       <AvatarDropdownItem>域名管理</AvatarDropdownItem>
       <AvatarDropdownItem onClick={disconnect}>退出登录</AvatarDropdownItem>
     </div>
