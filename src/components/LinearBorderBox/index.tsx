@@ -1,8 +1,8 @@
-import { memo, type PropsWithChildren, type HTMLAttributes } from 'react';
+import { memo, type HTMLAttributes } from 'react';
 import cx from 'clsx';
 import './index.css';
 
-const LinearBorderBox = ({ children, className, withInput, ...props }: PropsWithChildren<HTMLAttributes<HTMLDivElement> & { withInput?: boolean; }>) => {
+const LinearBorderBox: React.FC<HTMLAttributes<HTMLDivElement> & { withInput?: boolean }> = ({ children, className, withInput, ...props }) => {
   return (
     <div className={cx('linearBorderBox', { 'linearBorderBox--withInput': withInput }, className)} {...props}>
       {children}

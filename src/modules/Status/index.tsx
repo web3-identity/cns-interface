@@ -1,4 +1,4 @@
-import React, { useMemo, Suspense, type PropsWithChildren, type HTMLAttributes } from 'react';
+import React, { useMemo, Suspense, type HTMLAttributes } from 'react';
 import { Link } from 'react-router-dom';
 import cx from 'clsx';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
@@ -18,7 +18,7 @@ interface Props {
   where: 'home' | 'header' | 'register';
 }
 
-const DivBox = ({ children, ...props }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>;
+const DivBox: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, ...props }) => <div {...props}>{children}</div>;
 
 const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, where, className, ...props }) => {
   const Container = useMemo(() => (where === 'register' ? LinearBorderBox : DivBox), []);
@@ -91,12 +91,12 @@ const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) 
         <>
           {status === DomainStatus.Valid && (
             <Link to={`/register/${domain}`} className="no-underline">
-              <Button>注册</Button>
+              <Button size={where === 'header' ? 'small' : 'medium'}>注册</Button>
             </Link>
           )}
           {status === DomainStatus.Registered && (
             <Link to={`/setting/${domain}`} className="no-underline">
-              <Button>查看</Button>
+              <Button size={where === 'header' ? 'small' : 'medium'}>查看</Button>
             </Link>
           )}
         </>

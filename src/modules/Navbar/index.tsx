@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { type HTMLAttributes } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 import cx from 'clsx';
 import Button from '@components/Button';
 import Dropdown from '@components/Dropdown';
@@ -17,9 +17,14 @@ const Navbar: React.FC = () => {
   return (
     <header className="relative flex items-center h-88px pt-40px text-grey-normal">
       <nav className={cx('max-w-1920px mx-auto absolute bottom-0 flex w-full px-32px leading-48px')}>
-        <span className="i-bi:box-fill mr-14px text-48px flex-shrink-0" />
-        <span className="mr-auto text-28px font-bold">SHUTU</span>
-        {pathname !== '/' && <StatusSearch where="header" className='mr-16px' />}
+        <Link to="/" className="mr-auto text-grey-normal no-underline">
+          <span>
+            <span className="i-bi:box-fill mr-14px text-48px flex-shrink-0" />
+            <span className="text-28px font-bold">SHUTU</span>
+          </span>
+        </Link>
+
+        {pathname !== '/' && <StatusSearch where="header" className="mr-16px" />}
         {!account && <Button onClick={showConnectModal}>连接</Button>}
         {account && (
           <>
@@ -34,18 +39,12 @@ const Navbar: React.FC = () => {
 
 export default Navbar;
 
-interface ConnectWalletProps {
-  children?: React.ReactElement<any>;
-  onClick?: (ev: any) => void;
-  icon?: string;
-  name?: string;
-}
-const ConnectWallet: React.FC<ConnectWalletProps> = ({ children, onClick, icon, name }) => {
+
+const ConnectWallet: React.FC<HTMLAttributes<HTMLDivElement> & { icon: string; name: string; }> = ({ children, onClick, icon, name }) => {
   return (
     <div
       onClick={onClick}
-      className="flex flex-col items-center justify-center w-100px h-97px cursor-pointer rounded-8px bg-transparent hover:bg-#26233E mr-11px;
-    "
+      className="flex flex-col items-center justify-center w-100px h-100px rounded-8px hover:bg-#26233E transition-color cursor-pointer"
     >
       {children}
       <img className="w-24px h-24px mb-12px" src={icon} />
@@ -57,32 +56,27 @@ const ConnectWallet: React.FC<ConnectWalletProps> = ({ children, onClick, icon, 
 // Connect Method Modal
 const ConnectModalContent: React.FC = () => {
   return (
-    <div className="flex items-center justify-evently pt-24px">
+    <div className="flex items-center justify-evently gap-12px pt-24px">
       <ConnectWallet onClick={() => connect('fluent')} icon={fluentImg} name="Fluent" />
       <ConnectWallet onClick={() => connect('anyweb')} icon={anywebImg} name="AnyWeb" />
     </div>
   );
-};
+};  
 
 const showConnectModal = () => showModal({ Content: <ConnectModalContent />, className: '!max-w-370px', title: '连接钱包' });
 
-interface AvatarDropdownItemProps {
-  children: React.ReactElement<any> | string;
-  onClick?: (ev: any) => void;
-}
 
-const AvatarDropdownItem: React.FC<AvatarDropdownItemProps> = ({ children, onClick }) => {
+const AvatarDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, onClick }) => {
   return (
-    <div onClick={onClick} className="w-232px h-49px flex items-center justify-center rounded-8px bg-transparent hover:bg-#2E2E4D mb-16px">
+    <div onClick={onClick} className="w-160px h-48px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-color cursor-pointer">
       {children}
     </div>
   );
 };
 
-
 const AvatarDropdown: React.FC = () => {
   return (
-    <div className="w-280px h-162px rounded-8px bg-#26233E text-#F0EEE9 dropdown-shadow text-16px font-semibold no-underline overflow-hidden flex flex-col items-center pt-24px mt-24px">
+    <div className="mt-24px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow">
       <AvatarDropdownItem>域名管理</AvatarDropdownItem>
       <AvatarDropdownItem onClick={disconnect}>退出登录</AvatarDropdownItem>
     </div>
@@ -91,8 +85,8 @@ const AvatarDropdown: React.FC = () => {
 
 const Avatar: React.FC = () => {
   return (
-    <Dropdown placement="bottom-start" trigger="mouseenter click" interactiveDebounce={100} Content={<AvatarDropdown />}>
-      <span className="w-48px h-48px flex-shrink-0">
+    <Dropdown placement="bottom-start" trigger="click" interactiveDebounce={100} Content={<AvatarDropdown />}>
+      <span className="w-48px h-48px flex-shrink-0 cursor-pointer">
         <AvatarIcon className="w-full h-full" />
       </span>
     </Dropdown>
