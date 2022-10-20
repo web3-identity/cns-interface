@@ -12,7 +12,7 @@ const AppRouter: React.FC = () => {
     <Router>
       <ErrorBoundary>
         <Navbar />
-        <CustomScrollbar className="main-scroller" contentClassName="pb-100px">
+        <CustomScrollbar className="main-scroller" contentClassName="pb-160px">
           <Routes>
             <Route index element={<HomePage />} />
             <Route path="setting/:domain" element={<DomainSetting />} />

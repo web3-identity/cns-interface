@@ -43,6 +43,9 @@ export default defineConfig({
             normal: '#302c4d',
             normalHover: '#2b2845',
           },
+          error: {
+            normal: '#E96170'
+          }
         },
       },
     }),

@@ -1,14 +1,17 @@
 import React from 'react';
+import PageWrapper from '@components/Layout/PageWrapper';
 import { useParams } from 'react-router-dom';
-import { useDomainStatus, useRefreshDomainStatus, DomainStatus } from '@service/domain/status';
+import Status from '@modules/Status';
 
 const DomainRegister: React.FC = () => {
-    const { domain } = useParams() ?? {};
-    const status = useDomainStatus(domain!);
-    console.log(status);
-    return (
-        <div>DomainRegister</div>
-    );
-}
+  const { domain: _domain } = useParams();
+  const domain = _domain?.toLocaleLowerCase().trim() ?? '';
+
+  return (
+    <PageWrapper className="pt-72px">
+      <Status domain={domain} where="register" />
+    </PageWrapper>
+  );
+};
 
 export default DomainRegister;

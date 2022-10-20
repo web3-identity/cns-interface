@@ -1,6 +1,6 @@
 /** common **/
 .button {
-  @apply relative inline-flex justify-center items-center whitespace-nowrap outline-none transition-colors font-bold cursor-pointer;
+  @apply relative inline-flex justify-center items-center whitespace-nowrap outline-none transition-colors font-bold no-underline cursor-pointer;
 }
 
 button.button {
@@ -16,11 +16,11 @@ button.absolute {
 }
 
 .button--small {
-  @apply text-[16px] h-[44px] px-[32px] rounded-10px leading-44px;
+  @apply text-[14px] h-[32px] px-[24px] rounded-8px leading-32px;
 }
 
 .button--normal {
-  @apply text-[16px] h-[44px] px-[32px] rounded-10px leading-44px;
+  @apply text-[16px] h-[48px] px-[32px] rounded-10px leading-48px;
 }
 
 .button--medium {

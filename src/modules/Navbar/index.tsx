@@ -1,20 +1,25 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import cx from 'clsx';
 import Button from '@components/Button';
 import Dropdown from '@components/Dropdown';
 import { showModal } from '@components/showPopup/Modal';
 import { useAccount, connect, disconnect } from '@service/account';
+import StatusSearch from '@modules/StatusSearch';
 import fluentImg from '@assets/icons/fluent.svg';
 import anywebImg from '@assets/icons/anyweb.svg';
 import { ReactComponent as AvatarIcon } from '@assets/images/Avatar.svg';
 
 const Navbar: React.FC = () => {
   const account = useAccount();
+  const { pathname } = useLocation();
+
   return (
     <header className="relative flex items-center h-88px pt-40px text-grey-normal">
       <nav className={cx('max-w-1920px mx-auto absolute bottom-0 flex w-full px-32px leading-48px')}>
         <span className="i-bi:box-fill mr-14px text-48px flex-shrink-0" />
         <span className="mr-auto text-28px font-bold">SHUTU</span>
+        {pathname !== '/' && <StatusSearch where="header" className='mr-16px' />}
         {!account && <Button onClick={showConnectModal}>连接</Button>}
         {account && (
           <>
@@ -74,7 +79,7 @@ const AvatarDropdownItem: React.FC<AvatarDropdownItemProps> = ({ children, onCli
   );
 };
 
-// Avatar
+
 const AvatarDropdown: React.FC = () => {
   return (
     <div className="w-280px h-162px rounded-8px bg-#26233E text-#F0EEE9 dropdown-shadow text-16px font-semibold no-underline overflow-hidden flex flex-col items-center pt-24px mt-24px">

@@ -11,7 +11,7 @@ export const provider = new Provider({
 export const accountState = atom<string | null | undefined>({
   key: 'anywebAccountState',
   default: null,
-  effects_UNSTABLE: [
+  effects: [
     localStorageEffect('anywebAccountState'),
     ({ setSelf }) => {
       provider.on('ready', () => {
@@ -21,22 +21,25 @@ export const accountState = atom<string | null | undefined>({
             params: [],
           })
           .then((isLogined) => {
-            if (!isLogined) return;
-            provider
-              .request({
-                method: 'cfx_accounts',
-                params: [
-                  {
-                    availableNetwork: [1, 1029],
-                    scopes: ['baseInfo', 'identity'],
-                  },
-                ],
-              })
-              .then((result) => {
-                const account = result as Account;
-                const { address } = account;
-                setSelf(address);
-              });
+            if (!isLogined) {
+              setSelf(null);
+            } else {
+              provider
+                .request({
+                  method: 'cfx_accounts',
+                  params: [
+                    {
+                      availableNetwork: [1, 1029],
+                      scopes: ['baseInfo', 'identity'],
+                    },
+                  ],
+                })
+                .then((result) => {
+                  const account = result as Account;
+                  const { address } = account;
+                  setSelf(address);
+                });
+            }
           });
       });
     },

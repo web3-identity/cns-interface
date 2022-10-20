@@ -5,7 +5,7 @@ export { connect } from '@cfxjs/use-wallet-react/conflux/Fluent';
 export const accountState = atom<string | null | undefined>({
   key: 'fluentAccountState',
   default: undefined,
-  effects_UNSTABLE: [
+  effects: [
     ({ setSelf, trigger }) => {
       if (trigger === 'get') {
         setSelf(fluentStore.getState().accounts?.[0]);
