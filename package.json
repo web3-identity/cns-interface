@@ -19,6 +19,7 @@
     "ethers": "^5.7.1",
     "localstorage-enhance": "1.0.1",
     "lodash-es": "^4.17.21",
+    "mersenne-twister": "^1.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^3.1.4",

@@ -1,12 +1,24 @@
 import React, { type HTMLAttributes } from 'react';
 import { disconnect } from '@service/account';
 import Dropdown from '@components/Dropdown';
-import { ReactComponent as AvatarIcon } from '@assets/images/Avatar.svg';
+import { useAccount } from '@service/account';
+import renderReactNode from '@utils/renderReactNode';
+import { addressToNumber } from '@utils/addressUtils';
+
 
 const AvatarDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, onClick }) => {
   return (
-    <div onClick={onClick} className="w-230px h-50px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-colors cursor-pointer">
+    <div onClick={onClick} className="w-160px h-48px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-colors cursor-pointer">
       {children}
+    </div>
+  );
+};
+
+const AvatarIcon: React.FC<HTMLAttributes<HTMLDivElement> & { address: string | null | undefined; diameter: number }> = ({ address, diameter }) => {
+  const renderAddress = addressToNumber(address);
+  return (
+    <div className="w-160px h-48px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-colors cursor-pointer">
+      {/* {renderReactNode(jazzicon(diameter, renderAddress))} */}
     </div>
   );
 };
@@ -21,10 +33,11 @@ const AvatarDropdown: React.FC = () => {
 };
 
 const Avatar: React.FC = () => {
+  const address = useAccount();
   return (
     <Dropdown placement="bottom-start" trigger="click" interactiveDebounce={100} Content={<AvatarDropdown />}>
       <span className="w-48px h-48px flex-shrink-0 cursor-pointer">
-        <AvatarIcon className="w-full h-full pointer-events-none" />
+        <AvatarIcon address={address} diameter={48} />
       </span>
     </Dropdown>
   );
