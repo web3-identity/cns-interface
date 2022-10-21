@@ -11,7 +11,7 @@ import showAccountConnector from './AccountConnector';
 const Navbar: React.FC = () => {
   const account = useAccount();
   const { pathname } = useLocation();
-
+  
   return (
     <header className="relative flex items-center h-88px pt-40px text-grey-normal">
       <nav className={cx('mx-auto absolute bottom-0 flex w-full px-140px leading-48px')}>
