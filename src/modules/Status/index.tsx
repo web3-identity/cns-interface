@@ -23,7 +23,7 @@ const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, wher
 
   return (
     <BorderBox
-      variant={where === 'register' ? 'linear' : 'none'}
+      variant={where === 'register' ? 'gradient' : 'none'}
       className={cx('flex items-center pl-24px bg-purple-dark-active', className, {
         'w-fit min-w-328px h-80px px-12px text-22px rounded-24px': where === 'register',
         'h-92px pr-12px text-22px rounded-24px': where === 'home',
@@ -39,6 +39,8 @@ const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, wher
     </BorderBox>
   );
 };
+
+export default Status;
 
 const statusMap = {
   [DomainStatus.Valid]: {
@@ -89,7 +91,7 @@ const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) 
         <>
           {status === DomainStatus.Valid && (
             <Link to={`/register/${domain}`} className="no-underline">
-              <Button size={where === 'header' ? 'small' : 'medium'}>注册</Button>
+              <Button size={where === 'header' ? 'small' : 'medium'} color="gradient">注册</Button>
             </Link>
           )}
           {status === DomainStatus.Registered && (
@@ -120,5 +122,3 @@ const ErrorBoundaryFallback: React.FC<FallbackProps & Pick<Props, 'where'>> = ({
     </>
   );
 };
-
-export default Status;

@@ -17,11 +17,10 @@ const StatusSearch: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ where,
 
   const handleSearch = useCallback(withForm(({ domain }) => setDomain((domain as string).toLowerCase().trim())), []);
 
-
   return (
-    <form onSubmit={handleSearch} className={cx("relative", className)}>
+    <form onSubmit={handleSearch} className={cx('relative', className)}>
       <BorderBox
-        variant={where === 'home' ? 'linear' : 'purple'}
+        variant={where === 'home' ? 'gradient' : 'purple'}
         className={cx('relative flex items-center', {
           'h-92px pl-16px pr-12px rounded-24px': where === 'home',
           'min-w-380px h-48px pl-12px pr-8px rounded-10px border-2px border-purple-normal': where === 'header',
@@ -39,10 +38,16 @@ const StatusSearch: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ where,
         {!domain && <Button size={where === 'header' ? 'small' : 'medium'}>搜索</Button>}
       </BorderBox>
 
-      {domain && <Status domain={domain} where={where} className={cx("absolute left-0 w-full z-10", {
-        'top-[calc(100%+16px)]': where === 'home',
-        'top-[calc(100%+8px)]': where === 'header',
-      })}/>}
+      {domain && (
+        <Status
+          domain={domain}
+          where={where}
+          className={cx('absolute left-0 w-full z-10', {
+            'top-[calc(100%+16px)]': where === 'home',
+            'top-[calc(100%+8px)]': where === 'header',
+          })}
+        />
+      )}
     </form>
   );
 };

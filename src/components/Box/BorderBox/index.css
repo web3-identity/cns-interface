@@ -14,7 +14,7 @@
   @apply border-purple-normal;
 }
 
-.border-box--linear {
+.border-box--gradient {
   @apply border-transparent transition-all;
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;

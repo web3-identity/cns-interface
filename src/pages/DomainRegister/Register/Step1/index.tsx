@@ -4,29 +4,35 @@ import { RegisterContainer } from '../index';
 
 const Step1: React.FC = () => {
   return (
-    <RegisterContainer title="第一步：申请注册" className='flex flex-col text-14px text-grey-normal-hover text-opacity-50 '>
+    <RegisterContainer title="第一步：申请注册" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
       <div className="mt-40px flex items-center justify-between text-14px">
         <div>
           <p>总计花费</p>
 
-          <p className='mt-2px'>
+          <p className="mt-4px">
             <span className="leading-54px text-45px text-grey-normal font-bold">200.00</span>
-            <span className='ml-4px'>￥</span>
+            <span className="ml-4px">￥</span>
           </p>
         </div>
 
         <div>
           <p>注册时长</p>
 
-          <div className='mt-2px'>
-            <p>
+          <div className="mt-4px flex items-center">
+            <button className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors">
+              <span className="i-fluent:subtract-12-filled text-16px font-bold" />
+            </button>
+            <p className="mx-24px">
               <span className="leading-54px text-45px text-grey-normal font-bold">02</span>
-              <span className='ml-4px'>年</span>
+              <span className="ml-4px">年</span>
             </p>
+            <button className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors">
+              <span className="i-fluent:add-12-filled text-15px font-bold" />
+            </button>
           </div>
         </div>
 
-        <Button>申请</Button>
+        <Button className="mb-4px min-w-156px h-44px self-end">申请</Button>
       </div>
 
       <p className="mt-auto px-24px py-16px rounded-12px leading-24px bg-#26233E">
