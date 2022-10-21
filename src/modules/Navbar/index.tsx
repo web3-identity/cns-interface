@@ -5,13 +5,13 @@ import Button from '@components/Button';
 import { useAccount } from '@service/account';
 import StatusSearch from '@modules/StatusSearch';
 import { shortenAddress } from '@utils/addressUtils';
-import Avatar from './Avatar';
+import Account from './Account';
 import showAccountConnector from './AccountConnector';
 
 const Navbar: React.FC = () => {
   const account = useAccount();
   const { pathname } = useLocation();
-  
+
   return (
     <header className="relative flex items-center h-88px pt-40px text-grey-normal">
       <nav className={cx('mx-auto absolute bottom-0 flex w-full px-140px leading-48px')}>
@@ -27,7 +27,7 @@ const Navbar: React.FC = () => {
         {account && (
           <>
             <span className="ml-26px mr-10px text-16px text-#AAA9C1">{shortenAddress(account)}</span>
-            <Avatar />
+            <Account />
           </>
         )}
       </nav>

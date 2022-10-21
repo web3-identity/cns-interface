@@ -1,6 +1,6 @@
-export function addressToNumber(address: string | null | undefined): number | null {
+export function addressToNumber(address: string | null | undefined): number | undefined {
   if (!address) {
-    return null
+    return undefined;
   }
   const addr = address.slice(2, 10)
   const seed = parseInt(addr, 16)
