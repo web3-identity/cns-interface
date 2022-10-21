@@ -2,8 +2,8 @@ import React from 'react';
 import PageWrapper from '@components/Layout/PageWrapper';
 import Spin from '@components/Spin';
 import StatusSearch from '@modules/StatusSearch';
-import HomeBg from '@assets/images/HomeBg.png';
-import HomeBgWebp from '@assets/images/HomeBg.webp';
+import homeBg from '@assets/images/home-bg.png';
+import homeBgWebp from '@assets/images/home-bg.webp';
 
 const Home: React.FC = () => {
   return (
@@ -13,8 +13,8 @@ const Home: React.FC = () => {
       <Spin className="text-120px text-purple-normal" />
 
       <picture className="absolute top-0px left-1/2 -translate-x-1/2 w-1512px -z-1 pointer-events-none">
-        <source srcSet={HomeBgWebp} type="image/webp" />
-        <img className="w-full" src={HomeBg} alt="background image" />
+        <source srcSet={homeBgWebp} type="image/webp" />
+        <img className="w-full" src={homeBg} alt="background image" />
       </picture>
     </PageWrapper>
   );

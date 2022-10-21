@@ -7,11 +7,11 @@ import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
 import { useDomainStatus, useRefreshDomainStatus, DomainStatus } from '@service/domain/status';
-import { ReactComponent as StatusLocked } from '@assets/icons/StatusLocked.svg';
-import { ReactComponent as StatusRegistered } from '@assets/icons/StatusRegistered.svg';
-import { ReactComponent as StatusReserved } from '@assets/icons/StatusReserved.svg';
-import { ReactComponent as StatusValid } from '@assets/icons/StatusValid.svg';
-import { ReactComponent as StatusInvalid } from '@assets/icons/StatusInvalid.svg';
+import { ReactComponent as StatusLocked } from '@assets/icons/status-locked.svg';
+import { ReactComponent as StatusRegistered } from '@assets/icons/status-registered.svg';
+import { ReactComponent as StatusReserved } from '@assets/icons/status-reserved.svg';
+import { ReactComponent as StatusValid } from '@assets/icons/status-valid.svg';
+import { ReactComponent as StatusInvalid } from '@assets/icons/status-invalid.svg';
 
 interface Props {
   domain: string;
