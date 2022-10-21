@@ -5,14 +5,13 @@ import removeAllChild from '@utils/removeAllChild';
 
 const Avatar: React.FC<HTMLAttributes<HTMLDivElement> & { address: string | null | undefined; diameter: number }> = ({ address, diameter }) => {
   const renderAddress = addressToNumber(address);
-  console.log(renderAddress);
-  const avatarContainerRef = useRef(null)
+  const avatarContainerRef = useRef<HTMLDivElement>(null!);
   useEffect(() => {
-    const avatarDom = jazzIcon(diameter, renderAddress)
-    removeAllChild(avatarContainerRef.current)
-    avatarContainerRef.current.appendChild(avatarDom)
-  }, [avatarContainerRef, diameter, renderAddress])
-  return <div ref={avatarContainerRef} />
+    const avatarDom = jazzIcon(diameter, renderAddress);
+    removeAllChild(avatarContainerRef.current);
+    avatarContainerRef.current.appendChild(avatarDom);
+  }, [diameter, renderAddress]);
+  return <div ref={avatarContainerRef} />;
 };
 
 export default Avatar;
