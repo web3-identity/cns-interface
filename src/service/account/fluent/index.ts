@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 import { store as fluentStore } from '@cfxjs/use-wallet-react/conflux/Fluent';
-export { connect } from '@cfxjs/use-wallet-react/conflux/Fluent';
+export { connect, sendTransaction } from '@cfxjs/use-wallet-react/conflux/Fluent';
 
 export const accountState = atom<string | null | undefined>({
   key: 'fluentAccountState',

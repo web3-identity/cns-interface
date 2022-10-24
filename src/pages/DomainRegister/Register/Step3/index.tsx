@@ -5,7 +5,7 @@ import { ReactComponent as SuccessIcon } from '@assets/icons/Success.svg';
 
 const Step3: React.FC<{ domain: string }> = ({ domain }) => {
   return (
-    <RegisterContainer title="第一步：申请注册" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
+    <RegisterContainer title="注册完成" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
       <div className="mt-54px flex-1 flex justify-center gap-56px">
         <div className="text-right text-grey-normal">
           <SuccessIcon className="mb-16px w-80px h-80px" />

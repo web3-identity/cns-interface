@@ -7,6 +7,8 @@ import presetWind from '@unocss/preset-wind';
 import transformerDirective from '@unocss/transformer-directives';
 import svgr from 'vite-plugin-svgr';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
+import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -31,7 +33,7 @@ export default defineConfig({
             normalHover: '#5a5c9a',
             dark: '#4d4d80',
             darkHover: '#3D3E67',
-            darkActive: '#2E2E4D'
+            darkActive: '#2E2E4D',
           },
           green: {
             normal: '#96d8de',
@@ -46,8 +48,8 @@ export default defineConfig({
             normalHover: '#2b2845',
           },
           error: {
-            normal: '#E96170'
-          }
+            normal: '#E96170',
+          },
         },
       },
     }),
@@ -65,11 +67,22 @@ export default defineConfig({
       '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@components': path.resolve(__dirname, 'src/components'),
       '@service': path.resolve(__dirname, 'src/service'),
+      buffer: 'rollup-plugin-node-polyfills/polyfills/buffer-es6',
     },
   },
   build: {
     rollupOptions: {
       plugins: [visualizer()],
+    },
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      // Node.js global to browser globalThis
+      define: {
+        global: 'globalThis',
+      },
+      // Enable esbuild polyfill plugins
+      plugins: [NodeGlobalsPolyfillPlugin({ buffer: true, process: true }), NodeModulesPolyfillPlugin()],
     },
   },
 });

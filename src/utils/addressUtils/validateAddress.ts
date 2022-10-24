@@ -243,3 +243,26 @@ export const validateCfxAddress = (address: string) => {
 };
 
 export const validateHexAddress = (address: string) => /^0x[0-9a-fA-F]{40}$/.test(address);
+
+export const toHex = (value: string) => {
+  let hex;
+
+  if (typeof value === 'string') {
+    hex = value.toLowerCase(); // XXX: lower case for support checksum address
+  } else if (Number.isInteger(value) || typeof value === 'bigint' || value instanceof JSBI) {
+    hex = `0x${(value as any).toString(16)}`;
+  } else if (Buffer.isBuffer(value)) {
+    hex = `0x${(value as any).toString('hex')}`;
+  } else if (typeof value === 'boolean') {
+    hex = value ? '0x01' : '0x00';
+  } else if (value === null) {
+    hex = '0x';
+  } else {
+    hex = `${value}`;
+  }
+
+  if (!/^0x[0-9a-f]*$/.test(hex)) {
+    throw new Error(`${value} not match "hex"`);
+  }
+  return hex.length % 2 ? `0x0${hex.slice(2)}` : hex;
+}

@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
   const { pathname } = useLocation();
 
   return (
-    <header className="relative flex items-center h-88px pt-40px text-grey-normal">
+    <header className="relative flex items-center h-88px pt-40px text-grey-normal whitespace-nowrap">
       <nav className={cx('mx-auto absolute bottom-0 flex w-full px-140px leading-48px')}>
         <Link to="/" className="mr-auto text-grey-normal no-underline">
           <span>
