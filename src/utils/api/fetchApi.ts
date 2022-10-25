@@ -8,6 +8,12 @@ interface FetchParams {
   equalKey?: string;
 }
 
+interface RequestParams{
+  body?:string,
+  headers:HeadersInit,
+  method:string
+}
+
 const equalMap = new Map<string, any>();
 
 export function fetchApi<T extends any>(fetcher: () => Promise<any>, equalKey?: string): Promise<T>;
@@ -23,7 +29,7 @@ export function fetchApi() {
     let { path, method, params } = param;
     const bodyParams = params ?? {};
     method = method ?? 'GET';
-    const requestParams = {
+    const requestParams:RequestParams = {
       body: JSON.stringify(
         bodyParams,
       ),
