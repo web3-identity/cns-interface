@@ -5,7 +5,6 @@ import removeAllChild from '@utils/removeAllChild';
 
 const Avatar: React.FC<HTMLAttributes<HTMLDivElement> & { address: string | null | undefined; diameter: number }> = ({ address, diameter }) => {
   const renderAddress = addressToNumber(convertCfxToHex(address!));
-  console.log(address, renderAddress)
   const avatarContainerRef = useRef<HTMLDivElement>(null!);
   useEffect(() => {
     const avatarDom = jazzIcon(diameter, renderAddress);
