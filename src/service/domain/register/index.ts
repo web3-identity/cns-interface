@@ -1,6 +1,5 @@
 import { atomFamily, useRecoilValue } from 'recoil';
 import { setRecoil } from 'recoil-nexus';
-import { clamp } from 'lodash-es';
 import { persistAtomWithDefault } from '@utils/recoilUtils';
 export * from './commit';
 
@@ -15,8 +14,8 @@ const registerStep = atomFamily({
   effects: [persistAtomWithDefault(RegisterStep.WaitCommit)],
 });
 
-export const setRigisterToNextStep = (domain: string) => {
-  setRecoil(registerStep(domain), (pre: number) => clamp(pre + 1, RegisterStep.WaitCommit, RegisterStep.Success));
+export const setRigisterToStep = (domain: string, step: RegisterStep) => {
+  setRecoil(registerStep(domain), step);
 };
 
 export const useRegisterStep = (domain: string) => useRecoilValue(registerStep(domain));

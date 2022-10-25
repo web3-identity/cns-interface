@@ -81,4 +81,7 @@ export const sendTransaction = (params: Parameters<typeof send>[0]) =>
         from: getRecoil(accountState),
       },
     ],
-  });
+  }).catch(e => console.error({
+    ...params,
+    from: getRecoil(accountState),
+  }))

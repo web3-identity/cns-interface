@@ -1,4 +1,5 @@
 import { atom, useRecoilValue } from 'recoil';
+import { getRecoil } from 'recoil-nexus';
 import { persistAsynAtom } from '@utils/recoilUtils';
 import { fetchChain } from '@utils/fetchChain';
 import { Web3Controller } from '@contracts/index';
@@ -16,15 +17,18 @@ const fetchCommitmentLockTime = (type: 'min' | 'max') => async () => {
   }
 };
 
-const minCommitLockTimeState = atom<number>({
+// unit second
+export const minCommitLockTimeState = atom<number>({
   key: 'minCommitmentLockTime',
   effects: [persistAsynAtom(fetchCommitmentLockTime('min'))],
 });
 
-const maxCommitLockTimeState = atom<number>({
+export const maxCommitLockTimeState = atom<number>({
   key: 'maxCommitmentLockTime',
   effects: [persistAsynAtom(fetchCommitmentLockTime('max'))],
 });
 
 export const useMinCommitLockTime = () => useRecoilValue(minCommitLockTimeState);
 export const useMaxCommitLockTime = () => useRecoilValue(maxCommitLockTimeState);
+export const getMinCommitLockTime = () => getRecoil(minCommitLockTimeState);
+export const getMaxCommitLockTime = () => getRecoil(maxCommitLockTimeState);

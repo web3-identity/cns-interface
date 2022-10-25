@@ -1,12 +1,15 @@
 import React, { useState, useCallback, Suspense } from 'react';
 import Button from '@components/Button';
-import { useMinCommitLockTime, commitRegistration } from '@service/domain/register';
+import { useMinCommitLockTime, commitRegistration as _commitRegistration } from '@service/domain/register';
+import useInTranscation from '@hooks/useInTranscation';
 import { RegisterContainer } from '../index';
 
 const Step1: React.FC<{ domain: string }> = ({ domain }) => {
   const [durationYears, setDuration] = useState<number>(1);
   const decreaseDuration = useCallback(() => setDuration((pre) => (pre - 1 >= 1 ? pre - 1 : 1)), []);
   const increaseDuration = useCallback(() => setDuration((pre) => pre + 1), []);
+
+  const { inTranscation, execTranscation: commitRegistration } = useInTranscation(_commitRegistration);
 
   return (
     <RegisterContainer title="第一步：申请注册" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
@@ -45,7 +48,11 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
           </div>
         </div>
 
-        <Button className="mb-4px min-w-156px h-44px self-end" onClick={() => commitRegistration({ domain, durationYears })}>
+        <Button
+          className="mb-4px min-w-156px h-44px self-end"
+          loading={inTranscation}
+          onClick={() => commitRegistration({ domain, durationYears })}
+        >
           申请
         </Button>
       </div>

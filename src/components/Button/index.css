@@ -83,7 +83,7 @@ button.button--text.is-disabled {
 }
 
 .button__loading {
-  @apply !absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[calc(50%-0.14em)] text-[1.6em];
+  @apply !absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%-.04em)] text-1.6em;
 }
 
 /** start end icon **/

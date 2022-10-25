@@ -16,6 +16,7 @@
     "@web3identity/cns-contracts": "^0.1.4",
     "clsx": "^1.2.1",
     "custom-react-scrollbar": "0.0.3",
+    "dayjs": "^1.11.6",
     "ethers": "^5.7.1",
     "localstorage-enhance": "1.0.1",
     "lodash-es": "^4.17.21",

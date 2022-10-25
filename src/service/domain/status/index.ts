@@ -11,7 +11,7 @@ export enum DomainStatus {
   Registered,
 }
 
-const domainStatusQuery = selectorFamily({
+const domainStatusQuery = selectorFamily<DomainStatus, string>({
   key: 'domainStatus',
   get: (domain: string) => async () => {
     try {

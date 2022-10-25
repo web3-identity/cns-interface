@@ -4,7 +4,7 @@ import './index.css';
 
 const Spin: React.FC<HTMLAttributes<HTMLDivElement>> = ({ className }) => {
   return (
-    <span className={cx('relative block w-1em h-1em', className)}>
+    <span className={cx('relative block w-1em h-1em leading-1em', className)}>
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 200 200" xmlSpace="preserve">
         <g className='spin'>
           <linearGradient id="spin-right" gradientUnits="userSpaceOnUse" x1="150" y1="20" x2="150" y2="180">

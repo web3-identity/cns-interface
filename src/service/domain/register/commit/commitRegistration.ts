@@ -2,7 +2,7 @@ import { getAccount, getHexAccount, getAccountMethod, sendTransaction } from '@s
 import { randomSecret, getDomainHash } from '@utils/domainHelper';
 import { fetchChain } from '@utils/fetchChain';
 import { Web3Controller, PublicResolver } from '@contracts/index';
-import { recordCommitTime } from './';
+import { setCommitmentHash } from './';
 
 interface Params {
   domain: string;
@@ -16,7 +16,7 @@ export const commitRegistration = async ({ domain, durationYears }: Params) => {
     const hexAccount = getHexAccount();
     const accountMethod = getAccountMethod();
 
-    const commitment = await fetchChain({
+    const commitment: string = await fetchChain({
       params: [
         {
           data: Web3Controller.func.encodeFunctionData('makeCommitment', [
@@ -46,9 +46,7 @@ export const commitRegistration = async ({ domain, durationYears }: Params) => {
       to: Web3Controller.address,
     });
 
-    if (accountMethod === 'fluent') {
-      recordCommitTime(domain);
-    }
+    setCommitmentHash(domain, commitment);
   } catch (err) {
     console.info('err', err);
   }
