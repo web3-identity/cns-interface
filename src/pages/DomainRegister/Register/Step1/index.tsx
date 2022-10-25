@@ -1,13 +1,11 @@
-import React, { useState, useCallback, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import Button from '@components/Button';
-import { useMinCommitLockTime, commitRegistration as _commitRegistration } from '@service/domain/register';
+import { useMinCommitLockTime, useRegisterDurationYearsState, commitRegistration as _commitRegistration } from '@service/domain/register';
 import useInTranscation from '@hooks/useInTranscation';
 import { RegisterContainer } from '../index';
 
 const Step1: React.FC<{ domain: string }> = ({ domain }) => {
-  const [durationYears, setDuration] = useState<number>(1);
-  const decreaseDuration = useCallback(() => setDuration((pre) => (pre - 1 >= 1 ? pre - 1 : 1)), []);
-  const increaseDuration = useCallback(() => setDuration((pre) => pre + 1), []);
+  const { durationYears, increase, decrease } = useRegisterDurationYearsState(domain);
 
   const { inTranscation, execTranscation: commitRegistration } = useInTranscation(_commitRegistration);
 
@@ -28,7 +26,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
 
           <div className="mt-4px flex items-center">
             <button
-              onClick={decreaseDuration}
+              onClick={decrease}
               className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors"
             >
               <span className="i-fluent:subtract-12-filled text-16px font-bold" />
@@ -40,7 +38,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
               <span className="ml-4px">年</span>
             </p>
             <button
-              onClick={increaseDuration}
+              onClick={increase}
               className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors"
             >
               <span className="i-fluent:add-12-filled text-15px font-bold" />

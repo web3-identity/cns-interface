@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import WechatPayQrCode from '@assets/images/WechatPayQrCode.png';
 import timerNotifier from '@utils/timerNotifier';
-import { type CommitLockTime } from '@service/domain/register';
+import { useRegisterDurationYears, type CommitLockTime } from '@service/domain/register';
 import { RegisterContainer } from '../index';
 
 const Step2: React.FC<{ domain: string; commitLockTime: CommitLockTime; }> = ({ domain, commitLockTime }) => {
   const remainTimeDOM = useRef<HTMLDivElement>(null);
+  const durationYears = useRegisterDurationYears(domain);
   
   useEffect(() => {
     if (!commitLockTime || !remainTimeDOM) return;
@@ -36,7 +37,7 @@ const Step2: React.FC<{ domain: string; commitLockTime: CommitLockTime; }> = ({ 
 
           <p className='flex items-center'>
             注册时长
-            <span className='ml-32px text-28px text-grey-normal font-bold'>20</span>
+            <span className='ml-32px text-28px text-grey-normal font-bold'>{durationYears < 10 ? `0${durationYears}` : durationYears}</span>
             <span className='ml-4px mt-6px'>年</span>
           </p>
 
@@ -57,7 +58,7 @@ const Step2: React.FC<{ domain: string; commitLockTime: CommitLockTime; }> = ({ 
             </p>
             <p className='mt-2px'>
               请在
-              <span ref={remainTimeDOM} className='inline-block mx-4px min-w-68px text-center text-grey-normal'>09:59秒</span>
+              <span ref={remainTimeDOM} className='inline-block mx-4px min-w-68px text-center text-grey-normal'>09:30秒</span>
               内完成支付
             </p>
           </div>
