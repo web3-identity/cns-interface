@@ -1,6 +1,7 @@
 import React from 'react';
 import PageWrapper from '@components/Layout/PageWrapper';
 import { useParams } from 'react-router-dom';
+import Delay from '@components/Delay';
 import Status from '@modules/Status';
 import Register from './Register';
 import ProgressBar from './ProgressBar';

@@ -51,14 +51,20 @@ const commitmentHash = atomFamily<string | undefined, string>({
         waitCommitmentTimeConfirm(localCommitmentHash);
       }
       onSet(waitCommitmentTimeConfirm);
+
+      return clearCancel;
     },
   ],
 });
 
 export const setCommitmentHash = (domain: string, hash?: string) => setRecoil(commitmentHash(domain), hash);
 
+export type CommitLockTime = {
+  start: number;
+  end: number;
+} | null;
 
-const commitLockTime = atomFamily<{ start: number; end: number } | null, string>({
+const commitLockTime = atomFamily<CommitLockTime, string>({
   key: 'commitLockTime',
   effects: [
     ({ onSet, node: { key } }) => {
@@ -93,6 +99,8 @@ const commitLockTime = atomFamily<{ start: number; end: number } | null, string>
           }
         }, 250);
       });
+
+      return clearTimer;
     },
   ],
 });
@@ -108,14 +116,14 @@ const setCommitLockTime = (domain: string, commitTime: number) => {
   setRecoil(commitLockTime(domain), lockTime);
 };
 
-export const useCommitHashLoadable = (domain: string) => useRecoilValueLoadable(commitmentHash(domain));
-export const useCommitLockTime = (domain: string) => useRecoilValue(commitLockTime(domain));
-export const useCommitLockTimeLoadable = (domain: string) => useRecoilValueLoadable(commitLockTime(domain));
-
-export const useIsWaitCommitConfirm = (domain: string) => {
+export const useCommitInfo = (domain: string) => {
   const registerStep = useRegisterStep(domain);
-  const hashLoadable = useCommitHashLoadable(domain);
-  const lockLoadable = useCommitLockTimeLoadable(domain);
+  const hashLoadable = useRecoilValueLoadable(commitmentHash(domain));
+  const lockLoadable = useRecoilValueLoadable(commitLockTime(domain));
 
-  return registerStep === RegisterStep.WaitCommit && !!hashLoadable.contents && !!lockLoadable.contents;
-}
+  return {
+    isWaitCommitConfirm: registerStep === RegisterStep.WaitCommit && !!hashLoadable.contents && !!lockLoadable.contents,
+    registerStep,
+    commitLockTime: lockLoadable.contents as CommitLockTime,
+  } as const;
+};

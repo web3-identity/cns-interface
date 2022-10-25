@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { RegisterContainer } from '../index';
 import WechatPayQrCode from '@assets/images/WechatPayQrCode.png';
 import timerNotifier from '@utils/timerNotifier';
-import { useCommitLockTime } from '@service/domain/register';
+import { type CommitLockTime } from '@service/domain/register';
+import { RegisterContainer } from '../index';
 
-const Step2: React.FC<{ domain: string; }> = ({ domain }) => {
+const Step2: React.FC<{ domain: string; commitLockTime: CommitLockTime; }> = ({ domain, commitLockTime }) => {
   const remainTimeDOM = useRef<HTMLDivElement>(null);
-  const commitLockTime = useCommitLockTime(domain);
   
   useEffect(() => {
     if (!commitLockTime || !remainTimeDOM) return;
@@ -58,7 +57,7 @@ const Step2: React.FC<{ domain: string; }> = ({ domain }) => {
             </p>
             <p className='mt-2px'>
               请在
-              <span ref={remainTimeDOM} className='inline-block mx-4px min-w-68px text-center text-grey-normal'>14:59</span>
+              <span ref={remainTimeDOM} className='inline-block mx-4px min-w-68px text-center text-grey-normal'>09:59秒</span>
               内完成支付
             </p>
           </div>
