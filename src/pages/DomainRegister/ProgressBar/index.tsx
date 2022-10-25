@@ -1,8 +1,11 @@
 import React from 'react';
+import { useRegisterStep } from '@service/domain/register';
 import { ReactComponent as Rocket } from '@assets/images/Rocket.svg';
 import './index.css';
 
-const ProgressBar: React.FC = () => {
+const ProgressBar: React.FC<{ domain: string; }> = ({ domain }) => {
+  const registerStep = useRegisterStep(domain);
+
   return (
     <div className="mt-32px relative flex justify-between items-center px-32px text-18px text-grey-normal">
       <div className="w-32px h-32px leading-24px border-4px rounded-full text-center border-grey-normal bg-#1B192C">1</div>

@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, memo, type HTMLAttributes } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import cx from 'clsx';
 import BorderBox from '@components/Box/BorderBox';
@@ -13,7 +14,8 @@ interface Props {
 const StatusSearch: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ where, className, ...props }) => {
   const { register, handleSubmit: withForm, watch } = useForm();
   const [domain, setDomain] = useState('');
-  useEffect(() => setDomain(''), [watch('domain')]);
+  const { pathname } = useLocation();
+  useEffect(() => setDomain(''), [watch('domain'), pathname]);
 
   const handleSearch = useCallback(withForm(({ domain }) => setDomain((domain as string).toLowerCase().trim())), []);
 

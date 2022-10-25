@@ -26,7 +26,7 @@ const accountMethodFilter = atom<Methods | null>({
   effects: [persistAtom],
 });
 
-const account = selector({
+export const accountState = selector({
   key: 'account',
   get: ({ get }) => {
     const filter = get(accountMethodFilter);
@@ -44,7 +44,7 @@ const account = selector({
 const hexAccount = selector({
   key: 'hexAccount',
   get: ({ get }) => {
-    const cfxAccount = get(account);
+    const cfxAccount = get(accountState);
     if (!cfxAccount || !validateCfxAddress(cfxAccount)) return null;
     return convertCfxToHex(cfxAccount);
   },
@@ -52,7 +52,7 @@ const hexAccount = selector({
 
 
 export const getAccountMethod = () => getRecoil(accountMethodFilter);
-export const getAccount = () => getRecoil(account);
+export const getAccount = () => getRecoil(accountState);
 export const getHexAccount = () => getRecoil(hexAccount);
 
 export const connect = async (method: Methods) => {
@@ -72,4 +72,4 @@ export const sendTransaction = async (params: Parameters<typeof sendTransactionW
 
 
 export const disconnect = () => setRecoil(accountMethodFilter, null);
-export const useAccount = () => useRecoilValue(account);
+export const useAccount = () => useRecoilValue(accountState);

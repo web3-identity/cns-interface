@@ -1,8 +1,8 @@
-import React, { Suspense, type HTMLAttributes } from 'react';
+import React, { type HTMLAttributes } from 'react';
 import cx from 'clsx';
-import { useRegisterStep, RegisterStep, useCommitStatus } from '@service/domain/register';
-import ProgressBar from '../ProgressBar';
+import { useRegisterStep, RegisterStep, useIsWaitCommitConfirm } from '@service/domain/register';
 import Step1 from './Step1';
+import WaitCommitConfirm from './WaitCommitConfirm';
 import Step2 from './Step2';
 import Step3 from './Step3';
 
@@ -16,28 +16,18 @@ export const RegisterContainer: React.FC<HTMLAttributes<HTMLDivElement> & { titl
   );
 };
 
-const StepChoose: React.FC<{ domain: string }> = ({ domain }) => {
+const Register: React.FC<{ domain: string }> = ({ domain }) => {
   const registerStep = useRegisterStep(domain);
-  const a = useCommitStatus(domain);
-  console.log(a);
+  const isWaitCommitConfirm = useIsWaitCommitConfirm(domain);
+
   if (registerStep === RegisterStep.WaitCommit) {
-    return <Step1 domain={domain} />;
+    if (isWaitCommitConfirm) return <WaitCommitConfirm domain={domain} />
+    else return <Step1 domain={domain} />;
   } else if (registerStep === RegisterStep.WaitPay) {
     return <Step2 domain={domain} />;
   } else {
     return <Step3 domain={domain} />;
   }
-};
-
-const Register: React.FC<{ domain: string }> = ({ domain }) => {
-  return (
-    <Suspense fallback="123">
-      <>
-        <StepChoose domain={domain} />
-        <ProgressBar />
-      </>
-    </Suspense>
-  );
 };
 
 export default Register;
