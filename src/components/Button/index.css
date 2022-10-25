@@ -62,6 +62,15 @@ button.button--text.is-disabled {
   @apply bg-purple-normal-hover text-grey-normal-hover;
 }
 
+.button--contained.button--gradient {
+  @apply text-#110F1B;
+  background: linear-gradient(94.26deg, #6667AB 0%, #F0EEE9 51.35%, #96D8DE 100%);
+}
+
+.button--contained.button--gradient:hover,
+.button--contained.button--gradient:focus-visible {
+  background: linear-gradient(94.26deg, #6667AB 0%, #F0EEE9 51.35%, #96D8DE 100%);
+}
 
 .button__content {
   @apply inline-flex items-center h-full;

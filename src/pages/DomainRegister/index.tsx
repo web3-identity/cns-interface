@@ -11,7 +11,7 @@ const DomainRegister: React.FC = () => {
   return (
     <PageWrapper className="pt-72px">
       <Status className="mb-24px" domain={domain} where="register" />
-      <Register />
+      <Register domain={domain}/>
     </PageWrapper>
   );
 };

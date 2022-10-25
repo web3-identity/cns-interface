@@ -19,6 +19,7 @@
     "ethers": "^5.7.1",
     "localstorage-enhance": "1.0.1",
     "lodash-es": "^4.17.21",
+    "mersenne-twister": "^1.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^3.1.4",
@@ -31,8 +32,11 @@
     "zustand": "^4.1.2"
   },
   "devDependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
+    "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "@iconify/json": "^2.1.123",
     "@types/lodash-es": "^4.17.6",
+    "@types/mersenne-twister": "^1.1.2",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "@unocss/preset-icons": "^0.45.29",

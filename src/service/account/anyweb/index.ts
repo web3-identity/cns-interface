@@ -1,7 +1,8 @@
 import { atom } from 'recoil';
-import { setRecoil } from 'recoil-nexus';
-import { localStorageEffect } from '@utils/recoilUtils';
+import { setRecoil, getRecoil } from 'recoil-nexus';
+import { persistAtom } from '@utils/recoilUtils';
 import { Provider } from '@idealight-labs/anyweb-js-sdk';
+import { sendTransaction as send } from '@cfxjs/use-wallet-react/conflux/Fluent';
 
 export const provider = new Provider({
   logger: null as unknown as undefined,
@@ -12,7 +13,7 @@ export const accountState = atom<string | null | undefined>({
   key: 'anywebAccountState',
   default: null,
   effects: [
-    localStorageEffect('anywebAccountState'),
+    persistAtom,
     ({ setSelf }) => {
       provider.on('ready', () => {
         provider
@@ -70,3 +71,14 @@ export const connect = async () => {
       console.error(err);
     });
 };
+
+export const sendTransaction = (params: Parameters<typeof send>[0]) =>
+  provider.request({
+    method: 'cfx_sendTransaction',
+    params: [
+      {
+        ...params,
+        from: getRecoil(accountState),
+      },
+    ],
+  });

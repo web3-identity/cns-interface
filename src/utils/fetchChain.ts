@@ -38,7 +38,7 @@ export function fetchChain() {
   if (isPromise(fetcher)) {
     return fetcher.then((result) => {
       if (typeof equalKey !== 'string') return result;
-      
+
       const lastResult = equalMap.get(equalKey);
       if (isEqual(lastResult, result)) {
         throw new Error('fetchChain: equal');
@@ -50,14 +50,8 @@ export function fetchChain() {
   }
 }
 
-export function intervalFetchChain<T extends any>(
-  fetcher: () => Promise<any>,
-  conf: { intervalTime: number; callback: (res: T) => void; equalKey?: string }
-): VoidFunction;
-export function intervalFetchChain<T extends any>(
-  fetchParams: FetchParams,
-  conf: { intervalTime: number; callback: (res: T) => void; equalKey?: string }
-): VoidFunction;
+export function intervalFetchChain<T extends any>(fetcher: () => Promise<any>, conf: { intervalTime: number; callback: (res: T) => void; equalKey?: string }): VoidFunction;
+export function intervalFetchChain<T extends any>(fetchParams: FetchParams, conf: { intervalTime: number; callback: (res: T) => void; equalKey?: string }): VoidFunction;
 export function intervalFetchChain() {
   const conf: { intervalTime: number; callback: (res: any) => void; equalKey?: string } = arguments[1];
   if (typeof conf?.callback !== 'function' || typeof conf?.intervalTime !== 'number') return () => {};

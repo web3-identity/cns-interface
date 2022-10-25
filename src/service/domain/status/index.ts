@@ -11,7 +11,6 @@ export enum DomainStatus {
   Registered,
 }
 
-let i = 0;
 const domainStatusQuery = selectorFamily({
   key: 'domainStatus',
   get: (domain: string) => async () => {
@@ -19,10 +18,7 @@ const domainStatusQuery = selectorFamily({
       const response = await fetchChain({
         params: [{ data: Web3Controller.func.encodeFunctionData('labelStatus', [domain]), to: Web3Controller.address }, 'latest_state'],
       });
-      if (++i % 2 === 0) throw 'Network error';
-      const NumRes = Number(response);
-      if (!isNaN(NumRes)) return NumRes as DomainStatus;
-      throw new Error('Response unvalid: ' + response);
+      return Number(response);
     } catch (err) {
       throw err;
     }

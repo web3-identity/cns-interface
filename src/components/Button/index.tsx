@@ -6,7 +6,7 @@ import './index.css';
 
 export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'contained';
-  color?: 'purple';
+  color?: 'purple' | 'gradient';
   size?: 'small' | 'normal' | 'medium';
   fullWidth?: boolean;
   loading?: boolean | 'start' | 'end';

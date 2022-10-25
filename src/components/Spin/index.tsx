@@ -5,28 +5,19 @@ import './index.css';
 const Spin: React.FC<HTMLAttributes<HTMLDivElement>> = ({ className }) => {
   return (
     <span className={cx('relative block w-1em h-1em', className)}>
-      <svg className="spin" width="240" height="240" viewBox="0 0 240 240" color="currentColor">
-        <defs>
-          <linearGradient id="linear-gradient1">
-            <stop offset="0%" stopColor="currentColor" />
-            <stop offset="50%" stopColor="currentColor" stopOpacity="50%" />
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 200 200" xmlSpace="preserve">
+        <g className='spin'>
+          <linearGradient id="spin-right" gradientUnits="userSpaceOnUse" x1="150" y1="20" x2="150" y2="180">
+            <stop offset="0" style={{ stopColor: '#6667ab' }} />
+            <stop offset="1" style={{ stopColor: '#8B8BBA' }} />
           </linearGradient>
-          <linearGradient id="linear-gradient2">
-            <stop offset="50%" stopColor="currentColor" stopOpacity="50%" />
-            <stop offset="100%" stopColor="currentColor" stopOpacity="0%" />
+          <path className="spin-right" d="M100,0v20c44.1,0,80,35.9,80,80c0,44.1-35.9,80-80,80v20c55.2,0,100-44.8,100-100S155.2,0,100,0z" />
+          <linearGradient id="spin-left" gradientUnits="userSpaceOnUse" x1="50" y1="0" x2="50" y2="180">
+            <stop offset="0" style={{ stopColor: '#B1B1B1' }} />
+            <stop offset="1" style={{ stopColor: '#8B8BBA' }} />
           </linearGradient>
-          <circle id="semi-circle" cx="120" cy="120" r="100" strokeWidth="20" strokeDasharray="314 1000" fill="none" />
-        </defs>
-        <g>
-          <use href="#semi-circle" stroke="url('#linear-gradient1')" />
-          <use
-            href="#semi-circle"
-            stroke="url('#linear-gradient2')"
-            style={{
-              transform: 'rotate(180deg)',
-              transformOrigin: 'center',
-            }}
-          />
+          <path className="spin-left" d="M20,100c0-44.1,35.9-80,80-80V0C44.8,0,0,44.8,0,100s44.8,100,100,100v-20C55.9,180,20,144.1,20,100z" />
+          <circle className="fill-purple-normal" cx="100" cy="10" r="10" />
         </g>
       </svg>
     </span>

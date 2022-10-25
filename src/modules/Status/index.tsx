@@ -7,11 +7,11 @@ import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
 import { useDomainStatus, useRefreshDomainStatus, DomainStatus } from '@service/domain/status';
-import { ReactComponent as StatusLocked } from '@assets/icons/StatusLocked.svg';
-import { ReactComponent as StatusRegistered } from '@assets/icons/StatusRegistered.svg';
-import { ReactComponent as StatusReserved } from '@assets/icons/StatusReserved.svg';
-import { ReactComponent as StatusValid } from '@assets/icons/StatusValid.svg';
-import { ReactComponent as StatusInvalid } from '@assets/icons/StatusInvalid.svg';
+import { ReactComponent as StatusLocked } from '@assets/icons/status-locked.svg';
+import { ReactComponent as StatusRegistered } from '@assets/icons/status-registered.svg';
+import { ReactComponent as StatusReserved } from '@assets/icons/status-reserved.svg';
+import { ReactComponent as StatusValid } from '@assets/icons/status-valid.svg';
+import { ReactComponent as StatusInvalid } from '@assets/icons/status-invalid.svg';
 
 interface Props {
   domain: string;
@@ -23,7 +23,7 @@ const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, wher
 
   return (
     <BorderBox
-      variant={where === 'register' ? 'linear' : 'none'}
+      variant={where === 'register' ? 'gradient' : 'none'}
       className={cx('flex items-center pl-24px bg-purple-dark-active', className, {
         'w-fit min-w-328px h-80px px-12px text-22px rounded-24px': where === 'register',
         'h-92px pr-12px text-22px rounded-24px': where === 'home',
@@ -39,6 +39,8 @@ const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, wher
     </BorderBox>
   );
 };
+
+export default Status;
 
 const statusMap = {
   [DomainStatus.Valid]: {
@@ -89,7 +91,7 @@ const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) 
         <>
           {status === DomainStatus.Valid && (
             <Link to={`/register/${domain}`} className="no-underline">
-              <Button size={where === 'header' ? 'small' : 'medium'}>注册</Button>
+              <Button size={where === 'header' ? 'small' : 'medium'} color="gradient">注册</Button>
             </Link>
           )}
           {status === DomainStatus.Registered && (
@@ -120,5 +122,3 @@ const ErrorBoundaryFallback: React.FC<FallbackProps & Pick<Props, 'where'>> = ({
     </>
   );
 };
-
-export default Status;
