@@ -48,7 +48,7 @@ export const accountState = atom<string | null | undefined>({
 });
 
 interface Account {
-  address: string | null | undefined;
+  address: Array<string | null | undefined>;
 }
 
 export const connect = async () => {
@@ -65,7 +65,7 @@ export const connect = async () => {
     .then((result) => {
       const account = result as Account;
       const { address } = account;
-      setRecoil(accountState, address);
+      setRecoil(accountState, address[0]);
     })
     .catch((err) => {
       console.error(err);
