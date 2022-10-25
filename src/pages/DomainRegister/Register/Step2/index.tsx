@@ -2,9 +2,13 @@ import React, { useEffect, useRef } from 'react';
 import WechatPayQrCode from '@assets/images/WechatPayQrCode.png';
 import timerNotifier from '@utils/timerNotifier';
 import { useRegisterDurationYears, type CommitLockTime } from '@service/domain/register';
+import { useRefreshDomainStatus } from '@service/domain/status';
 import { RegisterContainer } from '../index';
 
 const Step2: React.FC<{ domain: string; commitLockTime: CommitLockTime; }> = ({ domain, commitLockTime }) => {
+  const refreshDomainStatus = useRefreshDomainStatus(domain);
+  useEffect(refreshDomainStatus, []);
+
   const remainTimeDOM = useRef<HTMLDivElement>(null);
   const durationYears = useRegisterDurationYears(domain);
   
@@ -25,6 +29,8 @@ const Step2: React.FC<{ domain: string; commitLockTime: CommitLockTime; }> = ({ 
       timerNotifier.deleteUnit('commit-remainTime');
     };
   }, [commitLockTime]);
+
+
 
   return (
     <RegisterContainer title="第二步：支付" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
