@@ -5,7 +5,7 @@ import { Provider } from '@idealight-labs/anyweb-js-sdk';
 import { sendTransaction as send } from '@cfxjs/use-wallet-react/conflux/Fluent';
 
 export const provider = new Provider({
-  logger: null as unknown as undefined,
+  logger: console,
   appId: '527572b7-40ac-49bf-b689-5dd94b4dff41',
 });
 
