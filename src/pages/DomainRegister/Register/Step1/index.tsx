@@ -1,5 +1,6 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useTransition } from 'react';
 import Button from '@components/Button';
+import Spin from '@components/Spin';
 import { useMinCommitLockTime, useRegisterDurationYearsState, commitRegistration as _commitRegistration, usePayPrice } from '@service/domain/register';
 import { useAccountMethod } from '@service/account';
 import useInTranscation from '@hooks/useInTranscation';
@@ -10,6 +11,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
 
   const { durationYears, increase, decrease } = useRegisterDurationYearsState(domain);
   const { inTranscation, execTranscation: commitRegistration } = useInTranscation(_commitRegistration);
+  const [isPending, startTransition] = useTransition();
 
   return (
     <RegisterContainer title="第一步：申请注册" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
@@ -18,8 +20,9 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
           <p>总计花费</p>
 
           <p className="mt-4px">
+            {isPending ? <Spin className="leading-54px text-45px text-grey-normal font-bold" /> : null}
             <span className="leading-54px text-45px text-grey-normal font-bold">
-              <Suspense fallback={null}>
+              <Suspense>
                 <TotalPayPrice domain={domain} />
               </Suspense>
             </span>
@@ -32,7 +35,11 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
 
           <div className="mt-4px flex items-center justify-self-end">
             <button
-              onClick={decrease}
+              onClick={() =>
+                startTransition(() => {
+                  decrease();
+                })
+              }
               className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors"
             >
               <span className="i-fluent:subtract-12-filled text-16px font-bold" />
@@ -44,7 +51,11 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
               <span className="ml-4px">年</span>
             </p>
             <button
-              onClick={increase}
+              onClick={() =>
+                startTransition(() => {
+                  increase();
+                })
+              }
               className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors"
             >
               <span className="i-fluent:add-12-filled text-15px font-bold" />
@@ -70,11 +81,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
 const TotalPayPrice: React.FC<{ domain: string }> = ({ domain }) => {
   const payPrice = usePayPrice(domain);
 
-  return (
-    <>
-      {Math.round(+payPrice.toDecimalStandardUnit())}
-    </>
-  );
+  return <>{Math.round(+payPrice.toDecimalStandardUnit())}</>;
 };
 
 const MinCommitmentLockTime: React.FC = () => {
