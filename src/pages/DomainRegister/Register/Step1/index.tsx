@@ -19,19 +19,23 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
         <div>
           <p>总计花费</p>
 
-          <p className="mt-4px flex items-baseline">
-            <span className="leading-54px text-45px text-grey-normal font-bold">
-              <Suspense fallback={null}>
-                <TotalPayPrice domain={domain} />
-              </Suspense>
-            </span>
-            <span className="ml-4px">{payMethod === 'web3' ? 'CFX' : '￥'}</span>
+          <p className="mt-4px h-54px flex">
+            <Suspense fallback={null}>
+              {!isPending && (
+                <span className="flex items-baseline">
+                  <span className="leading-54px text-45px text-grey-normal font-bold">
+                    <TotalPayPrice domain={domain} />
+                  </span>
+                  <span className="ml-4px">{payMethod === 'web3' ? 'CFX' : '￥'}</span>
+                </span>
+              )}
+            </Suspense>
             <span
               style={{
                 transition: isPending ? 'opacity 0.3s 0.2s linear' : 'opacity 0s 0s linear',
                 opacity: isPending ? 1 : 0,
               }}
-              className="h-54px flex items-center"
+              className="h-full flex items-center"
             >
               <Spin className="text-40px" />
             </span>
@@ -88,12 +92,8 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
 
 const TotalPayPrice: React.FC<{ domain: string }> = ({ domain }) => {
   const payPrice = usePayPrice(domain);
-  
-  return (
-    <>
-      {Math.round(+payPrice?.toDecimalStandardUnit())}
-    </>
-  );
+
+  return <>{Math.round(+payPrice?.toDecimalStandardUnit())}</>;
 };
 
 const MinCommitmentLockTime: React.FC = () => {
