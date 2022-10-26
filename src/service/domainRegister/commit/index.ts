@@ -1,6 +1,5 @@
 export * from './MinMaxCommitLockTime';
 export * from './commitRegistration';
-import { useCallback } from 'react';
 import { atomFamily, useRecoilValue, useRecoilState, useRecoilValueLoadable } from 'recoil';
 import { setRecoil } from 'recoil-nexus';
 import LocalStorage from 'localstorage-enhance';
@@ -136,11 +135,9 @@ export const useCommitInfo = (domain: string) => {
   } as const;
 };
 
-
-
 export const registerDurationYears = atomFamily<number, string>({
   key: 'registerDurationYears',
-  effects: [persistAtomWithDefault(1)]
+  effects: [persistAtomWithDefault(1)],
 });
 
 const resetRegisterDurationYears = (domain: string) => setRecoil(registerDurationYears(domain), 1);
@@ -148,12 +145,12 @@ const resetRegisterDurationYears = (domain: string) => setRecoil(registerDuratio
 export const useRegisterDurationYears = (domain: string) => useRecoilValue(registerDurationYears(domain));
 export const useRegisterDurationYearsState = (domain: string) => {
   const [durationYears, setRegisterDurationYears] = useRecoilState(registerDurationYears(domain));
-  const increase = useCallback(() => setRegisterDurationYears((pre) => pre + 1), []);
-  const decrease = useCallback(() => setRegisterDurationYears((pre) => (pre - 1 >= 1 ? pre - 1 : 1)), []);
+  const increase = () => setRegisterDurationYears(durationYears + 1);
 
+  const decrease = () => setRegisterDurationYears(durationYears - 1 >= 1 ? durationYears - 1 : 1);
   return {
     durationYears,
     increase,
     decrease,
-  }
-}
+  };
+};
