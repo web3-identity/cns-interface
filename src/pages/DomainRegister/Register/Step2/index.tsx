@@ -1,13 +1,19 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef,Suspense } from 'react';
 import { RegisterContainer } from '../index';
 import WechatPayQrCode from '@assets/images/WechatPayQrCode.png';
 import timerNotifier from '@utils/timerNotifier';
 import { useCommitLockTime } from '@service/domain/register';
+import {useCommitHashLoadable} from '@service/domain/register'
+import {useMakeOrder} from '@service/order/post'
+import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
+
 
 const Step2: React.FC<{ domain: string; }> = ({ domain }) => {
   const remainTimeDOM = useRef<HTMLDivElement>(null);
   const commitLockTime = useCommitLockTime(domain);
-  
+  const hashLoadable = useCommitHashLoadable(domain);
+  const content=useMakeOrder(hashLoadable.contents,domain)
+  console.info('content',content)
   useEffect(() => {
     if (!commitLockTime || !remainTimeDOM) return;
     const timerUnit: Parameters<typeof timerNotifier.addUnit>[0] = {
@@ -67,5 +73,6 @@ const Step2: React.FC<{ domain: string; }> = ({ domain }) => {
     </RegisterContainer>
   );
 };
+
 
 export default Step2;
