@@ -5,6 +5,7 @@ import { Web3Controller, PublicResolver } from '@contracts/index';
 import { setCommitmentHash } from './';
 import {postCommitment} from '@utils/api'
 import {generateCommitmentParams} from '@utils/api/helper'
+import {yearsToSeconds} from '@utils/date'
 
 interface Params {
   domain: string;
@@ -13,7 +14,7 @@ interface Params {
 
 export const commitRegistration = async ({ domain, durationYears }: Params) => {
   try {
-    const durationSeconds = durationYears * 365 * 24 * 60 * 60;
+    const durationSeconds = yearsToSeconds(durationYears);
     const account = getAccount();
     const hexAccount = getHexAccount();
     const accountMethod = getAccountMethod();
