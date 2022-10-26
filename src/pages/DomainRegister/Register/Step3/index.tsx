@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from '@components/Button';
-import { RegisterContainer } from '../index';
+import { useRefreshDomainStatus } from '@service/domain/status';
 import { ReactComponent as SuccessIcon } from '@assets/icons/Success.svg';
+import { RegisterContainer } from '../index';
 
 const Step3: React.FC<{ domain: string }> = ({ domain }) => {
+  const refreshDomainStatus = useRefreshDomainStatus(domain);
+  useEffect(refreshDomainStatus, []);
+
   return (
     <RegisterContainer title="注册完成" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
       <div className="mt-54px flex-1 flex justify-center gap-56px">

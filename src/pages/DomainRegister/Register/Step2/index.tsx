@@ -1,19 +1,21 @@
-import React, { useEffect, useRef,Suspense } from 'react';
-import { RegisterContainer } from '../index';
+import React, { useEffect, useRef } from 'react';
 import WechatPayQrCode from '@assets/images/WechatPayQrCode.png';
 import timerNotifier from '@utils/timerNotifier';
-import { useCommitLockTime } from '@service/domain/register';
-import {useCommitHashLoadable} from '@service/domain/register'
+import { useRegisterDurationYears, type CommitLockTime,useCommitInfo } from '@service/domain/register';
+import { useRefreshDomainStatus } from '@service/domain/status';
 import {useMakeOrder} from '@service/order/post'
-import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
+import { RegisterContainer } from '../index';
 
 
-const Step2: React.FC<{ domain: string; }> = ({ domain }) => {
+const Step2: React.FC<{ domain: string; commitLockTime: CommitLockTime; }> = ({ domain, commitLockTime }) => {
+  const refreshDomainStatus = useRefreshDomainStatus(domain);
+  useEffect(refreshDomainStatus, []);
+  const {commitmentHash} = useCommitInfo(domain);
+  const content=useMakeOrder(commitmentHash,domain)
+  console.info(content)
   const remainTimeDOM = useRef<HTMLDivElement>(null);
-  const commitLockTime = useCommitLockTime(domain);
-  const hashLoadable = useCommitHashLoadable(domain);
-  const content=useMakeOrder(hashLoadable.contents,domain)
-  console.info('content',content)
+  const durationYears = useRegisterDurationYears(domain);
+  
   useEffect(() => {
     if (!commitLockTime || !remainTimeDOM) return;
     const timerUnit: Parameters<typeof timerNotifier.addUnit>[0] = {
@@ -32,6 +34,8 @@ const Step2: React.FC<{ domain: string; }> = ({ domain }) => {
     };
   }, [commitLockTime]);
 
+
+
   return (
     <RegisterContainer title="第二步：支付" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
       <div className='mt-24px flex-1 flex justify-between md:px-8%'>
@@ -43,7 +47,7 @@ const Step2: React.FC<{ domain: string; }> = ({ domain }) => {
 
           <p className='flex items-center'>
             注册时长
-            <span className='ml-32px text-28px text-grey-normal font-bold'>20</span>
+            <span className='ml-32px text-28px text-grey-normal font-bold'>{durationYears < 10 ? `0${durationYears}` : durationYears}</span>
             <span className='ml-4px mt-6px'>年</span>
           </p>
 
@@ -64,7 +68,7 @@ const Step2: React.FC<{ domain: string; }> = ({ domain }) => {
             </p>
             <p className='mt-2px'>
               请在
-              <span ref={remainTimeDOM} className='inline-block mx-4px min-w-68px text-center text-grey-normal'>14:59</span>
+              <span ref={remainTimeDOM} className='inline-block mx-4px min-w-68px text-center text-grey-normal'>09:30秒</span>
               内完成支付
             </p>
           </div>

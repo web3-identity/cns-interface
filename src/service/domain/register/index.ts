@@ -9,7 +9,7 @@ export enum RegisterStep {
   Success,
 }
 
-const registerStep = atomFamily({
+const registerStep = atomFamily<RegisterStep, string>({
   key: 'RegisterStep',
   effects: [persistAtomWithDefault(RegisterStep.WaitCommit)],
 });

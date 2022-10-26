@@ -1,9 +1,10 @@
 export * from './MinMaxCommitLockTime';
 export * from './commitRegistration';
-import { atomFamily, useRecoilValue, useRecoilValueLoadable } from 'recoil';
+import { useCallback } from 'react';
+import { atomFamily, useRecoilValue, useRecoilState, useRecoilValueLoadable } from 'recoil';
 import { setRecoil } from 'recoil-nexus';
 import LocalStorage from 'localstorage-enhance';
-import { persistAtom } from '@utils/recoilUtils';
+import { persistAtom, persistAtomWithDefault } from '@utils/recoilUtils';
 import { intervalFetchChain } from '@utils/fetchChain';
 import { Web3Controller } from '@contracts/index';
 import { getMinCommitLockTime, getMaxCommitLockTime } from './MinMaxCommitLockTime';
@@ -51,16 +52,23 @@ const commitmentHash = atomFamily<string | undefined, string>({
         waitCommitmentTimeConfirm(localCommitmentHash);
       }
       onSet(waitCommitmentTimeConfirm);
+
+      return clearCancel;
     },
   ],
 });
 
 export const setCommitmentHash = (domain: string, hash?: string) => setRecoil(commitmentHash(domain), hash);
 
+export type CommitLockTime = {
+  start: number;
+  end: number;
+} | null;
 
-const commitLockTime = atomFamily<{ start: number; end: number } | null, string>({
+const commitLockTime = atomFamily<CommitLockTime, string>({
   key: 'commitLockTime',
   effects: [
+    persistAtom,
     ({ onSet, node: { key } }) => {
       const regex = /\"(.+?)\"/g;
       const domain = regex.exec(key)?.[1];
@@ -89,10 +97,13 @@ const commitLockTime = atomFamily<{ start: number; end: number } | null, string>
           } else if (now > end) {
             setCommitmentHash(domain, undefined);
             setRigisterToStep(domain, RegisterStep.WaitCommit);
+            resetRegisterDurationYears(domain);
             clearTimer();
           }
         }, 250);
       });
+
+      return clearTimer;
     },
   ],
 });
@@ -108,14 +119,37 @@ const setCommitLockTime = (domain: string, commitTime: number) => {
   setRecoil(commitLockTime(domain), lockTime);
 };
 
-export const useCommitHashLoadable = (domain: string) => useRecoilValueLoadable(commitmentHash(domain));
-export const useCommitLockTime = (domain: string) => useRecoilValue(commitLockTime(domain));
-export const useCommitLockTimeLoadable = (domain: string) => useRecoilValueLoadable(commitLockTime(domain));
-
-export const useIsWaitCommitConfirm = (domain: string) => {
+export const useCommitInfo = (domain: string) => {
   const registerStep = useRegisterStep(domain);
-  const hashLoadable = useCommitHashLoadable(domain);
-  const lockLoadable = useCommitLockTimeLoadable(domain);
+  const hashLoadable = useRecoilValueLoadable(commitmentHash(domain));
+  const lockLoadable = useRecoilValueLoadable(commitLockTime(domain));
 
-  return registerStep === RegisterStep.WaitCommit && !!hashLoadable.contents && !!lockLoadable.contents;
+  return {
+    isWaitCommitConfirm: registerStep === RegisterStep.WaitCommit && !!hashLoadable.contents && !!lockLoadable.contents,
+    registerStep,
+    commitLockTime: lockLoadable.contents as CommitLockTime,
+    commitmentHash:hashLoadable.contents
+  } as const;
+};
+
+
+
+const registerDurationYears = atomFamily<number, string>({
+  key: 'registerDurationYears',
+  effects: [persistAtomWithDefault(1)]
+});
+
+const resetRegisterDurationYears = (domain: string) => setRecoil(registerDurationYears(domain), 1);
+
+export const useRegisterDurationYears = (domain: string) => useRecoilValue(registerDurationYears(domain));
+export const useRegisterDurationYearsState = (domain: string) => {
+  const [durationYears, setRegisterDurationYears] = useRecoilState(registerDurationYears(domain));
+  const increase = useCallback(() => setRegisterDurationYears((pre) => pre + 1), []);
+  const decrease = useCallback(() => setRegisterDurationYears((pre) => (pre - 1 >= 1 ? pre - 1 : 1)), []);
+
+  return {
+    durationYears,
+    increase,
+    decrease,
+  }
 }
