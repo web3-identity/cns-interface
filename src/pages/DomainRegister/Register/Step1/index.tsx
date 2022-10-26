@@ -21,7 +21,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
 
           <p className="mt-4px flex items-baseline">
             <span className="leading-54px text-45px text-grey-normal font-bold">
-              <Suspense>
+              <Suspense fallback={null}>
                 <TotalPayPrice domain={domain} />
               </Suspense>
             </span>
