@@ -1,13 +1,13 @@
 import React, { Suspense, useTransition } from 'react';
 import Button from '@components/Button';
 import Spin from '@components/Spin';
-import { useMinCommitLockTime, useRegisterDurationYearsState, commitRegistration as _commitRegistration, usePayPrice } from '@service/domain/register';
-import { useAccountMethod } from '@service/account';
+import { useMinCommitLockTime, useRegisterDurationYearsState, commitRegistration as _commitRegistration, usePayPrice } from '@service/domainRegister';
+import { usePayMethod } from '@service/payMethod';
 import useInTranscation from '@hooks/useInTranscation';
 import { RegisterContainer } from '../index';
 
 const Step1: React.FC<{ domain: string }> = ({ domain }) => {
-  const accountMethod = useAccountMethod();
+  const payMethod = usePayMethod();
 
   const { durationYears, increase, decrease } = useRegisterDurationYearsState(domain);
   const { inTranscation, execTranscation: commitRegistration } = useInTranscation(_commitRegistration);
@@ -19,16 +19,13 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
         <div>
           <p>总计花费</p>
 
-          <p className="mt-4px flex">
-            <Suspense fallback={null}>
-              {!isPending && (
-                <span className="flex items-baseline">
-                  <TotalPayPrice domain={domain} />
-                  <span className="ml-4px">{!accountMethod || accountMethod === 'fluent' ? 'CFX' : '￥'}</span>
-                </span>
-              )}
-            </Suspense>
-
+          <p className="mt-4px flex items-baseline">
+            <span className="leading-54px text-45px text-grey-normal font-bold">
+              <Suspense fallback={null}>
+                <TotalPayPrice domain={domain} />
+              </Suspense>
+            </span>
+            <span className="ml-4px">{payMethod === 'web3' ? 'CFX' : '￥'}</span>
             <span
               style={{
                 transition: isPending ? 'opacity 0.3s 0.2s linear' : 'opacity 0s 0s linear',
@@ -91,8 +88,12 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
 
 const TotalPayPrice: React.FC<{ domain: string }> = ({ domain }) => {
   const payPrice = usePayPrice(domain);
-
-  return <span className="leading-54px text-45px text-grey-normal font-bold">{Math.round(+payPrice.toDecimalStandardUnit())}</span>;
+  
+  return (
+    <>
+      {Math.round(+payPrice?.toDecimalStandardUnit())}
+    </>
+  );
 };
 
 const MinCommitmentLockTime: React.FC = () => {

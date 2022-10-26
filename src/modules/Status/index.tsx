@@ -6,7 +6,7 @@ import BorderBox from '@components/Box/BorderBox';
 import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
-import { useDomainStatus, useRefreshDomainStatus, DomainStatus } from '@service/domain/status';
+import { useDomainStatus, useRefreshDomainStatus, DomainStatus } from '@service/domainStatus';
 import { ReactComponent as StatusLocked } from '@assets/icons/status-locked.svg';
 import { ReactComponent as StatusRegistered } from '@assets/icons/status-registered.svg';
 import { ReactComponent as StatusReserved } from '@assets/icons/status-reserved.svg';

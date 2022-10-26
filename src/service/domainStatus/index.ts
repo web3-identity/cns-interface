@@ -1,5 +1,5 @@
 import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
-import { fetchChain } from '@utils/fetchChain';
+import { fetchChain } from '@utils/fetch';
 import { Web3Controller } from '@contracts/index';
 
 export enum DomainStatus {
