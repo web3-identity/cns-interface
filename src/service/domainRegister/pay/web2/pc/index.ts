@@ -1,13 +1,11 @@
 import { selectorFamily, useRecoilValue ,useRecoilRefresher_UNSTABLE} from 'recoil';
 import { fetchApi } from '@utils/fetch';
 
-const generateMakeOrderParams = (description: string, tradeProvider?: string, tradeType?: number, timeExpire?: number) => {
+const generateMakeOrderParams = (description: string, tradeProvider?: string, tradeType?: string) => {
   return {
     trade_provider: tradeProvider || 'wechat',
-    trade_type: tradeType || 1,
+    trade_type: tradeType || 'native',
     description: description,
-    time_expire: Math.floor((Date.now() + 60 * 60 * 24 * 1000) / 1000), //will be deleted at next version
-    amount: 1, //will be deleted at next version
   };
 };
 
