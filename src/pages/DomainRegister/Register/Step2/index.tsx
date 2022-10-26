@@ -1,14 +1,20 @@
 import React, { useEffect, useRef } from 'react';
-import WechatPayQrCode from '@assets/images/WechatPayQrCode.png';
+import QRCode from "react-qr-code";
 import timerNotifier from '@utils/timerNotifier';
-import { useRegisterDurationYears, type CommitLockTime } from '@service/domain/register';
+import { useRegisterDurationYears, type CommitLockTime,useCommitInfo } from '@service/domain/register';
 import { useRefreshDomainStatus } from '@service/domain/status';
+import {useMakeOrder} from '@service/order/post'
 import { RegisterContainer } from '../index';
+
+interface ResponseBody{
+  code_url?:string
+}
 
 const Step2: React.FC<{ domain: string; commitLockTime: CommitLockTime; }> = ({ domain, commitLockTime }) => {
   const refreshDomainStatus = useRefreshDomainStatus(domain);
   useEffect(refreshDomainStatus, []);
-
+  const {commitmentHash} = useCommitInfo(domain);
+  const content:ResponseBody=useMakeOrder(commitmentHash,domain)
   const remainTimeDOM = useRef<HTMLDivElement>(null);
   const durationYears = useRegisterDurationYears(domain);
   
@@ -55,7 +61,17 @@ const Step2: React.FC<{ domain: string; commitLockTime: CommitLockTime; }> = ({ 
         </div>
 
         <div className='flex flex-col w-288px rounded-12px bg-violet-normal-hover overflow-hidden'>
-          <img src={WechatPayQrCode} alt='wechat-pay' className='my-20px mx-auto w-100px h-100px' />
+          {/* <div className='my-20px mx-auto w-100px h-100px'>
+            <QRCode value={content?.code_url||''}/>
+          </div> */}
+          <div style={{ height: "auto", margin: "20px auto", maxWidth: 128, width: "100%" }}>
+            <QRCode
+            size={256}
+            style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+            value={content?.code_url||''}
+            viewBox={`0 0 256 256`}
+            />
+          </div>
           <div className='flex-1 flex flex-col justify-center items-center bg-#26233E leading-24px'>
             <p>
               请使用
@@ -73,5 +89,6 @@ const Step2: React.FC<{ domain: string; commitLockTime: CommitLockTime; }> = ({ 
     </RegisterContainer>
   );
 };
+
 
 export default Step2;

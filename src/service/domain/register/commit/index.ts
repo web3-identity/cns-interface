@@ -128,6 +128,7 @@ export const useCommitInfo = (domain: string) => {
     isWaitCommitConfirm: registerStep === RegisterStep.WaitCommit && !!hashLoadable.contents && !!lockLoadable.contents,
     registerStep,
     commitLockTime: lockLoadable.contents as CommitLockTime,
+    commitmentHash:hashLoadable.contents
   } as const;
 };
 

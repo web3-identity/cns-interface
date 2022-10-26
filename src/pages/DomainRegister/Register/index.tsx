@@ -1,4 +1,4 @@
-import React, { type HTMLAttributes } from 'react';
+import React, { type HTMLAttributes,Suspense } from 'react';
 import cx from 'clsx';
 import { RegisterStep, useCommitInfo } from '@service/domain/register';
 import Step1 from './Step1';
@@ -23,7 +23,7 @@ const Register: React.FC<{ domain: string }> = ({ domain }) => {
     if (isWaitCommitConfirm) return <WaitCommitConfirm domain={domain} />;
     else return <Step1 domain={domain} />;
   } else if (registerStep === RegisterStep.WaitPay) {
-    return <Step2 domain={domain} commitLockTime={commitLockTime} />;
+    return <Suspense fallback={'...'}><Step2 domain={domain} commitLockTime={commitLockTime} /></Suspense>;
   } else {
     return <Step3 domain={domain} />;
   }
