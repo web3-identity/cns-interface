@@ -133,7 +133,7 @@ export const useCommitInfo = (domain: string) => {
 
 
 
-const registerDurationYears = atomFamily<number, string>({
+export const registerDurationYears = atomFamily<number, string>({
   key: 'registerDurationYears',
   effects: [persistAtomWithDefault(1)]
 });

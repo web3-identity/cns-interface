@@ -2,6 +2,7 @@ import { atomFamily, useRecoilValue } from 'recoil';
 import { setRecoil } from 'recoil-nexus';
 import { persistAtomWithDefault } from '@utils/recoilUtils';
 export * from './commit';
+export * from './pay';
 
 export enum RegisterStep {
   WaitCommit = 0,
