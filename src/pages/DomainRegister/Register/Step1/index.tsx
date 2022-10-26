@@ -20,22 +20,20 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
         <div>
           <p>总计花费</p>
 
-          <p className="mt-4px h-54px flex">
-            <span className="flex items-baseline">
-              <span className="relative leading-54px text-45px text-grey-normal font-bold">
-                <Suspense fallback={<Delay>...</Delay>}>
-                  <TotalPayPrice domain={domain} />
-                  <span className="ml-4px text-14px text-grey-normal-hover text-opacity-50">{payMethod === 'web3' ? 'CFX' : '￥'}</span>
-                </Suspense>
-                {isPending && (
-                  <Delay mode="opacity">
-                    <div className="absolute top-0 left-0 w-full flex items-center h-54px bg-purple-dark-active">
-                      <Spin className="text-40px" />
-                    </div>
-                  </Delay>
-                )}
+          <p className="mt-4px h-54px flex items-baseline relative">
+            <Suspense fallback={<Delay>...</Delay>}>
+              <span className="mr-2px text-16px text-grey-normal-hover text-opacity-50">{payMethod === 'web3' ? 'CFX' : '￥'}</span>
+              <span className="leading-54px text-45px text-grey-normal font-bold">
+                <TotalPayPrice domain={domain} />
               </span>
-            </span>
+            </Suspense>
+            {isPending && (
+              <Delay mode="opacity">
+                <div className="absolute top-0 left-0 w-full flex items-center h-54px bg-purple-dark-active">
+                  <Spin className="text-40px" />
+                </div>
+              </Delay>
+            )}
           </p>
         </div>
 
