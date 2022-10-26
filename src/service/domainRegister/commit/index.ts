@@ -5,10 +5,10 @@ import { atomFamily, useRecoilValue, useRecoilState, useRecoilValueLoadable } fr
 import { setRecoil } from 'recoil-nexus';
 import LocalStorage from 'localstorage-enhance';
 import { persistAtom, persistAtomWithDefault } from '@utils/recoilUtils';
-import { intervalFetchChain } from '@utils/fetchChain';
+import { intervalFetchChain } from '@utils/fetch';
 import { Web3Controller } from '@contracts/index';
 import { getMinCommitLockTime, getMaxCommitLockTime } from './MinMaxCommitLockTime';
-import { useRegisterStep, setRigisterToStep, RegisterStep } from '../';
+import { useRegisterStep, setRigisterToStep, RegisterStep, setRegisterSecret } from '..';
 
 const commitmentHash = atomFamily<string | undefined, string>({
   key: 'commitmentHash',
@@ -96,6 +96,8 @@ const commitLockTime = atomFamily<CommitLockTime, string>({
             setRigisterToStep(domain, RegisterStep.WaitPay);
           } else if (now > end) {
             setCommitmentHash(domain, undefined);
+            setCommitLockTime(domain, undefined);
+            setRegisterSecret(domain, undefined);
             setRigisterToStep(domain, RegisterStep.WaitCommit);
             resetRegisterDurationYears(domain);
             clearTimer();
@@ -108,10 +110,13 @@ const commitLockTime = atomFamily<CommitLockTime, string>({
   ],
 });
 
-const setCommitLockTime = (domain: string, commitTime: number) => {
+const setCommitLockTime = (domain: string, commitTime?: number) => {
   const minCommitLockTime = getMinCommitLockTime();
   const maxCommitLockTime = getMaxCommitLockTime();
-  if (!commitTime || !minCommitLockTime || !maxCommitLockTime) return null;
+  if (!commitTime || !minCommitLockTime || !maxCommitLockTime) {
+    setRecoil(commitLockTime(domain), null);
+    return null;
+  }
   const lockTime = {
     start: commitTime + minCommitLockTime * 1000,
     end: commitTime + maxCommitLockTime * 1000,
@@ -125,10 +130,9 @@ export const useCommitInfo = (domain: string) => {
   const lockLoadable = useRecoilValueLoadable(commitLockTime(domain));
 
   return {
-    isWaitCommitConfirm: registerStep === RegisterStep.WaitCommit && !!hashLoadable.contents && !!lockLoadable.contents,
+    isWaitCommitConfirm: registerStep === RegisterStep.WaitCommit && (!!hashLoadable.contents || !!lockLoadable.contents),
     registerStep,
     commitLockTime: lockLoadable.contents as CommitLockTime,
-    commitmentHash:hashLoadable.contents
   } as const;
 };
 

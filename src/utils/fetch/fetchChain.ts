@@ -1,5 +1,5 @@
 import { isEqual } from 'lodash-es';
-import { isFunction, isPromise } from './is';
+import { isFunction, isPromise } from '../is';
 
 interface FetchParams {
   rpcUrl?: string;

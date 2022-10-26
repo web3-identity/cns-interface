@@ -1,7 +1,7 @@
 import { atom, useRecoilValue } from 'recoil';
 import { getRecoil } from 'recoil-nexus';
 import { persistAsynAtom } from '@utils/recoilUtils';
-import { fetchChain } from '@utils/fetchChain';
+import { fetchChain } from '@utils/fetch';
 import { Web3Controller } from '@contracts/index';
 
 const fetchCommitmentLockTime = (type: 'min' | 'max') => async () => {
@@ -9,9 +9,7 @@ const fetchCommitmentLockTime = (type: 'min' | 'max') => async () => {
     const response = await fetchChain({
       params: [{ data: Web3Controller.func.encodeFunctionData(`${type}CommitmentAge`), to: Web3Controller.address }, 'latest_state'],
     });
-    const NumRes = Number(response);
-    if (!isNaN(NumRes)) return NumRes;
-    throw new Error(`${type}CommitmentAge Response unvalid: ` + response);
+    return Number(response);
   } catch (err) {
     throw err;
   }

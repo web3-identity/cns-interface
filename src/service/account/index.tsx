@@ -4,6 +4,7 @@ import { persistAtom } from '@utils/recoilUtils';
 import { convertCfxToHex, convertHexToCfx, validateCfxAddress, validateHexAddress } from '@utils/addressUtils';
 import { accountState as fluentAccountState, connect as connectFluent, sendTransaction as sendTransactionWithFluent } from './fluent';
 import { accountState as anywebAccountState, connect as connectAnyweb, sendTransaction as sendTransactionWithAnyweb} from './anyweb';
+import isProduction from '@utils/isProduction';
 
 const methodsMap = {
   fluent: {
@@ -35,7 +36,7 @@ export const accountState = selector({
     const account = get(accountState);
     if (!account) return account;
     if (validateHexAddress(account)) {
-      return convertHexToCfx(account, import.meta.env.MODE === 'production' ? '1029' : '1');
+      return convertHexToCfx(account, isProduction ? '1029' : '1');
     }
     return account;
   },

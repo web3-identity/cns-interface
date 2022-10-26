@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev:web2": "vite --mode web2-dev --host",
+    "dev:web3": "vite --mode web3-dev --host",
+    "build:web2": "vite build --mode web2-prod",
+    "build:web3": "vite build --mode web3-prod"
   },
   "dependencies": {
     "@cfxjs/use-wallet-react": "0.0.1-33",
