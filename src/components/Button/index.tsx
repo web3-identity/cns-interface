@@ -58,7 +58,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<Props>>(
         )}
         {!children && icon && <span className="button__icon">{renderReactNode(icon)}</span>}
         {endIcon && <span className="button__icon">{renderReactNode(endIcon)}</span>}
-        {loading === true && <Spin className="button__loading" />}
+        {loading === true && <Spin className="button__loading" theme="light" />}
       </>
     );
   }
