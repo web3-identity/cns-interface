@@ -20,7 +20,7 @@ const methodsMap = {
 
 type Methods = keyof typeof methodsMap;
 
-const accountMethodFilter = atom<Methods | null>({
+export const accountMethodFilter = atom<Methods | null>({
   key: 'accountFilter',
   default: null,
   effects: [persistAtom],
@@ -73,3 +73,4 @@ export const sendTransaction = async (params: Parameters<typeof sendTransactionW
 
 export const disconnect = () => setRecoil(accountMethodFilter, null);
 export const useAccount = () => useRecoilValue(accountState);
+export const useAccountMethod = () => useRecoilValue(accountMethodFilter);

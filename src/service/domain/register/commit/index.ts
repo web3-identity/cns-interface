@@ -1,9 +1,10 @@
 export * from './MinMaxCommitLockTime';
 export * from './commitRegistration';
-import { atomFamily, useRecoilValue, useRecoilValueLoadable } from 'recoil';
+import { useCallback } from 'react';
+import { atomFamily, useRecoilValue, useRecoilState, useRecoilValueLoadable } from 'recoil';
 import { setRecoil } from 'recoil-nexus';
 import LocalStorage from 'localstorage-enhance';
-import { persistAtom } from '@utils/recoilUtils';
+import { persistAtom, persistAtomWithDefault } from '@utils/recoilUtils';
 import { intervalFetchChain } from '@utils/fetchChain';
 import { Web3Controller } from '@contracts/index';
 import { getMinCommitLockTime, getMaxCommitLockTime } from './MinMaxCommitLockTime';
@@ -67,6 +68,7 @@ export type CommitLockTime = {
 const commitLockTime = atomFamily<CommitLockTime, string>({
   key: 'commitLockTime',
   effects: [
+    persistAtom,
     ({ onSet, node: { key } }) => {
       const regex = /\"(.+?)\"/g;
       const domain = regex.exec(key)?.[1];
@@ -95,6 +97,7 @@ const commitLockTime = atomFamily<CommitLockTime, string>({
           } else if (now > end) {
             setCommitmentHash(domain, undefined);
             setRigisterToStep(domain, RegisterStep.WaitCommit);
+            resetRegisterDurationYears(domain);
             clearTimer();
           }
         }, 250);
@@ -125,5 +128,28 @@ export const useCommitInfo = (domain: string) => {
     isWaitCommitConfirm: registerStep === RegisterStep.WaitCommit && !!hashLoadable.contents && !!lockLoadable.contents,
     registerStep,
     commitLockTime: lockLoadable.contents as CommitLockTime,
+    commitmentHash:hashLoadable.contents
   } as const;
 };
+
+
+
+export const registerDurationYears = atomFamily<number, string>({
+  key: 'registerDurationYears',
+  effects: [persistAtomWithDefault(1)]
+});
+
+const resetRegisterDurationYears = (domain: string) => setRecoil(registerDurationYears(domain), 1);
+
+export const useRegisterDurationYears = (domain: string) => useRecoilValue(registerDurationYears(domain));
+export const useRegisterDurationYearsState = (domain: string) => {
+  const [durationYears, setRegisterDurationYears] = useRecoilState(registerDurationYears(domain));
+  const increase = useCallback(() => setRegisterDurationYears((pre) => pre + 1), []);
+  const decrease = useCallback(() => setRegisterDurationYears((pre) => (pre - 1 >= 1 ? pre - 1 : 1)), []);
+
+  return {
+    durationYears,
+    increase,
+    decrease,
+  }
+}

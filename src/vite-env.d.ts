@@ -13,6 +13,7 @@ interface ImportMetaEnv {
   readonly VITE_STABLE_ORACLE: string;
   readonly VITE_WEB3_CONTROLLER: string;
   readonly VITE_PUBLIC_RESOLVER: string;
+  readonly VITE_ApiUrl: string;
 }
 
 interface ImportMeta {
