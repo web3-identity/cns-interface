@@ -19,14 +19,21 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
         <div>
           <p>总计花费</p>
 
-          <p className="mt-4px">
-            {isPending ? <Spin className="leading-54px text-45px text-grey-normal font-bold" /> : null}
+          <p className="mt-4px flex items-baseline">
             <span className="leading-54px text-45px text-grey-normal font-bold">
               <Suspense>
                 <TotalPayPrice domain={domain} />
               </Suspense>
             </span>
             <span className="ml-4px">{!accountMethod || accountMethod === 'fluent' ? 'CFX' : '￥'}</span>
+            <span
+              style={{
+                transition: isPending ? 'opacity 0.3s 0.2s linear' : 'opacity 0s 0s linear',
+                opacity: isPending ? 1 : 0,
+              }}
+            >
+              <Spin className="leading-54px text-45px text-grey-normal font-bold" />
+            </span>
           </p>
         </div>
 
