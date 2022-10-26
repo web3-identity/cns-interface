@@ -1,4 +1,5 @@
 import React, { Suspense, useTransition } from 'react';
+import Delay from '@components/Delay';
 import Button from '@components/Button';
 import Spin from '@components/Spin';
 import { useMinCommitLockTime, useRegisterDurationYearsState, commitRegistration as _commitRegistration, usePayPrice } from '@service/domainRegister';
@@ -19,21 +20,21 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
         <div>
           <p>总计花费</p>
 
-          <p className="mt-4px h-54px flex relative items-baseline">
-            <span className="leading-54px text-45px text-grey-normal font-bold">
-              <Suspense fallback={null}>
-                <TotalPayPrice domain={domain} />
-              </Suspense>
-            </span>
-            <span className="ml-4px">{payMethod === 'web3' ? 'CFX' : '￥'}</span>
-            <span
-              style={{
-                transition: isPending ? 'opacity 0.3s 0.2s linear' : 'opacity 0s 0s linear',
-                opacity: isPending ? 1 : 0,
-              }}
-              className="h-full w-full flex items-center absolute bg-purple-dark-active"
-            >
-              <Spin className="text-40px" />
+          <p className="mt-4px h-54px flex">
+            <span className="flex items-baseline">
+              <span className="relative leading-54px text-45px text-grey-normal font-bold">
+                <Suspense fallback={<Delay>...</Delay>}>
+                  <TotalPayPrice domain={domain} />
+                  <span className="ml-4px text-14px text-grey-normal-hover text-opacity-50">{payMethod === 'web3' ? 'CFX' : '￥'}</span>
+                </Suspense>
+                {isPending && (
+                  <Delay mode="opacity">
+                    <div className="absolute top-0 left-0 w-full flex items-center h-54px bg-purple-dark-active">
+                      <Spin className="text-40px" />
+                    </div>
+                  </Delay>
+                )}
+              </span>
             </span>
           </p>
         </div>
@@ -43,11 +44,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
 
           <div className="mt-4px flex items-center justify-self-end">
             <button
-              onClick={() =>
-                startTransition(() => {
-                  decrease();
-                })
-              }
+              onClick={() => startTransition(decrease)}
               className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors"
             >
               <span className="i-fluent:subtract-12-filled text-16px font-bold" />
@@ -59,11 +56,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
               <span className="ml-4px">年</span>
             </p>
             <button
-              onClick={() =>
-                startTransition(() => {
-                  increase();
-                })
-              }
+              onClick={() => startTransition(increase)}
               className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors"
             >
               <span className="i-fluent:add-12-filled text-15px font-bold" />
