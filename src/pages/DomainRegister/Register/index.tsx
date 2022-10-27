@@ -1,7 +1,7 @@
 import React, { useEffect, Suspense, type HTMLAttributes } from 'react';
 import cx from 'clsx';
-import { useRefreshDomainStatus } from '@service/domainStatus';
-import { RegisterStep, useCommitInfo } from '@service/domainRegister';
+import { useRefreshDomainStatus } from '@service/domainInfo';
+import { RegisterStep, useRegisterStep, useCommitInfo, useMonitorDomainState } from '@service/domainRegister';
 import Step1 from './Step1';
 import WaitCommitConfirm from './WaitCommitConfirm';
 import Step2 from './Step2';
@@ -18,19 +18,17 @@ export const RegisterContainer: React.FC<HTMLAttributes<HTMLDivElement> & { titl
 };
 
 const Register: React.FC<{ domain: string }> = ({ domain }) => {
-  const { registerStep, isWaitCommitConfirm, commitLockTime } = useCommitInfo(domain);
+  const registerStep = useRegisterStep(domain);
+  const commitInfo = useCommitInfo(domain);
   const refreshDomainStatus = useRefreshDomainStatus(domain);
   useEffect(refreshDomainStatus, [registerStep]);
+  useMonitorDomainState(domain);
 
   if (registerStep === RegisterStep.WaitCommit) {
-    if (isWaitCommitConfirm) return <WaitCommitConfirm domain={domain} />;
+    if (commitInfo) return <WaitCommitConfirm domain={domain} />;
     else return <Step1 domain={domain} />;
   } else if (registerStep === RegisterStep.WaitPay) {
-    return (
-      <Suspense fallback={'...'}>
-        <Step2 domain={domain} commitLockTime={commitLockTime} />
-      </Suspense>
-    );
+    return <Step2 domain={domain} commitInfo={commitInfo} />;
   } else {
     return <Step3 domain={domain} />;
   }

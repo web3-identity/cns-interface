@@ -6,7 +6,7 @@ import BorderBox from '@components/Box/BorderBox';
 import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
-import { useDomainStatus, useRefreshDomainStatus, DomainStatus } from '@service/domainStatus';
+import { useDomainStatus, useRefreshDomainStatus, DomainStatus } from '@service/domainInfo';
 import { ReactComponent as StatusLocked } from '@assets/icons/status-locked.svg';
 import { ReactComponent as StatusRegistered } from '@assets/icons/status-registered.svg';
 import { ReactComponent as StatusReserved } from '@assets/icons/status-reserved.svg';
@@ -95,7 +95,7 @@ const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) 
             </Link>
           )}
           {status === DomainStatus.Registered && (
-            <Link to={`/setting/${domain}`} className="no-underline">
+            <Link to={`/register/${domain}`} className="no-underline">
               <Button size={where === 'header' ? 'small' : 'medium'}>查看</Button>
             </Link>
           )}

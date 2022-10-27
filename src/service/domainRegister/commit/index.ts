@@ -1,156 +1,68 @@
 export * from './MinMaxCommitLockTime';
 export * from './commitRegistration';
-import { atomFamily, useRecoilValue, useRecoilState, useRecoilValueLoadable } from 'recoil';
-import { setRecoil } from 'recoil-nexus';
-import LocalStorage from 'localstorage-enhance';
-import { persistAtom, persistAtomWithDefault } from '@utils/recoilUtils';
-import { intervalFetchChain } from '@utils/fetch';
-import { Web3Controller } from '@contracts/index';
+import { atomFamily, useRecoilValue } from 'recoil';
+import { setRecoil, getRecoil } from 'recoil-nexus';
+import { persistAtomWithNamespace } from '@utils/recoilUtils';
 import { getMinCommitLockTime, getMaxCommitLockTime } from './MinMaxCommitLockTime';
-import { useRegisterStep, setRigisterToStep, RegisterStep, setRegisterSecret } from '..';
+import JobSchedule from '@utils/JobSchedule';
+import { setRigisterToStep, RegisterStep } from '..';
 
-const commitmentHash = atomFamily<string | undefined, string>({
-  key: 'commitmentHash',
-  effects: [
-    persistAtom,
-    ({ onSet, trigger, node: { key } }) => {
-      let cancel: VoidFunction | null = null;
-      const clearCancel = () => {
-        if (cancel) {
-          cancel();
-          cancel = null;
-        }
-      };
+export type CommitInfo = {
+  validTime: {
+    start: number;
+    end: number;
+  };
+  secret: string;
+  durationYears: number;
+};
 
-      const waitCommitmentTimeConfirm = (commitmentHash?: string) => {
-        clearCancel();
-        if (!commitmentHash) return;
-        cancel = intervalFetchChain(
-          {
-            params: [{ data: Web3Controller.func.encodeFunctionData('commitments', [commitmentHash]), to: Web3Controller.address }, 'latest_state'],
-          },
-          {
-            intervalTime: 1000,
-            callback: (_res) => {
-              const res = Number(_res);
-              if (res) {
-                clearCancel();
-                const regex = /\"(.+?)\"/g;
-                const domain = regex.exec(key)?.[1];
-                if (domain) {
-                  setCommitLockTime(domain, res * 1000);
-                }
-              }
-            },
-          }
-        );
-      };
-
-      if (trigger === 'get') {
-        const localCommitmentHash = LocalStorage.getItem(key) as string;
-        waitCommitmentTimeConfirm(localCommitmentHash);
-      }
-      onSet(waitCommitmentTimeConfirm);
-
-      return clearCancel;
-    },
-  ],
+(() => {
+  try {
+    const _storageData = localStorage.getItem('localStorage_enhance');
+    if (!_storageData) return;
+    const storageData = JSON.parse(_storageData);
+    if (!Array.isArray(storageData)) return;
+    const allCommitInfo = storageData.filter((data: [string, any]) => data?.[0]?.startsWith('CommitInfo'));
+    console.log(allCommitInfo);
+  } catch(err) {
+    console.log('Init CommitInfo schudle', err);
+  }
+})();
+export const commitInfoState = atomFamily<CommitInfo | null, string>({
+  key: 'CommitInfo',
+  effects: [persistAtomWithNamespace('CommitInfo')],
 });
 
-export const setCommitmentHash = (domain: string, hash?: string) => setRecoil(commitmentHash(domain), hash);
-
-export type CommitLockTime = {
-  start: number;
-  end: number;
-} | null;
-
-const commitLockTime = atomFamily<CommitLockTime, string>({
-  key: 'commitLockTime',
-  effects: [
-    persistAtom,
-    ({ onSet, node: { key } }) => {
-      const regex = /\"(.+?)\"/g;
-      const domain = regex.exec(key)?.[1];
-
-      let timer: ReturnType<typeof setInterval> | null = null;
-      const clearTimer = () => {
-        if (timer) {
-          clearInterval(timer);
-          timer = null;
-        }
-      };
-
-      onSet((lockTime) => {
-        clearTimer();
-        if (!domain) return;
-        if (!lockTime) {
-          setRigisterToStep(domain, RegisterStep.WaitCommit);
-          return;
-        }
-
-        const { start, end } = lockTime;
-        timer = setInterval(() => {
-          const now = Date.now();
-          if (now >= start && now <= end) {
-            setRigisterToStep(domain, RegisterStep.WaitPay);
-          } else if (now > end) {
-            setCommitmentHash(domain, undefined);
-            setCommitLockTime(domain, undefined);
-            setRegisterSecret(domain, undefined);
-            setRigisterToStep(domain, RegisterStep.WaitCommit);
-            resetRegisterDurationYears(domain);
-            clearTimer();
-          }
-        }, 250);
-      });
-
-      return clearTimer;
-    },
-  ],
-});
-
-const setCommitLockTime = (domain: string, commitTime?: number) => {
+export const setCommitInfo = (domain: string, commitInfo: { commitTime: number; secret: string; durationYears: number }) => {
   const minCommitLockTime = getMinCommitLockTime();
   const maxCommitLockTime = getMaxCommitLockTime();
-  if (!commitTime || !minCommitLockTime || !maxCommitLockTime) {
-    setRecoil(commitLockTime(domain), null);
+  if (!commitInfo || !minCommitLockTime || !maxCommitLockTime) {
+    setRecoil(commitInfoState(domain), null);
     return null;
   }
-  const lockTime = {
-    start: commitTime + minCommitLockTime * 1000,
-    end: commitTime + maxCommitLockTime * 1000,
+
+  const validTime = {
+    start: commitInfo.commitTime + minCommitLockTime * 1000,
+    end: commitInfo.commitTime + maxCommitLockTime * 1000,
   };
-  setRecoil(commitLockTime(domain), lockTime);
+
+  setRecoil(commitInfoState(domain), {
+    validTime,
+    secret: commitInfo.secret,
+    durationYears: commitInfo.durationYears,
+  });
+
+  JobSchedule.addJob({
+    triggerTime: [validTime.start, validTime.end],
+    callback: [() => {
+      setRigisterToStep(domain, RegisterStep.WaitPay);
+    }, () => {
+      setRigisterToStep(domain, RegisterStep.WaitCommit)
+      setRecoil(commitInfoState(domain), null);
+    }]
+  });
 };
 
-export const useCommitInfo = (domain: string) => {
-  const registerStep = useRegisterStep(domain);
-  const hashLoadable = useRecoilValueLoadable(commitmentHash(domain));
-  const lockLoadable = useRecoilValueLoadable(commitLockTime(domain));
 
-  return {
-    isWaitCommitConfirm: registerStep === RegisterStep.WaitCommit && (!!hashLoadable.contents || !!lockLoadable.contents),
-    registerStep,
-    commitLockTime: lockLoadable.contents as CommitLockTime,
-  } as const;
-};
-
-export const registerDurationYears = atomFamily<number, string>({
-  key: 'registerDurationYears',
-  effects: [persistAtomWithDefault(1)],
-});
-
-const resetRegisterDurationYears = (domain: string) => setRecoil(registerDurationYears(domain), 1);
-
-export const useRegisterDurationYears = (domain: string) => useRecoilValue(registerDurationYears(domain));
-export const useRegisterDurationYearsState = (domain: string) => {
-  const [durationYears, setRegisterDurationYears] = useRecoilState(registerDurationYears(domain));
-  const increase = () => setRegisterDurationYears(durationYears + 1);
-
-  const decrease = () => setRegisterDurationYears(durationYears - 1 >= 1 ? durationYears - 1 : 1);
-  return {
-    durationYears,
-    increase,
-    decrease,
-  };
-};
+export const useCommitInfo = (domain: string) => useRecoilValue(commitInfoState(domain));
+export const getCommitInfo = (domain: string) => getRecoil(commitInfoState(domain))!;

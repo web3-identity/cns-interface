@@ -5,7 +5,6 @@ import { fetchChain } from '@utils/fetch';
 import { Web3Controller } from '@contracts/index';
 import { payMethodState } from '@service/payMethod';
 import { yearsToSeconds } from '@utils/date';
-import { registerDurationYears } from '../commit';
 
 const payPrice = selectorFamily<Unit, string>({
   key: 'payPrice',
@@ -13,13 +12,12 @@ const payPrice = selectorFamily<Unit, string>({
     (domain: string) =>
     async ({ get }) => {
       const payMethod = get(payMethodState);
-      const durationYears = get(registerDurationYears(domain));
 
       try {
         const encodeData: string = await fetchChain({
           params: [
             {
-              data: Web3Controller.func.encodeFunctionData(payMethod === 'web3' ? 'rentPrice' : 'rentPriceInFiat', [domain, yearsToSeconds(durationYears)]),
+              data: Web3Controller.func.encodeFunctionData(payMethod === 'web3' ? 'rentPrice' : 'rentPriceInFiat', [domain, yearsToSeconds(3)]),
               to: Web3Controller.address,
             },
             'latest_state',

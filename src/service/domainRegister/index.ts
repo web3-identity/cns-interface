@@ -1,6 +1,9 @@
+import { useEffect } from 'react';
 import { atomFamily, useRecoilValue } from 'recoil';
-import { getRecoil, setRecoil } from 'recoil-nexus';
-import { persistAtom, persistAtomWithDefault } from '@utils/recoilUtils';
+import { setRecoil } from 'recoil-nexus';
+import { persistAtomWithDefault } from '@utils/recoilUtils';
+import { fetchDomainOwner } from '@service/domainInfo';
+import waitAsyncResult from '@utils/waitAsyncResult';
 export * from './commit';
 export * from './pay';
 
@@ -21,12 +24,21 @@ export const setRigisterToStep = (domain: string, step: RegisterStep) => {
 
 export const useRegisterStep = (domain: string) => useRecoilValue(registerStep(domain));
 
+export const useMonitorDomainState = (domain: string) => {
+  useEffect(() => {
+    let stop: VoidFunction;
+    const startFetch = async () => {
+      const [ownerPromise, _stop] = waitAsyncResult(() => fetchDomainOwner(domain))
+      stop = _stop
+      const owner = await ownerPromise;
+    }
 
+    startFetch();
 
-const registerSecret = atomFamily<string | undefined, string>({
-  key: 'registerSecret',
-  effects: [persistAtom],
-});
+    return () => { stop?.(); };
+  }, [domain]);
 
-export const setRegisterSecret = (domain: string, secret?: string) => setRecoil(registerSecret(domain), secret);
-export const getRegisterSecret = (domain: string) => getRecoil(registerSecret(domain));
+  useEffect(() => {
+
+  }, []);
+}

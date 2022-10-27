@@ -2,18 +2,19 @@ import React, { useEffect, useRef } from 'react';
 import QRCode from 'react-qr-code';
 import Button from '@components/Button';
 import timerNotifier from '@utils/timerNotifier';
-import { useRegisterDurationYears, web3Pay, type CommitLockTime} from '@service/domainRegister';
+import { web3Pay, type CommitInfo } from '@service/domainRegister';
 import { usePayMethod } from '@service/payMethod';
 import { ReactComponent as FluentIcon } from '@assets/icons/fluent.svg';
 import { RegisterContainer } from '../index';
+import PayPrice from '../PayPrice';
 
-const Step2: React.FC<{ domain: string; commitLockTime: CommitLockTime }> = ({ domain, commitLockTime }) => {
+const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ domain, commitInfo }) => {
   const payMethod = usePayMethod();
   const remainTimeDOM = useRef<HTMLDivElement>(null);
-  const durationYears = useRegisterDurationYears(domain);
+  const { durationYears, validTime } = commitInfo || {};
 
   useEffect(() => {
-    if (!commitLockTime || !remainTimeDOM) return;
+    if (!validTime?.end || !remainTimeDOM) return;
     const timerUnit: Parameters<typeof timerNotifier.addUnit>[0] = {
       key: 'commit-remainTime',
       type: 'second',
@@ -21,35 +22,35 @@ const Step2: React.FC<{ domain: string; commitLockTime: CommitLockTime }> = ({ d
         if (!remainTimeDOM.current) return;
         remainTimeDOM.current.innerText = `${remainTime.minutes}分:${remainTime.seconds}秒`;
       },
-      endDate: new Date(commitLockTime.end),
+      endDate: new Date(validTime.end),
     };
     timerNotifier.addUnit(timerUnit);
 
     return () => {
       timerNotifier.deleteUnit('commit-remainTime');
     };
-  }, [commitLockTime]);
+  }, [validTime?.end]);
 
+  if (!commitInfo) return null;
   return (
     <RegisterContainer title="第二步：支付" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
       <div className="mt-24px flex-1 flex justify-between md:px-8%">
         <div className="pt-16px flex flex-col gap-24px">
-          <p className="flex items-center">
+          <div className="flex items-baseline">
             注册域名
             <span className="ml-32px text-28px text-grey-normal font-bold">{domain}.web3</span>
-          </p>
+          </div>
 
-          <p className="flex items-center">
+          <div className="flex items-baseline">
             注册时长
             <span className="ml-32px text-28px text-grey-normal font-bold">{durationYears < 10 ? `0${durationYears}` : durationYears}</span>
             <span className="ml-4px mt-6px">年</span>
-          </p>
+          </div>
 
-          <p className="flex items-center">
+          <div className="flex items-baseline">
             总计花费
-            <span className="ml-32px text-28px text-grey-normal font-bold">639.00</span>
-            <span className="ml-4px mt-6px">￥</span>
-          </p>
+            <PayPrice className="ml-32px text-28px" domain={domain} />
+          </div>
         </div>
 
         <div className="flex flex-col w-288px rounded-12px bg-violet-normal-hover overflow-hidden">

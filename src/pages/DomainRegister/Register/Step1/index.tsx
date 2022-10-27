@@ -1,18 +1,24 @@
 import React, { Suspense, useTransition } from 'react';
-import Delay from '@components/Delay';
+import { atomFamily, useRecoilState } from 'recoil';
+import { persistAtomWithDefault } from '@utils/recoilUtils';
 import Button from '@components/Button';
-import Spin from '@components/Spin';
-import { useMinCommitLockTime, useRegisterDurationYearsState, commitRegistration as _commitRegistration, usePayPrice } from '@service/domainRegister';
-import { usePayMethod } from '@service/payMethod';
+import { useMinCommitLockTime, commitRegistration as _commitRegistration } from '@service/domainRegister';
 import useInTranscation from '@hooks/useInTranscation';
 import { RegisterContainer } from '../index';
+import PayPrice from '../PayPrice';
+
+const registerDurationYears = atomFamily<number, string>({
+  key: 'registerDurationYears',
+  effects: [persistAtomWithDefault(1)],
+});
 
 const Step1: React.FC<{ domain: string }> = ({ domain }) => {
-  const payMethod = usePayMethod();
-
-  const { durationYears, increase, decrease } = useRegisterDurationYearsState(domain);
-  const { inTranscation, execTranscation: commitRegistration } = useInTranscation(_commitRegistration);
+  const [durationYears, setRegisterDurationYears] = useRecoilState(registerDurationYears(domain));
+  const increase = () => setRegisterDurationYears(durationYears + 1);
+  const decrease = () => setRegisterDurationYears(durationYears - 1 >= 1 ? durationYears - 1 : 1);
   const [isPending, startTransition] = useTransition();
+
+  const { inTranscation, execTranscation: commitRegistration } = useInTranscation(_commitRegistration);
 
   return (
     <RegisterContainer title="第一步：申请注册" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
@@ -20,21 +26,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
         <div>
           <p>总计花费</p>
 
-          <p className="mt-4px h-54px flex items-baseline relative">
-            <Suspense fallback={<Delay>...</Delay>}>
-              <span className="mr-2px text-16px text-grey-normal-hover text-opacity-50">{payMethod === 'web3' ? 'CFX' : '￥'}</span>
-              <span className="leading-54px text-45px text-grey-normal font-bold">
-                <TotalPayPrice domain={domain} />
-              </span>
-            </Suspense>
-            {isPending && (
-              <Delay mode="opacity">
-                <div className="absolute top-0 left-0 w-full flex items-center h-54px bg-purple-dark-active">
-                  <Spin className="text-40px" />
-                </div>
-              </Delay>
-            )}
-          </p>
+          <PayPrice className="mt-4px h-54px leading-54px text-45px" domain={domain} isPending={isPending} />
         </div>
 
         <div>
@@ -75,12 +67,6 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
       </p>
     </RegisterContainer>
   );
-};
-
-const TotalPayPrice: React.FC<{ domain: string }> = ({ domain }) => {
-  const payPrice = usePayPrice(domain);
-
-  return <>{Math.round(+payPrice?.toDecimalStandardUnit())}</>;
 };
 
 const MinCommitmentLockTime: React.FC = () => {

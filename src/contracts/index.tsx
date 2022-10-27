@@ -1,5 +1,5 @@
 import { Contract, providers, type ContractInterface } from 'ethers';
-import { Web3RegistrarController as Web3ControllerABI, PublicResolver as PublicResolverABI } from '@web3identity/cns-contracts';
+import { Web3RegistrarController as Web3ControllerABI, PublicResolver as PublicResolverABI, NameWrapper as NameWrapperABI } from '@web3identity/cns-contracts';
 import { convertCfxToHex } from '@utils/addressUtils';
 import isProduction from '@utils/isProduction';
 export const HttpProvider = new providers.JsonRpcProvider(import.meta.env.VITE_CoreSpaceRpcUrl);
@@ -21,4 +21,9 @@ export const Web3Controller = createContract(
 export const PublicResolver = createContract(
   isProduction ? 'cfxtest:acecxexm0pg268m44jncw5bmagwwmun53jj9msmadj' : 'cfxtest:acecxexm0pg268m44jncw5bmagwwmun53jj9msmadj',
   PublicResolverABI
+);
+
+export const NameWrapper = createContract(
+  isProduction ? 'cfxtest:acdc4xzy0pg1dzrbajgmv8nw3cjyj6ezn2dzncc4w5' : 'cfxtest:acdc4xzy0pg1dzrbajgmv8nw3cjyj6ezn2dzncc4w5',
+  NameWrapperABI
 );
