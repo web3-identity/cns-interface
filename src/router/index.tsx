@@ -6,6 +6,7 @@ import Navbar from '@modules/Navbar';
 import HomePage from '@pages/Home';
 import DomainRegister from '@pages/DomainRegister';
 import DomainSetting from '@pages/DomainSetting';
+import MyDomains from '@pages/MyDomains';
 
 const AppRouter: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const AppRouter: React.FC = () => {
             <Route index element={<HomePage />} />
             <Route path="setting/:domain" element={<DomainSetting />} />
             <Route path="register/:domain" element={<DomainRegister />} />
+            <Route path="my-domains" element={<MyDomains />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </CustomScrollbar>
