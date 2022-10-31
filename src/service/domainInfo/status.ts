@@ -1,7 +1,6 @@
 import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
 import { fetchChain } from '@utils/fetch';
 import { Web3Controller } from '@contracts/index';
-import { waitSeconds } from '@utils/waitAsyncResult';
 
 export enum DomainStatus {
   Valid = 0,

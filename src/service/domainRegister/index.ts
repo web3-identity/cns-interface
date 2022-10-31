@@ -33,23 +33,27 @@ export const useMonitorDomainState = (domain: string) => {
   useEffect(() => {
     let stop: VoidFunction;
     const startFetch = async () => {
-      const [ownerPromise, _stop] = waitAsyncResult(() => fetchDomainOwner(domain))
-      stop = _stop
-      const owner = await ownerPromise;
-      clearCommitInfo(domain);
-      if (getAccount() === owner) {
-        setRigisterToStep(domain, RegisterStep.Success);
-      } else {
-        refreshDomainStatus();
-      }
-    }
+      try {
+        const [ownerPromise, _stop] = waitAsyncResult(() => fetchDomainOwner(domain));
+        stop = _stop;
+        const owner = await ownerPromise;
+        clearCommitInfo(domain);
+        if (getAccount() === owner) {
+          setRigisterToStep(domain, RegisterStep.Success);
+        } else {
+          refreshDomainStatus();
+        }
+      } catch (_) {}
+    };
 
     startFetch();
-    return () => { stop?.(); };
+    return () => {
+      stop?.();
+    };
   }, [domain]);
 
   useEffect(() => {
     const timer = setInterval(() => refreshDomainStatus, 10000);
     return () => clearInterval(timer);
   }, []);
-}
+};

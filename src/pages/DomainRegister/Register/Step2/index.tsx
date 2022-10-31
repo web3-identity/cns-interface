@@ -11,7 +11,7 @@ import PayPrice from '../PayPrice';
 const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ domain, commitInfo }) => {
   const payMethod = usePayMethod();
   const remainTimeDOM = useRef<HTMLDivElement>(null);
-  const { durationYears, validTime } = commitInfo || {};
+  const { durationYears, validTime } = commitInfo! || {};
 
   useEffect(() => {
     if (!validTime?.end || !remainTimeDOM) return;

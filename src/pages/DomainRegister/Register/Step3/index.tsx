@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+import { Link } from 'react-router-dom';
 import Button from '@components/Button';
 import { ReactComponent as SuccessIcon } from '@assets/icons/Success.svg';
+import { useDomainExpire } from '@service/domainInfo';
 import { RegisterBox } from '@pages/DomainRegister';
+
+const ExpireTime: React.FC<{ domain: string; }> = ({ domain }) => {
+  const expire = useDomainExpire(domain);
+  
+  return <>{expire.dateStr}</>;
+};
 
 const Step3: React.FC<{ domain: string }> = ({ domain }) => {
   
@@ -21,12 +29,17 @@ const Step3: React.FC<{ domain: string }> = ({ domain }) => {
           </p>
 
           <p className="mt-16px flex items-center">
-            注册时长
+            有效期至
+            <Suspense fallback={' ...'}>
+              <ExpireTime domain={domain} />
+            </Suspense>
             <span className="ml-32px text-28px text-grey-normal font-bold">20</span>
             <span className="ml-4px mt-6px">年</span>
           </p>
-
-          <Button className='w-152px mt-32px h-44px' color='gradient'>去设置</Button>
+          
+          <Link to={`/setting/${domain}`} className="no-underline">
+            <Button className='w-152px mt-32px'>管理域名</Button>
+          </Link>
         </div>
       </div>
     </RegisterBox>

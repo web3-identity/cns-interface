@@ -1,14 +1,19 @@
-import React, { Suspense, useTransition } from 'react';
+import React, { Suspense } from 'react';
 import PageWrapper from '@components/Layout/PageWrapper';
 import { useMyDomains } from '@service/myDomains';
 
-const MyDomains: React.FC = () => {
+const DomainList: React.FC = () => {
   const myDomains = useMyDomains();
 
+  return <>{myDomains}</>;
+};
 
+const MyDomains: React.FC = () => {
   return (
     <PageWrapper className="pt-72px">
-      <Suspense fallback={null}>{myDomains}</Suspense>
+      <Suspense fallback={null}>
+        <DomainList />
+      </Suspense>
     </PageWrapper>
   );
 };
