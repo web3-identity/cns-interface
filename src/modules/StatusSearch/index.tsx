@@ -5,7 +5,7 @@ import cx from 'clsx';
 import BorderBox from '@components/Box/BorderBox';
 import Input from '@components/Input';
 import Button from '@components/Button';
-import Status from '@modules/Status';
+import Status from '@modules/StatusSearch/Status';
 
 interface Props {
   where: 'home' | 'header';

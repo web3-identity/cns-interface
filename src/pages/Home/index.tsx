@@ -1,6 +1,5 @@
 import React from 'react';
 import PageWrapper from '@components/Layout/PageWrapper';
-import Spin from '@components/Spin';
 import StatusSearch from '@modules/StatusSearch';
 import homeBg from '@assets/images/home-bg.png';
 import homeBgWebp from '@assets/images/home-bg.webp';

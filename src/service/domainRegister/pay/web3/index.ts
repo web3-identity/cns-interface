@@ -29,7 +29,7 @@ export const web3Pay = async ({ domain, durationYears }: Params) => {
     
     const [receiptPromise] = waitAsyncResult(() => isTransactionReceipt(txHash));
     const res = await receiptPromise;
-    console.log(res);
+    // console.log(res);
   } catch (err) {
     console.error('err', err);
   }

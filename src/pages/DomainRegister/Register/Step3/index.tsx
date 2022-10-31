@@ -1,12 +1,12 @@
 import React from 'react';
 import Button from '@components/Button';
 import { ReactComponent as SuccessIcon } from '@assets/icons/Success.svg';
-import { RegisterContainer } from '../index';
+import { RegisterBox } from '@pages/DomainRegister';
 
 const Step3: React.FC<{ domain: string }> = ({ domain }) => {
   
   return (
-    <RegisterContainer title="注册完成" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
+    <RegisterBox title="注册完成" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
       <div className="mt-54px flex-1 flex justify-center gap-56px">
         <div className="text-right text-grey-normal">
           <SuccessIcon className="mb-16px w-80px h-80px" />
@@ -29,7 +29,7 @@ const Step3: React.FC<{ domain: string }> = ({ domain }) => {
           <Button className='w-152px mt-32px h-44px' color='gradient'>去设置</Button>
         </div>
       </div>
-    </RegisterContainer>
+    </RegisterBox>
   );
 };
 

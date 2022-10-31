@@ -5,7 +5,7 @@ import timerNotifier from '@utils/timerNotifier';
 import { web3Pay, type CommitInfo } from '@service/domainRegister';
 import { usePayMethod } from '@service/payMethod';
 import { ReactComponent as FluentIcon } from '@assets/icons/fluent.svg';
-import { RegisterContainer } from '../index';
+import { RegisterBox } from '@pages/DomainRegister';
 import PayPrice from '../PayPrice';
 
 const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ domain, commitInfo }) => {
@@ -33,7 +33,7 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
 
   if (!commitInfo) return null;
   return (
-    <RegisterContainer title="第二步：支付" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
+    <RegisterBox title="第二步：支付" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
       <div className="mt-24px flex-1 flex justify-between md:px-8%">
         <div className="pt-16px flex flex-col gap-24px">
           <div className="flex items-baseline">
@@ -84,7 +84,7 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
           </div>
         </div>
       </div>
-    </RegisterContainer>
+    </RegisterBox>
   );
 };
 

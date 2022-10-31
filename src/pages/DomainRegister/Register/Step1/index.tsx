@@ -4,16 +4,16 @@ import { persistAtomWithDefault } from '@utils/recoilUtils';
 import Button from '@components/Button';
 import { useMinCommitLockTime, commitRegistration as _commitRegistration } from '@service/domainRegister';
 import useInTranscation from '@hooks/useInTranscation';
-import { RegisterContainer } from '../index';
+import { RegisterBox } from '@pages/DomainRegister';
 import PayPrice from '../PayPrice';
 
-const registerDurationYears = atomFamily<number, string>({
+export const registerDurationYearsState = atomFamily<number, string>({
   key: 'registerDurationYears',
   effects: [persistAtomWithDefault(1)],
 });
 
 const Step1: React.FC<{ domain: string }> = ({ domain }) => {
-  const [durationYears, setRegisterDurationYears] = useRecoilState(registerDurationYears(domain));
+  const [durationYears, setRegisterDurationYears] = useRecoilState(registerDurationYearsState(domain));
   const increase = () => setRegisterDurationYears(durationYears + 1);
   const decrease = () => setRegisterDurationYears(durationYears - 1 >= 1 ? durationYears - 1 : 1);
   const [isPending, startTransition] = useTransition();
@@ -21,7 +21,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
   const { inTranscation, execTranscation: commitRegistration } = useInTranscation(_commitRegistration);
 
   return (
-    <RegisterContainer title="第一步：申请注册" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
+    <RegisterBox title="第一步：申请注册" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
       <div className="mt-40px grid grid-cols-3 items-center text-14px">
         <div>
           <p>总计花费</p>
@@ -65,7 +65,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
           <MinCommitmentLockTime />
         </Suspense>
       </p>
-    </RegisterContainer>
+    </RegisterBox>
   );
 };
 

@@ -3,7 +3,9 @@ import { atomFamily, useRecoilValue } from 'recoil';
 import { setRecoil } from 'recoil-nexus';
 import { persistAtomWithDefault } from '@utils/recoilUtils';
 import { fetchDomainOwner } from '@service/domainInfo';
+import { getAccount } from '@service/account';
 import waitAsyncResult from '@utils/waitAsyncResult';
+import { clearCommitInfo } from './commit';
 export * from './commit';
 export * from './pay';
 
@@ -31,6 +33,11 @@ export const useMonitorDomainState = (domain: string) => {
       const [ownerPromise, _stop] = waitAsyncResult(() => fetchDomainOwner(domain))
       stop = _stop
       const owner = await ownerPromise;
+      console.log(owner)
+      clearCommitInfo(domain);
+      if (getAccount() === owner) {
+        setRigisterToStep(domain, RegisterStep.Success);
+      }
     }
 
     startFetch();

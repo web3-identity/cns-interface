@@ -11,24 +11,26 @@ const PrideFetch: React.FC<{ domain: string }> = ({ domain }) => {
   return <>{Math.round(+payPrice?.toDecimalStandardUnit())}</>;
 };
 
-const PayPrice: React.FC<{ domain: string; isPending?: boolean; className?: string; }> = ({ domain, isPending, className }) => {
+const Loading: React.FC = () => (
+  <Delay mode="opacity">
+    <div className="absolute top-0 left-0 w-full h-full flex items-center bg-purple-dark-active">
+      <Spin className="text-.9em" />
+    </div>
+  </Delay>
+);
+
+const PayPrice: React.FC<{ domain: string; isPending?: boolean; className?: string }> = ({ domain, isPending, className }) => {
   const payMethod = usePayMethod();
 
   return (
     <div className={cx('relative flex items-baseline', className)}>
-      <Suspense fallback={<Delay mode='opacity'>...</Delay>}>
+      <Suspense fallback={<Loading />}>
         <span className="mr-3px text-.35em text-grey-normal-hover text-opacity-50">{payMethod === 'web3' ? 'CFX' : '￥'}</span>
         <span className="text-grey-normal font-bold">
           <PrideFetch domain={domain} />
         </span>
       </Suspense>
-      {isPending && (
-        <Delay mode="opacity">
-          <div className="absolute top-0 left-0 w-full h-full flex items-center bg-purple-dark-active">
-            <Spin className="text-.9em" />
-          </div>
-        </Delay>
-      )}
+      {isPending && <Loading />}
     </div>
   );
 };

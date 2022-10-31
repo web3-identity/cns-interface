@@ -2,7 +2,6 @@ import React, { Suspense, type HTMLAttributes } from 'react';
 import { Link } from 'react-router-dom';
 import cx from 'clsx';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
-import BorderBox from '@components/Box/BorderBox';
 import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
@@ -15,17 +14,15 @@ import { ReactComponent as StatusInvalid } from '@assets/icons/status-invalid.sv
 
 interface Props {
   domain: string;
-  where: 'home' | 'header' | 'register';
+  where: 'home' | 'header';
 }
 
 const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, where, className, ...props }) => {
   const handleRefresh = useRefreshDomainStatus(domain);
 
   return (
-    <BorderBox
-      variant={where === 'register' ? 'gradient' : 'none'}
+    <div
       className={cx('flex items-center pl-24px bg-purple-dark-active', className, {
-        'w-fit min-w-328px h-80px px-12px text-22px rounded-24px': where === 'register',
         'h-92px pr-12px text-22px rounded-24px': where === 'home',
         'h-48px text-16px rounded-10px': where === 'header',
       })}
@@ -36,7 +33,7 @@ const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, wher
           <StatusContent domain={domain} where={where} />
         </Suspense>
       </ErrorBoundary>
-    </BorderBox>
+    </div>
   );
 };
 
@@ -87,19 +84,17 @@ const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) 
         <span className="ml-24px font-bold">{domain}.web3</span>
       </span>
 
-      {where !== 'register' && (
-        <>
-          {status === DomainStatus.Valid && (
-            <Link to={`/register/${domain}`} className="no-underline">
-              <Button size={where === 'header' ? 'small' : 'medium'} color="gradient">注册</Button>
-            </Link>
-          )}
-          {status === DomainStatus.Registered && (
-            <Link to={`/register/${domain}`} className="no-underline">
-              <Button size={where === 'header' ? 'small' : 'medium'}>查看</Button>
-            </Link>
-          )}
-        </>
+      {status === DomainStatus.Valid && (
+        <Link to={`/register/${domain}`} className="no-underline">
+          <Button size={where === 'header' ? 'small' : 'medium'} color="gradient">
+            注册
+          </Button>
+        </Link>
+      )}
+      {status === DomainStatus.Registered && (
+        <Link to={`/register/${domain}`} className="no-underline">
+          <Button size={where === 'header' ? 'small' : 'medium'}>查看</Button>
+        </Link>
       )}
     </>
   );

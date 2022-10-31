@@ -19,7 +19,7 @@ async function* endlessGenerator() {
   }
 }
 
-const waitSeconds = (seconds: number) => new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+export const waitSeconds = (seconds: number) => new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
 /**
 * @param {Number} maxWaitTime - max wait time in seconds; 0 means endless;
