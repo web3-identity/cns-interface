@@ -35,6 +35,7 @@ const StatusSearch: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ where,
           size={where === 'header' ? 'normal' : 'medium'}
           prefixIcon="i-charm:search"
           placeholder="获取您的.web3"
+          autoFocus={where === 'home'}
           {...register('domain', { required: true })}
         />
         {!domain && <Button size={where === 'header' ? 'small' : 'medium'}>搜索</Button>}
