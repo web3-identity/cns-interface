@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useRefreshDomainStatus } from '@service/domainInfo';
+import React from 'react';
 import { RegisterStep, useRegisterStep, useCommitInfo, useMonitorDomainState } from '@service/domainRegister';
 import Step1 from './Step1';
 import WaitCommitConfirm from './WaitCommitConfirm';
@@ -9,8 +8,6 @@ import Step3 from './Step3';
 const Register: React.FC<{ domain: string }> = ({ domain }) => {
   const registerStep = useRegisterStep(domain);
   const commitInfo = useCommitInfo(domain);
-  const refreshDomainStatus = useRefreshDomainStatus(domain);
-  useEffect(refreshDomainStatus, [registerStep]);
   useMonitorDomainState(domain);
 
   if (registerStep === RegisterStep.WaitCommit) {

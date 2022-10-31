@@ -102,7 +102,7 @@ const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) 
 
 const StatusLoading: React.FC = () => (
   <Delay>
-    <Spin className="text-1.4em text-green-normal" />
+    <Spin className="text-1.4em" />
   </Delay>
 );
 

@@ -9,7 +9,7 @@ const ConnectWallet: React.FC<HTMLAttributes<HTMLDivElement> & { icon: string; n
     <div onClick={onClick} className="flex flex-col items-center justify-center w-100px h-100px rounded-8px hover:bg-#26233E transition-colors cursor-pointer">
       {children}
       <img className="w-24px h-24px mb-12px" src={icon} />
-      <span className="text-14px text-#F0EEE9">{name}</span>
+      <span className="text-14px text-grey-normal">{name}</span>
     </div>
   );
 };
