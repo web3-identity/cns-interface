@@ -42,7 +42,7 @@ export const accountState = selector({
   },
 });
 
-const hexAccount = selector({
+export const hexAccountState = selector({
   key: 'hexAccount',
   get: ({ get }) => {
     const cfxAccount = get(accountState);
@@ -54,7 +54,7 @@ const hexAccount = selector({
 
 export const getAccountMethod = () => getRecoil(accountMethodFilter);
 export const getAccount = () => getRecoil(accountState);
-export const getHexAccount = () => getRecoil(hexAccount);
+export const getHexAccount = () => getRecoil(hexAccountState);
 
 export const connect = async (method: Methods) => {
   try {
