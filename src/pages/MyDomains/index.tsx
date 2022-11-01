@@ -6,6 +6,7 @@ import { useAccount } from '@service/account';
 import { useDomainExpire } from '@service/domainInfo';
 import { useDomainReverseRegistrar } from '@service/domainReverseRegistrar';
 import { shortenAddress } from '@utils/addressUtils';
+import { getLabelDomain } from '@utils/domainHelper';
 import BorderBox from '@components/Box/BorderBox';
 import Button from '@components/Button';
 import Avatar from '@components/Avatar';
@@ -15,15 +16,15 @@ interface Props {
   className?: string;
 }
 const DomainItem: React.FC<Props> = ({ domain, className }) => {
-  const { dateFormat, gracePeriod, isExpired } = useDomainExpire(domain);
+  const { dateFormatForSecond, gracePeriod, isExpired } = useDomainExpire(domain);
   return (
     <div className={cx('flex py-24px justify-between', className)}>
       <div className="flex flex-col gap-6px">
-        <span className="text-grey-normal text-22px font-bold">{domain}</span>
+        <span className="text-grey-normal text-22px font-bold">{getLabelDomain(domain)}</span>
         {!isExpired ? (
           <span className="text-grey-normal-hover text-opacity-50 text-14px">
             预计到期
-            <span className="ml-8px text-grey-normal">{dateFormat}</span>
+            <span className="ml-8px text-grey-normal">{dateFormatForSecond}</span>
           </span>
         ) : (
           <span className="text-grey-normal-hover text-opacity-50 text-14px">
@@ -41,7 +42,6 @@ const DomainItem: React.FC<Props> = ({ domain, className }) => {
 
 const DomainList: React.FC = () => {
   const myDomains = useMyDomains();
-  console.log('myDomains', myDomains);
   const account = useAccount();
   const domain = useDomainReverseRegistrar();
 
@@ -66,7 +66,7 @@ const DomainList: React.FC = () => {
       <span className="text-grey-normal text-22px leading-26px">注册人</span>
       <div className="bg-purple-dark-active px-24px rounded-24px dropdown-shadow">
         {myDomains.map((domain: string, index: number) => (
-          <DomainItem domain={domain} className={cx(index !== 0 ? 'border-t border-purple-normal' : '')} />
+          <DomainItem key={index} domain={domain} className={cx(index !== 0 ? 'border-t border-purple-normal' : '')} />
         ))}
       </div>
     </div>
