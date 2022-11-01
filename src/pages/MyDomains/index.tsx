@@ -3,8 +3,8 @@ import cx from 'clsx';
 import PageWrapper from '@components/Layout/PageWrapper';
 import { useMyDomains } from '@service/myDomains';
 import { useAccount } from '@service/account';
-import { useDomainExpire } from '@service/domainInfo/expire';
-import { useDomainReverseRegister } from '@service/domainReverseRegister';
+import { useDomainExpire } from '@service/domainInfo';
+import { useDomainReverseRegistrar } from '@service/domainReverseRegistrar';
 import { shortenAddress } from '@utils/addressUtils';
 import BorderBox from '@components/Box/BorderBox';
 import Button from '@components/Button';
@@ -15,15 +15,21 @@ interface Props {
   className?: string;
 }
 const DomainItem: React.FC<Props> = ({ domain, className }) => {
-  const { dateFormat, timestamp } = useDomainExpire(domain);
+  const { dateFormat, gracePeriod, isExpired } = useDomainExpire(domain);
   return (
     <div className={cx('flex py-24px justify-between', className)}>
       <div className="flex flex-col gap-6px">
         <span className="text-grey-normal text-22px font-bold">{domain}</span>
-        <span className="text-grey-normal-hover text-opacity-50 text-14px">
-          预计到期
-          <span className="ml-8px text-grey-normal">{dateFormat}</span>
-        </span>
+        {!isExpired ? (
+          <span className="text-grey-normal-hover text-opacity-50 text-14px">
+            预计到期
+            <span className="ml-8px text-grey-normal">{dateFormat}</span>
+          </span>
+        ) : (
+          <span className="text-grey-normal-hover text-opacity-50 text-14px">
+            域名已到期，将于<span className="text-grey-normal font-bold">{gracePeriod}</span>天后到期
+          </span>
+        )}
       </div>
       <div className="flex gap-60px">
         <Button variant="text">续费</Button>
@@ -35,8 +41,9 @@ const DomainItem: React.FC<Props> = ({ domain, className }) => {
 
 const DomainList: React.FC = () => {
   const myDomains = useMyDomains();
+  console.log('myDomains', myDomains);
   const account = useAccount();
-  const domain = useDomainReverseRegister();
+  const domain = useDomainReverseRegistrar();
 
   return (
     <div className="flex flex-col gap-16px">
@@ -59,7 +66,7 @@ const DomainList: React.FC = () => {
       <span className="text-grey-normal text-22px leading-26px">注册人</span>
       <div className="bg-purple-dark-active px-24px rounded-24px dropdown-shadow">
         {myDomains.map((domain: string, index: number) => (
-          <DomainItem domain={domain} className={cx(index !== 0 ? 'border-t border-purple-normal' : '')}/>
+          <DomainItem domain={domain} className={cx(index !== 0 ? 'border-t border-purple-normal' : '')} />
         ))}
       </div>
     </div>

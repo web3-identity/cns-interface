@@ -8,7 +8,7 @@ interface Params {
   domain: string;
 }
 
-export const domainReverseRegister = async ({ domain }: Params) => {
+export const domainReverseRegistrar = async ({ domain }: Params) => {
   try {
     const account = getAccount();
     const txHash = await sendTransaction({
@@ -22,8 +22,8 @@ export const domainReverseRegister = async ({ domain }: Params) => {
   }
 };
 
-const domainReverseRegisterQuery = selector({
-  key: 'domainReverseRegister',
+const domainReverseRegistrarQuery = selector({
+  key: 'domainReverseRegistrar',
   get: async ({ get }) => {
     const hexAccount = get(hexAccountState);
     try {
@@ -44,4 +44,4 @@ const domainReverseRegisterQuery = selector({
   },
 });
 
-export const useDomainReverseRegister = () => useRecoilValue(domainReverseRegisterQuery);
+export const useDomainReverseRegistrar = () => useRecoilValue(domainReverseRegistrarQuery);
