@@ -15,18 +15,18 @@ interface Props {
   className?: string;
 }
 const DomainItem: React.FC<Props> = ({ domain, className }) => {
-  const { dateStr, timestamp } = useDomainExpire(domain);
+  const { dateFormat, timestamp } = useDomainExpire(domain);
   return (
     <div className={cx('flex py-24px justify-between', className)}>
       <div className="flex flex-col gap-6px">
         <span className="text-grey-normal text-22px font-bold">{domain}</span>
         <span className="text-grey-normal-hover text-opacity-50 text-14px">
           预计到期
-          <span className="ml-8px text-grey-normal">{dateStr}</span>
+          <span className="ml-8px text-grey-normal">{dateFormat}</span>
         </span>
       </div>
       <div className="flex gap-60px">
-        <Button>续费</Button>
+        <Button variant="text">续费</Button>
         <Button>域名管理</Button>
       </div>
     </div>
@@ -35,7 +35,6 @@ const DomainItem: React.FC<Props> = ({ domain, className }) => {
 
 const DomainList: React.FC = () => {
   const myDomains = useMyDomains();
-  console.log('myDomains', myDomains);
   const account = useAccount();
   const domain = useDomainReverseRegister();
 
@@ -58,9 +57,9 @@ const DomainList: React.FC = () => {
         </div>
       </BorderBox>
       <span className="text-grey-normal text-22px leading-26px">注册人</span>
-      <div className="bg-purple-dark-active px-24px">
-        {myDomains.map((domain: string) => (
-          <DomainItem domain={domain} />
+      <div className="bg-purple-dark-active px-24px rounded-24px dropdown-shadow">
+        {myDomains.map((domain: string, index: number) => (
+          <DomainItem domain={domain} className={cx(index !== 0 ? 'border-t border-purple-normal' : '')}/>
         ))}
       </div>
     </div>

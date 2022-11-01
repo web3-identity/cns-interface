@@ -25,10 +25,10 @@ const domainExpireQuery = selectorFamily<DomainExpire, string>({
       });
 
       const timestamp = Number(response) * 1000;
-      const dateFormat = dayjs(timestamp).format('YYYY-MM-DD');
+      const dateFormat = dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss');
       const date = Object.fromEntries(dateFormat.split('-').map((v, i) => [i === 0 ? 'year' : i === 1 ? 'month' : 'day', Number(v)]));
       const gracePeriod = dayjs(timestamp).add(90, 'day').diff(dayjs(), 'day');
-      
+
       return {
         timestamp,
         dateFormat,

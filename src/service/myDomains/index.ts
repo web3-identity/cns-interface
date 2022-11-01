@@ -2,7 +2,7 @@ import { selector, useRecoilValue } from 'recoil';
 import { fetchChain } from '@utils/fetch';
 import { NameWrapper } from '@contracts/index';
 import { hexAccountState } from '@service/account';
-import { dnsNameNotationDecode } from '@utils/domainHelper';
+import { dnsNameNotationDecode, getDomainLabel } from '@utils/domainHelper';
 
 const myDomainsQuery = selector({
   key: 'myDomains',
@@ -12,7 +12,7 @@ const myDomainsQuery = selector({
       return await fetchChain<string>({
         params: [{ data: NameWrapper.func.encodeFunctionData('userDomains', [hexAccount]), to: NameWrapper.address }, 'latest_state'],
       }).then((response) => {
-        const myDomains = NameWrapper.func.decodeFunctionResult('userDomains', response)?.[0].map((domain: string) => dnsNameNotationDecode(domain));
+        const myDomains = NameWrapper.func.decodeFunctionResult('userDomains', response)?.[0].map((domain: string) => getDomainLabel(dnsNameNotationDecode(domain)));
         return myDomains;
       });
     } catch (err) {
