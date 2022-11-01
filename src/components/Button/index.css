@@ -72,6 +72,23 @@ button.button--text.is-disabled {
   background: linear-gradient(94.26deg, #6667AB 0%, #F0EEE9 51.35%, #96D8DE 100%);
 }
 
+
+/* text button */
+.button--text {
+  @apply border-none;
+}
+
+.button--text.button--purple {
+  @apply bg-transparent bg-opacity-100 text-purple-normal;;
+}
+
+.button--text.button--purple:hover,
+.button--text.button--purple:focus-visible {
+  @apply bg-purple-normal bg-opacity-10 text-purple-normal-hover;
+}
+
+
+
 .button__content {
   @apply inline-flex items-center h-full;
 }
