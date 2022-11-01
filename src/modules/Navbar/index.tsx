@@ -1,6 +1,5 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import cx from 'clsx';
 import Button from '@components/Button';
 import { useAccount } from '@service/account';
 import StatusSearch from '@modules/StatusSearch';
@@ -14,7 +13,7 @@ const Navbar: React.FC = () => {
 
   return (
     <header className="relative flex items-center h-88px pt-40px text-grey-normal whitespace-nowrap">
-      <nav className={cx('mx-auto absolute bottom-0 flex w-full px-140px leading-48px')}>
+      <nav className="mx-auto absolute bottom-0 flex w-full px-140px leading-48px">
         <Link to="/" className="mr-auto text-grey-normal no-underline">
           <span>
             <span className="i-bi:box-fill mr-14px text-48px flex-shrink-0" />

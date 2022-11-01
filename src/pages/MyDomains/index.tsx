@@ -1,16 +1,75 @@
 import React, { Suspense } from 'react';
+import cx from 'clsx';
 import PageWrapper from '@components/Layout/PageWrapper';
 import { useMyDomains } from '@service/myDomains';
+import { useAccount } from '@service/account';
+import { useDomainExpire } from '@service/domainInfo/expire';
+import { useDomainReverseRegister } from '@service/domainReverseRegister';
+import { shortenAddress } from '@utils/addressUtils';
+import BorderBox from '@components/Box/BorderBox';
+import Button from '@components/Button';
+import Avatar from '@components/Avatar';
+
+interface Props {
+  domain: string;
+  className?: string;
+}
+const DomainItem: React.FC<Props> = ({ domain, className }) => {
+  const { dateStr, timestamp } = useDomainExpire(domain);
+  return (
+    <div className={cx('flex py-24px justify-between', className)}>
+      <div className="flex flex-col gap-6px">
+        <span className="text-grey-normal text-22px font-bold">{domain}</span>
+        <span className="text-grey-normal-hover text-opacity-50 text-14px">
+          预计到期
+          <span className="ml-8px text-grey-normal">{dateStr}</span>
+        </span>
+      </div>
+      <div className="flex gap-60px">
+        <Button>续费</Button>
+        <Button>域名管理</Button>
+      </div>
+    </div>
+  );
+};
 
 const DomainList: React.FC = () => {
   const myDomains = useMyDomains();
+  console.log('myDomains', myDomains);
+  const account = useAccount();
+  const domain = useDomainReverseRegister();
 
-  return <>{myDomains}</>;
+  return (
+    <div className="flex flex-col gap-16px">
+      <BorderBox variant="gradient" className="flex justify-between h-100px px-24px rounded-18px">
+        <div className="flex flex-col justify-between pt-14px pb-22px text-22px font-bold text-grey-normal">
+          <span className="text-grey-normal-hover text-opacity-50 text-14px leading-18px">当前账户</span>
+          {!domain ? (
+            <div className="flex gap-16px items-center">
+              <Avatar address={account} diameter={30} />
+              <span>{shortenAddress(account!)}</span>
+            </div>
+          ) : (
+            <span>{domain}</span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <Button>设置.web3域名</Button>
+        </div>
+      </BorderBox>
+      <span className="text-grey-normal text-22px leading-26px">注册人</span>
+      <div className="bg-purple-dark-active px-24px">
+        {myDomains.map((domain: string) => (
+          <DomainItem domain={domain} />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 const MyDomains: React.FC = () => {
   return (
-    <PageWrapper className="pt-72px">
+    <PageWrapper className="pt-230px">
       <Suspense fallback={null}>
         <DomainList />
       </Suspense>
