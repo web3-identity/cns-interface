@@ -35,7 +35,8 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
           <div className="mt-4px flex items-center justify-self-end">
             <button
               onClick={() => startTransition(decrease)}
-              className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors"
+              className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors disabled:pointer-events-none"
+              disabled={inTranscation}
             >
               <span className="i-fluent:subtract-12-filled text-16px font-bold" />
             </button>
@@ -47,7 +48,8 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
             </p>
             <button
               onClick={() => startTransition(increase)}
-              className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors"
+              className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors disabled:pointer-events-none"
+              disabled={inTranscation}
             >
               <span className="i-fluent:add-12-filled text-15px font-bold" />
             </button>

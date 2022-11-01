@@ -37,8 +37,7 @@ export function fetchApi() {
       method: method,
     };
     if (method == 'GET') delete requestParams.body;
-
-    fetcher = fetch(import.meta.env.VITE_ApiUrl + `/${path}`,requestParams)
+    fetcher = fetch(`/v0/${path}`,requestParams)
       .then((response) => response.json())
   }
 

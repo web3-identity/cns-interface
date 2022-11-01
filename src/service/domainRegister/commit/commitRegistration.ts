@@ -50,11 +50,12 @@ export const commitRegistration = async ({ domain, durationYears }: Params) => {
 
     const [receiptCommit] = waitAsyncResult(() => isCommitReceipt(commitmentHash));
     const commitTime =  await receiptCommit;
-    setCommitInfo(domain, { commitTime, secret, durationYears });
 
     if (payMethod === 'web2' && !isMobile()) {
-      await postCommitmentToBackend(commitmentHash, commitParams);
+      const _ = await postCommitmentToBackend(commitmentHash, commitParams);
     }
+
+    setCommitInfo(domain, { commitmentHash, commitTime, secret, durationYears });
   } catch (err) {
     console.error('err', err);
   }

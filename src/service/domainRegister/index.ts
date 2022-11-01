@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import { atomFamily, useRecoilValue } from 'recoil';
-import { setRecoil } from 'recoil-nexus';
+import { setRecoil, getRecoil } from 'recoil-nexus';
 import { persistAtomWithDefault } from '@utils/recoilUtils';
 import { useRefreshDomainStatus } from '@service/domainInfo';
 import { fetchDomainOwner } from '@service/domainInfo';
+import { usePayMethod } from '@service/payMethod';
 import { getAccount } from '@service/account';
 import waitAsyncResult from '@utils/waitAsyncResult';
-import { clearCommitInfo } from './commit';
+import { clearCommitInfo, useCommitInfo } from './commit';
+import { setWaitPayConfrim, isOrderPaid } from './pay';
 export * from './commit';
 export * from './pay';
 
@@ -21,6 +23,7 @@ const registerStep = atomFamily<RegisterStep, string>({
   effects: [persistAtomWithDefault(RegisterStep.WaitCommit)],
 });
 
+const getRigisterToStep = (domain: string) => getRecoil(registerStep(domain));
 export const setRigisterToStep = (domain: string, step: RegisterStep) => {
   setRecoil(registerStep(domain), step);
 };
@@ -38,6 +41,7 @@ export const useMonitorDomainState = (domain: string) => {
         stop = _stop;
         const owner = await ownerPromise;
         clearCommitInfo(domain);
+        setWaitPayConfrim(domain, false);
         if (getAccount() === owner) {
           setRigisterToStep(domain, RegisterStep.Success);
         } else {
@@ -51,6 +55,29 @@ export const useMonitorDomainState = (domain: string) => {
       stop?.();
     };
   }, [domain]);
+
+  const payMethod = usePayMethod();
+  const commitInfo = useCommitInfo(domain);
+  useEffect(() => {
+    if (payMethod === 'web3' || !commitInfo) return;
+
+    let stop: VoidFunction;
+    const startFetch = async () => {
+      try {
+        const [orderPaidPromise, _stop] = waitAsyncResult(() => isOrderPaid(commitInfo.commitmentHash));
+        stop = _stop;
+        const orderPaid = await orderPaidPromise;
+        if (getRigisterToStep(domain) === RegisterStep.WaitPay) {
+          setWaitPayConfrim(domain, true);
+        }
+      } catch (_) {}
+    };
+
+    startFetch();
+    return () => {
+      stop?.();
+    };
+  }, [payMethod, commitInfo]);
 
   useEffect(() => {
     const timer = setInterval(() => refreshDomainStatus, 10000);

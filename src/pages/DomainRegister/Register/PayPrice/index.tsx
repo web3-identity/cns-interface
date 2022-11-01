@@ -5,10 +5,14 @@ import Spin from '@components/Spin';
 import { usePayMethod } from '@service/payMethod';
 import { commitRegistration as _commitRegistration, usePayPrice } from '@service/domainRegister';
 
-const PrideFetch: React.FC<{ domain: string }> = ({ domain }) => {
+const PrideFetch: React.FC<{ domain: string; payMethod: ReturnType<typeof usePayMethod> }> = ({ domain, payMethod }) => {
   const payPrice = usePayPrice(domain);
 
-  return <>{Math.round(+payPrice?.toDecimalStandardUnit())}</>;
+  if (payMethod === 'web3') {
+    return <>{Math.round(+payPrice?.toDecimalStandardUnit())}</>;
+  }
+  
+  return <>{payPrice?.toDecimalStandardUnit(2, 8)}</>
 };
 
 const Loading: React.FC = () => (
@@ -27,7 +31,7 @@ const PayPrice: React.FC<{ domain: string; isPending?: boolean; className?: stri
       <Suspense fallback={<Loading />}>
         <span className="mr-3px text-.35em text-grey-normal-hover text-opacity-50">{payMethod === 'web3' ? 'CFX' : '￥'}</span>
         <span className="text-grey-normal font-bold">
-          <PrideFetch domain={domain} />
+          <PrideFetch domain={domain} payMethod={payMethod} />
         </span>
       </Suspense>
       {isPending && <Loading />}
