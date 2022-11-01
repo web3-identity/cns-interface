@@ -7,6 +7,7 @@ import { fetchDomainOwner } from '@service/domainInfo';
 import { getAccount } from '@service/account';
 import waitAsyncResult from '@utils/waitAsyncResult';
 import { clearCommitInfo } from './commit';
+import { setWaitPayConfrim } from './pay';
 export * from './commit';
 export * from './pay';
 
@@ -38,6 +39,7 @@ export const useMonitorDomainState = (domain: string) => {
         stop = _stop;
         const owner = await ownerPromise;
         clearCommitInfo(domain);
+        setWaitPayConfrim(domain, false);
         if (getAccount() === owner) {
           setRigisterToStep(domain, RegisterStep.Success);
         } else {

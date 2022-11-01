@@ -4,7 +4,19 @@ import { fetchChain } from '@utils/fetch';
 import { BaseRegistrar } from '@contracts/index';
 import { getDomainHash } from '@utils/domainHelper';
 
-const domainExpireQuery = selectorFamily<{ timestamp: number, dateStr: string; }, string>({
+interface DomainExpire {
+  timestamp: number;
+  dateFormat: string;
+  date: {
+    year: number;
+    month: number;
+    day: number;
+  };
+  /** Unit day */
+  gracePeriod: number;
+}
+
+const domainExpireQuery = selectorFamily<DomainExpire, string>({
   key: 'domainExpire',
   get: (domain: string) => async () => {
     try {
@@ -13,11 +25,16 @@ const domainExpireQuery = selectorFamily<{ timestamp: number, dateStr: string; }
       });
 
       const timestamp = Number(response) * 1000;
-      const dateStr = dayjs(timestamp).format('YYYY-MM-DD');
+      const dateFormat = dayjs(timestamp).format('YYYY-MM-DD');
+      const date = Object.fromEntries(dateFormat.split('-').map((v, i) => [i === 0 ? 'year' : i === 1 ? 'month' : 'day', Number(v)]));
+      const gracePeriod = dayjs(timestamp).add(90, 'day').diff(dayjs(), 'day');
+      
       return {
         timestamp,
-        dateStr
-      };
+        dateFormat,
+        date,
+        gracePeriod,
+      } as DomainExpire;
     } catch (err) {
       throw err;
     }

@@ -17,7 +17,7 @@ const Spin: React.FC<HTMLAttributes<HTMLDivElement> & { theme?: string }> = ({ c
             <stop offset="1" style={{ stopColor: theme === 'light' ? '#B1B1B1' : '#8B8BBA' }} />
           </linearGradient>
           <path className="spin-left" d="M20,100c0-44.1,35.9-80,80-80V0C44.8,0,0,44.8,0,100s44.8,100,100,100v-20C55.9,180,20,144.1,20,100z" />
-          <circle className="fill-purple-normal" cx="100" cy="10" r="10" />
+          <circle className={cx(theme === 'light' ? 'fill-#F0EEE9' : 'fill-purple-normal')} cx="100" cy="10" r="10" />
         </g>
       </svg>
     </span>

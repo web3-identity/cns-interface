@@ -1,9 +1,9 @@
 import { getAccount, getHexAccount, sendTransaction } from '@service/account';
 import { Web3Controller, PublicResolver } from '@contracts/index';
-import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
 import { yearsToSeconds } from '@utils/date';
 import { getCommitInfo } from '@service/domainRegister/commit';
 import { getPayPrice } from '@service/domainRegister/pay';
+import { setWaitPayConfrim } from '../';
 
 interface Params {
   domain: string;
@@ -27,9 +27,8 @@ export const web3Pay = async ({ domain, durationYears }: Params) => {
       value: payPrice.toHexMinUnit()
     });
     
-    const [receiptPromise] = waitAsyncResult(() => isTransactionReceipt(txHash));
-    const res = await receiptPromise;
-    // console.log(res);
+    setWaitPayConfrim(domain, true);
+    setTimeout(() => setWaitPayConfrim(domain, false), 1000 * 180);
   } catch (err) {
     console.error('err', err);
   }

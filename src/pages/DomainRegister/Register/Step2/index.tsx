@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import QRCode from 'react-qr-code';
 import Button from '@components/Button';
 import timerNotifier from '@utils/timerNotifier';
-import { web3Pay, type CommitInfo } from '@service/domainRegister';
+import { web3Pay as _web3Pay, type CommitInfo } from '@service/domainRegister';
 import { usePayMethod } from '@service/payMethod';
 import { ReactComponent as FluentIcon } from '@assets/icons/fluent.svg';
 import { RegisterBox } from '@pages/DomainRegister';
+import useInTranscation from '@hooks/useInTranscation';
+import QRCode from './QRCode_web2pc';
 import PayPrice from '../PayPrice';
 
 const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ domain, commitInfo }) => {
@@ -31,6 +32,8 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
     };
   }, [validTime?.end]);
 
+  const { inTranscation, execTranscation: web3Pay } = useInTranscation(_web3Pay);
+
   if (!commitInfo) return null;
   return (
     <RegisterBox title="第二步：支付" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50">
@@ -54,10 +57,8 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
         </div>
 
         <div className="flex flex-col w-288px rounded-12px bg-violet-normal-hover overflow-hidden">
-          {payMethod === 'web3' && <Button className="mx-auto my-20px w-100px h-100px rounded-full text-40px" onClick={() => web3Pay({ domain, durationYears })}>买</Button>}
-          {/* <div style={{ height: 'auto', margin: '20px auto', maxWidth: 128, width: '100%' }}>
-            <QRCode size={256} style={{ height: 'auto', maxWidth: '100%', width: '100%' }} value={content?.code_url || ''} viewBox={`0 0 256 256`} />
-          </div> */}
+          {payMethod === 'web3' && <Button loading={inTranscation} className="mx-auto my-20px w-100px h-100px rounded-full text-40px" onClick={() => web3Pay({ domain, durationYears })}>买</Button>}
+          {payMethod === 'web2' && <QRCode domain={domain} />}
           <div className="flex-1 flex flex-col justify-center items-center bg-#26233E leading-24px">
             <p>
               请使用

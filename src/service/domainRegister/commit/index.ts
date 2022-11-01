@@ -8,6 +8,7 @@ import { getMinCommitLockTime, getMaxCommitLockTime } from './MinMaxCommitLockTi
 import { setRigisterToStep, RegisterStep } from '..';
 
 export type CommitInfo = {
+  commitmentHash: string;
   validTime: {
     start: number;
     end: number;
@@ -21,7 +22,7 @@ export const commitInfoState = atomFamily<CommitInfo | null, string>({
   effects: [persistAtomWithNamespace('CommitInfo')],
 });
 
-export const setCommitInfo = (domain: string, commitInfo: { commitTime: number; secret: string; durationYears: number }) => {
+export const setCommitInfo = (domain: string, commitInfo: { commitmentHash: string; commitTime: number; secret: string; durationYears: number }) => {
   const minCommitLockTime = getMinCommitLockTime();
   const maxCommitLockTime = getMaxCommitLockTime();
   if (!commitInfo || !minCommitLockTime || !maxCommitLockTime) {
@@ -34,6 +35,7 @@ export const setCommitInfo = (domain: string, commitInfo: { commitTime: number; 
   };
 
   setRecoil(commitInfoState(domain), {
+    commitmentHash: commitInfo.commitmentHash,
     validTime,
     secret: commitInfo.secret,
     durationYears: commitInfo.durationYears,
@@ -75,6 +77,7 @@ export const getCommitInfo = (domain: string) => getRecoil(commitInfoState(domai
     let storageData = JSON.parse(_storageData);
     if (!Array.isArray(storageData)) return;
     const allCommitInfo = storageData.filter((data: [string, any]) => data?.[0]?.startsWith('CommitInfo'));
+    console.log(allCommitInfo)
     allCommitInfo.forEach((data: [string, any]) => {
       const regex = /\"(.+?)\"/g;
       const domain = regex.exec(data?.[0])?.[1];

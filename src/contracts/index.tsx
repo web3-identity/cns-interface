@@ -1,5 +1,5 @@
 import { Contract, providers, type ContractInterface } from 'ethers';
-import { Web3RegistrarController as Web3ControllerABI, PublicResolver as PublicResolverABI, NameWrapper as NameWrapperABI, BaseRegistrarImplementation as BaseRegistrarABI } from '@web3identity/cns-contracts';
+import { Web3RegistrarController as Web3ControllerABI, PublicResolver as PublicResolverABI, NameWrapper as NameWrapperABI, BaseRegistrarImplementation as BaseRegistrarABI, ReverseRegistrar as ReverseRegistrarABI } from '@web3identity/cns-contracts';
 import { convertCfxToHex } from '@utils/addressUtils';
 import isProduction from '@utils/isProduction';
 export const HttpProvider = new providers.JsonRpcProvider(import.meta.env.VITE_CoreSpaceRpcUrl);
@@ -31,4 +31,9 @@ export const NameWrapper = createContract(
 export const BaseRegistrar = createContract(
   isProduction ? 'cfxtest:acc1ttg7287cybsdy6bn0002nzepypn29yavjbj36g' : 'cfxtest:acc1ttg7287cybsdy6bn0002nzepypn29yavjbj36g',
   BaseRegistrarABI
+);
+
+export const ReverseRegistrar = createContract(
+  isProduction ? 'cfxtest:ach1p03gkptxz07p4ecn66gjpd0xrnkkbj1n6p96d5' : 'cfxtest:ach1p03gkptxz07p4ecn66gjpd0xrnkkbj1n6p96d5',
+  ReverseRegistrarABI
 );

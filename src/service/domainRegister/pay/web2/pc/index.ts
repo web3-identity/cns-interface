@@ -1,38 +1,56 @@
-import { selectorFamily, useRecoilValue ,useRecoilRefresher_UNSTABLE} from 'recoil';
+import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
 import { fetchApi } from '@utils/fetch';
+import { commitInfoState, getCommitInfo } from '@service/domainRegister/commit';
 
-const generateMakeOrderParams = (description: string, tradeProvider?: string, tradeType?: string) => {
-  return {
-    trade_provider: tradeProvider || 'wechat',
-    trade_type: tradeType || 'native',
-    description: description,
-  };
+export const postOrder = (commitmentHash: string, params: object) => fetchApi({ path: `registers/order/${commitmentHash}`, method: 'POST', params });
+export const getOrder = (commitmentHash: string) => fetchApi({ path: `registers/order/${commitmentHash}`, method: 'GET' });
+export const refreshRegisterOrder = (domain: string) => {
+  const commitInfo = getCommitInfo(domain);
+  if (!commitInfo) return;
+  fetchApi({ path: `registers/order/refresh-url/${commitInfo.commitmentHash}`, method: 'PUT' });
 };
 
-export const postOrder = (commitmentHash: string, params: object) => fetchApi({ path:'orders/'+commitmentHash, method: 'POST', params });
-export const queryOrder = (path: string) => fetchApi({ path });
-
-
-interface Params {
-  commitmentHash: string;
-  description: string;
+interface Response {
+  code_url: string;
+  commit_hash: string;
+  trade_no: string;
+  trade_provider: string;
+  trade_type: string;
 }
-
-type SelectorMapper<Type> = {
-  [Property in keyof Type]: Type[Property];
-};
-
-const makeOrder = selectorFamily<object, SelectorMapper<Params>>({
+const makeOrderQuery = selectorFamily<Response, string>({
   key: 'makeOrder',
-  get: (params) => async () => {
-    try {
-      const res = await postOrder(params.commitmentHash, generateMakeOrderParams(params.description));
-      return res;
-    } catch (err) {
-      throw err;
-    }
-  },
+  get:
+    (domain) =>
+    async ({ get }) => {
+      const commitInfo = get(commitInfoState(domain));
+
+      if (!commitInfo) throw new Error('commitInfo is not ready');
+      try {
+        const getRes: any = await getOrder(commitInfo.commitmentHash);
+
+        if (getRes?.code === 50000) {
+          if (getRes?.message === 'record not found') {
+            const postRes: any = await postOrder(commitInfo.commitmentHash, {
+              trade_provider: 'wechat',
+              trade_type: 'native',
+              description: domain,
+            });
+
+            if (postRes?.code === 50000) {
+              throw new Error(getRes.message);
+            }
+            return postRes;
+          } else {
+            throw new Error(getRes.message);
+          }
+        }
+        return getRes;
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
+    },
 });
 
-export const useMakeOrder = (commitmentHash: string, description: string) => useRecoilValue(makeOrder({ commitmentHash: commitmentHash, description: description } as any));
-export const useRefreshMakeOrder = (commitmentHash: string, description: string) => useRecoilRefresher_UNSTABLE(makeOrder({ commitmentHash: commitmentHash, description: description } as any));
+export const useMakeOrder = (domain: string) => useRecoilValue(makeOrderQuery(domain));
+export const useRefreshMakeOrder = (domain: string) => useRecoilRefresher_UNSTABLE(makeOrderQuery(domain));
