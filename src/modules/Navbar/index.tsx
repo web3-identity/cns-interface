@@ -15,7 +15,7 @@ const Navbar: React.FC = () => {
 
   return (
     <header className="relative flex items-center h-88px pt-40px text-grey-normal whitespace-nowrap">
-      <nav className="mx-auto absolute bottom-0 flex w-full px-140px leading-48px">
+      <nav className="left-1/2 -translate-x-1/2 absolute bottom-0 flex items-center w-full max-w-1232px leading-48px lt-xl:px-24px">
         <Link to="/" className="mr-auto text-grey-normal no-underline">
           <span>
             <span className="i-bi:box-fill mr-14px text-48px flex-shrink-0" />

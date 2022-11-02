@@ -1,11 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { atom, atomFamily, useRecoilValue } from 'recoil';
 import { setRecoil, getRecoil } from 'recoil-nexus';
 import { persistAtom, persistAtomWithDefault } from '@utils/recoilUtils';
 import { useRefreshDomainStatus } from '@service/domainInfo';
 import { fetchDomainOwner } from '@service/domainInfo';
 import { usePayMethod } from '@service/payMethod';
-import { useAccount, getAccount } from '@service/account';
+import { getAccount } from '@service/account';
 import LocalStorage from 'localstorage-enhance';
 import waitAsyncResult from '@utils/waitAsyncResult';
 import { clearCommitInfo, useCommitInfo } from './commit';
