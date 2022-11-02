@@ -87,7 +87,7 @@ export default defineConfig({
   server:{
     proxy:{
       '/v0': {
-        target: 'http://101.42.88.184:8081/v0',
+        target: 'http://101.42.88.184/v0',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/v0/, '')
       },

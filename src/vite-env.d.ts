@@ -3,6 +3,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_CoreSpaceRpcUrl: string;
+  readonly VITE_BackendUrl: string;
 }
 
 interface ImportMeta {
