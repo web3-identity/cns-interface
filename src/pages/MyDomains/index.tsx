@@ -13,30 +13,33 @@ import Avatar from '@components/Avatar';
 
 interface Props {
   domain: string;
-  className?: string;
+  index: number;
 }
-const DomainItem: React.FC<Props> = ({ domain, className }) => {
+const DomainItem: React.FC<Props> = ({ domain, index }) => {
   const { dateFormatForSecond, gracePeriod, isExpired } = useDomainExpire(domain);
   return (
-    <div className={cx('flex py-24px justify-between', className)}>
-      <div className="flex flex-col gap-6px">
-        <span className="text-grey-normal text-22px font-bold">{getLabelDomain(domain)}</span>
-        {!isExpired ? (
-          <span className="text-grey-normal-hover text-opacity-50 text-14px">
-            预计到期
-            <span className="ml-8px text-grey-normal">{dateFormatForSecond}</span>
-          </span>
-        ) : (
-          <span className="text-grey-normal-hover text-opacity-50 text-14px">
-            域名已到期，将于<span className="text-grey-normal font-bold">{gracePeriod}</span>天后到期
-          </span>
-        )}
+    <>
+      {index !== 0 && <div className="h-1px w-full bg-purple-normal opacity-30" />}
+      <div className="flex py-24px justify-between">
+        <div className="flex flex-col gap-6px">
+          <span className="text-grey-normal text-22px font-bold">{getLabelDomain(domain)}</span>
+          {!isExpired ? (
+            <span className="text-grey-normal-hover text-opacity-50 text-14px">
+              预计到期
+              <span className="ml-8px text-grey-normal">{dateFormatForSecond}</span>
+            </span>
+          ) : (
+            <span className="text-grey-normal-hover text-opacity-50 text-14px">
+              域名已到期，将于<span className="text-grey-normal font-bold">{gracePeriod}</span>天后到期
+            </span>
+          )}
+        </div>
+        <div className="flex gap-60px">
+          <Button variant="text">续费</Button>
+          <Button>域名管理</Button>
+        </div>
       </div>
-      <div className="flex gap-60px">
-        <Button variant="text">续费</Button>
-        <Button>域名管理</Button>
-      </div>
-    </div>
+    </>
   );
 };
 
@@ -66,7 +69,7 @@ const DomainList: React.FC = () => {
       <span className="text-grey-normal text-22px leading-26px">注册人</span>
       <div className="bg-purple-dark-active px-24px rounded-24px dropdown-shadow">
         {myDomains.map((domain: string, index: number) => (
-          <DomainItem key={index} domain={domain} className={cx(index !== 0 ? 'border-t border-purple-normal' : '')} />
+          <DomainItem key={index} domain={domain} index={index} />
         ))}
       </div>
     </div>
