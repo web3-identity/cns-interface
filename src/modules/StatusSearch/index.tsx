@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, memo, type HTMLAttributes } from 'react';
+import React, { useState, useCallback, useLayoutEffect, memo, type HTMLAttributes } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import cx from 'clsx';
@@ -14,10 +14,11 @@ interface Props {
 
 const StatusSearch: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ where, className, ...props }) => {
   const { pathname } = useLocation();
-  const { register, handleSubmit: withForm, watch } = useForm();
+  const { register, handleSubmit: withForm, watch, setValue } = useForm();
   const [domain, setDomain] = useState('');
   const currentInput = watch('domain');
-  useEffect(() => setDomain(''), [currentInput, pathname]);
+  useLayoutEffect(() => setDomain(''), [currentInput, pathname]);
+  useLayoutEffect(() => setValue('domain', ''), [pathname]);
 
   const handleSearch = useCallback(withForm(({ domain }) => setDomain((domain as string).toLowerCase().trim())), []);
 
@@ -27,7 +28,7 @@ const StatusSearch: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ where,
         variant={where === 'home' ? 'gradient' : 'purple'}
         className={cx(`status-search-${where} flex items-center`, {
           'relative h-92px pl-16px pr-12px rounded-24px': where === 'home',
-          'min-w-380px h-48px pl-12px pr-8px rounded-10px border-2px border-purple-normal': where === 'header',
+          'min-w-400px h-48px pl-12px pr-8px rounded-10px border-2px border-purple-normal': where === 'header',
           '!opacity-100 !pointer-events-auto': domain || currentInput
         })}
         withInput
@@ -63,7 +64,7 @@ const StatusSearch: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ where,
           where={where}
           className={cx('!absolute left-0 w-full z-10', {
             'top-[calc(100%+16px)]': where === 'home',
-            'top-[0]': where === 'header',
+            'top-[calc(100%+8px)]': where === 'header',
           })}
         />
       )}

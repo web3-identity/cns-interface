@@ -14,7 +14,7 @@ const Navbar: React.FC = () => {
   useClearRegisterInfoWhenAccountChange(account);
 
   return (
-    <header className="relative flex items-center h-88px pt-40px text-grey-normal whitespace-nowrap">
+    <header className="relative flex items-center h-88px pt-40px text-grey-normal whitespace-nowrap z-100">
       <nav className="left-1/2 -translate-x-1/2 absolute bottom-0 flex items-center w-full max-w-1232px leading-48px lt-xl:px-24px">
         <Link to="/" className="mr-auto text-grey-normal no-underline">
           <span>

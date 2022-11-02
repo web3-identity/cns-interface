@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Button from '@components/Button';
+import Domain from '@modules/Domain';
 import timerNotifier from '@utils/timerNotifier';
 import { web3Pay as _web3Pay, type CommitInfo } from '@service/domainRegister';
 import { usePayMethod } from '@service/payMethod';
@@ -41,7 +42,7 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
         <div className="pt-16px flex flex-col gap-24px">
           <div className="flex items-baseline">
             注册域名
-            <span className="ml-32px text-28px text-grey-normal font-bold">{domain}.web3</span>
+            <Domain className="ml-32px text-28px text-grey-normal font-bold" domain={domain} />
           </div>
 
           <div className="flex items-baseline">

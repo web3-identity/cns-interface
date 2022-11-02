@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { Link } from 'react-router-dom';
+import Domain from '@modules/Domain';
 import Button from '@components/Button';
 import { ReactComponent as SuccessIcon } from '@assets/icons/Success.svg';
 import { useDomainExpire } from '@service/domainInfo';
@@ -33,7 +34,7 @@ const Step3: React.FC<{ domain: string }> = ({ domain }) => {
         <div>
           <p className="flex items-center">
             注册域名
-            <span className="ml-32px text-28px text-grey-normal font-bold">{domain}.web3</span>
+            <Domain className="ml-32px text-28px text-grey-normal font-bold" domain={domain}/>
           </p>
 
           <p className="mt-16px flex items-center">

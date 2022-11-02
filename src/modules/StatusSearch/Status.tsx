@@ -2,10 +2,10 @@ import React, { Suspense, type HTMLAttributes } from 'react';
 import { Link } from 'react-router-dom';
 import cx from 'clsx';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
-import CustomScrollbar from 'custom-react-scrollbar';
 import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
+import Domain from '@modules/Domain';
 import { useDomainStatus, useRefreshDomainStatus, DomainStatus } from '@service/domainInfo';
 import { ReactComponent as StatusLocked } from '@assets/icons/status-locked.svg';
 import { ReactComponent as StatusRegistered } from '@assets/icons/status-registered.svg';
@@ -22,13 +22,9 @@ const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, wher
   const refreshDomainStatus = useRefreshDomainStatus(domain);
 
   return (
-    <CustomScrollbar
-      wrapperClassName={cx('!h-48px', className)}
-      direction="horizontal"
-      thumbMinSize={8}
-      className='!h-48px !overflow-y-hidden'
-      contentClassName={cx('relative min-w-full w-fit items-center pl-24px pr-12px bg-purple-dark-active whitespace-nowrap', {
-        'h-92px text-22px rounded-24px': where === 'home',
+    <div
+      className={cx('flex items-center pl-24px bg-purple-dark-active whitespace-nowrap', className, {
+        'h-92px pr-12px text-22px rounded-24px': where === 'home',
         'h-48px text-16px rounded-10px': where === 'header',
       })}
       {...props}
@@ -38,7 +34,7 @@ const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, wher
           <StatusContent domain={domain} where={where} />
         </Suspense>
       </ErrorBoundary>
-    </CustomScrollbar>
+    </div>
   );
 };
 
@@ -91,18 +87,18 @@ const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) 
       <Icon className="mr-12px w-40px h-40px -translate-y-2px flex-shrink-0" />
       <span className={cx('mr-auto', statusMap[status].color)}>
         {statusMap[status].text}
-        <span className="ml-24px font-bold">{domain}.web3</span>
+        <Domain className={cx('font-bold', where === 'header' ? 'ml-16px' : 'ml-24px')} domain={domain} ellipsisLength={where === 'header' ? 12 : 20}/>
       </span>
 
       {status === DomainStatus.Valid && (
-        <Link to={`/register/${domain}`} className="no-underline sticky right-12px ml-16px">
+        <Link to={`/register/${domain}`} className="no-underline">
           <Button size={where === 'header' ? 'small' : 'medium'} color="gradient">
             注册
           </Button>
         </Link>
       )}
       {status === DomainStatus.Registered && (
-        <Link to={`/register/${domain}`} className="no-underline sticky right-12px ml-16px">
+        <Link to={`/register/${domain}`} className="no-underline">
           <Button size={where === 'header' ? 'small' : 'medium'}>查看</Button>
         </Link>
       )}

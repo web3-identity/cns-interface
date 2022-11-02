@@ -30,34 +30,36 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
           <PayPrice className="mt-4px h-54px leading-54px text-45px" domain={domain} isPending={isPending} />
         </div>
 
-        <div>
-          <p className="w-fit">注册时长</p>
+        <div className='flex justify-center'>
+          <div>
+            <p className="w-fit">注册时长</p>
 
-          <div className="mt-4px flex items-center justify-self-end">
-            <button
-              onClick={() => startTransition(decrease)}
-              className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors disabled:pointer-events-none"
-              disabled={inTranscation}
-            >
-              <span className="i-fluent:subtract-12-filled text-16px font-bold" />
-            </button>
-            <p className="mx-24px">
-              <span className="inline-block min-w-60px text-center leading-54px text-45px text-grey-normal font-bold">
-                {durationYears < 10 ? `0${durationYears}` : durationYears}
-              </span>
-              <span className="ml-4px">年</span>
-            </p>
-            <button
-              onClick={() => startTransition(increase)}
-              className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors disabled:pointer-events-none"
-              disabled={inTranscation}
-            >
-              <span className="i-fluent:add-12-filled text-15px font-bold" />
-            </button>
+            <div className="mt-4px flex items-center">
+              <button
+                onClick={() => startTransition(decrease)}
+                className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors disabled:pointer-events-none"
+                disabled={inTranscation}
+              >
+                <span className="i-fluent:subtract-12-filled text-16px font-bold" />
+              </button>
+              <p className="mx-24px">
+                <span className="inline-block min-w-60px text-center leading-54px text-45px text-grey-normal font-bold">
+                  {durationYears < 10 ? `0${durationYears}` : durationYears}
+                </span>
+                <span className="ml-4px">年</span>
+              </p>
+              <button
+                onClick={() => startTransition(increase)}
+                className="mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover text-opacity-50 bg-purple-dark-hover hover:bg-purple-dark cursor-pointer transition-colors disabled:pointer-events-none"
+                disabled={inTranscation}
+              >
+                <span className="i-fluent:add-12-filled text-15px font-bold" />
+              </button>
+            </div>
           </div>
         </div>
 
-        <AuthConnectButton className="mb-4px w-156px h-44px self-end justify-self-end">
+        <AuthConnectButton className="mb-4px w-156px h-44px">
           <Button className="mb-4px w-156px h-44px self-end justify-self-end" loading={inTranscation} onClick={() => commitRegistration({ domain, durationYears })}>
             申请
           </Button>

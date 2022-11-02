@@ -1,4 +1,4 @@
-import { useState, useEffect, PropsWithChildren } from 'react';
+import { useState, useLayoutEffect, PropsWithChildren } from 'react';
 import cx from 'clsx';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 
 const Delay = ({ delay = 150, mode = 'display', children }: PropsWithChildren<Props>) => {
   const [ready, setReady] = useState(false);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const timer = setTimeout(() => setReady(true), delay);
     return () => clearTimeout(timer);
   }, []);

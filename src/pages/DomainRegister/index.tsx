@@ -1,8 +1,9 @@
 import React, { type HTMLAttributes } from 'react';
 import cx from 'clsx';
-import PageWrapper from '@components/Layout/PageWrapper';
 import { useParams } from 'react-router-dom';
+import PageWrapper from '@components/Layout/PageWrapper';
 import BorderBox from '@components/Box/BorderBox';
+import Domain from '@modules/Domain';
 import Register from './Register';
 import ProgressBar from './ProgressBar';
 import StatusCheck from './StatusCheck';
@@ -28,8 +29,8 @@ const DomainRegister: React.FC = () => {
 
   return (
     <PageWrapper className="pt-72px">
-      <BorderBox variant="gradient" className="mb-40px w-fit min-w-200px h-60px leading-58px rounded-24px text-center text-green-normal text-22px font-bold">
-        {domain}.web3
+      <BorderBox variant="gradient" className="mb-40px w-fit px-24px min-w-200px h-60px leading-58px rounded-24px text-center text-green-normal text-22px font-bold">
+        <Domain domain={domain} />
       </BorderBox>
       <StatusCheck domain={domain}>
         <Register domain={domain} />
