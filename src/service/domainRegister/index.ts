@@ -30,6 +30,13 @@ export const setRigisterToStep = (domain: string, step: RegisterStep) => {
 
 export const useRegisterStep = (domain: string) => useRecoilValue(registerStep(domain));
 
+
+export const backToStep1 = (domain: string) => {
+  clearCommitInfo(domain);
+  setRigisterToStep(domain, RegisterStep.WaitCommit);
+  setWaitPayConfrim(domain, false);
+}
+
 export const useMonitorDomainState = (domain: string) => {
   const refreshDomainStatus = useRefreshDomainStatus(domain);
 
@@ -66,7 +73,7 @@ export const useMonitorDomainState = (domain: string) => {
       try {
         const [orderPaidPromise, _stop] = waitAsyncResult(() => isOrderPaid(commitInfo.commitmentHash));
         stop = _stop;
-        const orderPaid = await orderPaidPromise;
+        const _ = await orderPaidPromise;
         if (getRigisterToStep(domain) === RegisterStep.WaitPay) {
           setWaitPayConfrim(domain, true);
         }

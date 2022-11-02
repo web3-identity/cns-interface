@@ -22,7 +22,7 @@ export const isOrderPaid = (commitmentHash: string) =>
 export const refreshRegisterOrder = (domain: string) => {
   const commitInfo = getCommitInfo(domain);
   if (!commitInfo) return;
-  fetchApi({
+  return fetchApi({
     path: `registers/order/refresh-url/${commitInfo.commitmentHash}`,
     method: 'PUT',
     params: {
