@@ -74,18 +74,22 @@ export const connect = async () => {
 };
 
 export const sendTransaction = (params: Parameters<typeof send>[0]) =>
-  provider.request({
-    method: 'cfx_sendTransaction',
-    params: [
-      {
+  provider
+    .request({
+      method: 'cfx_sendTransaction',
+      params: [
+        {
+          ...params,
+          from: getRecoil(accountState),
+        },
+      ],
+    })
+    .catch((e) =>
+      console.error({
         ...params,
         from: getRecoil(accountState),
-      },
-    ],
-  }).catch(e => console.error({
-    ...params,
-    from: getRecoil(accountState),
-  }))
+      })
+    );
 
 export const switchChain = () => {
   // targetChainId

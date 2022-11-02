@@ -21,5 +21,4 @@ export const accountState = atom<string | null | undefined>({
   ],
 });
 
-
 export const switchChain = () => _switchChain('0x' + Number(targetChainId).toString(16));

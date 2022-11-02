@@ -20,7 +20,7 @@
     "@tippyjs/react": "^4.2.6",
     "@web3identity/cns-contracts": "^0.2.1",
     "clsx": "^1.2.1",
-    "custom-react-scrollbar": "0.0.3",
+    "custom-react-scrollbar": "0.0.4",
     "dayjs": "^1.11.6",
     "ethers": "^5.7.2",
     "jsbi": "^4.3.0",

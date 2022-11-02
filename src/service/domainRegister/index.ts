@@ -90,9 +90,6 @@ export const useMonitorDomainState = (domain: string) => {
   }, []);
 };
 
-
-
-
 const preAccount = atom<string>({
   key: 'preAccountState',
   effects: [persistAtom],
@@ -100,36 +97,37 @@ const preAccount = atom<string>({
 export const setPreAccount = (account: string) => setRecoil(preAccount, account);
 export const usePreAccount = () => useRecoilValue(preAccount);
 
-
 export const useClearRegisterInfoWhenAccountChange = (account: string | null | undefined) => {
   const preAccount = usePreAccount();
-  
+
   useEffect(() => {
     if (account && preAccount && account !== preAccount) {
       const _storageData = localStorage.getItem('localStorage_enhance');
       if (!_storageData) return;
       const storageData = JSON.parse(_storageData);
       if (!Array.isArray(storageData)) return;
-      storageData.filter(
-        ([key]: [string, any]) =>
-          key?.startsWith?.('default|waitPayConfrim') ||
-          key?.startsWith?.('CommitInfo|CommitInfo') ||
-          key?.startsWith?.('default|RegisterStep') ||
-          key?.startsWith?.('default|registerDurationYears')
-      ).forEach(([key]: [string, any]) => {
-        const [namespace, itemKey] = key.split('|');
-        const regex = /\"(.+?)\"/g;
-        const domain = regex.exec(itemKey)?.[1];
-        if (domain) {
-          clearCommitInfo(domain);
-          setRigisterToStep(domain, RegisterStep.WaitCommit);
-        }
-        LocalStorage.removeItem(itemKey, namespace);
-      });
+      storageData
+        .filter(
+          ([key]: [string, any]) =>
+            key?.startsWith?.('default|waitPayConfrim') ||
+            key?.startsWith?.('CommitInfo|CommitInfo') ||
+            key?.startsWith?.('default|RegisterStep') ||
+            key?.startsWith?.('default|registerDurationYears')
+        )
+        .forEach(([key]: [string, any]) => {
+          const [namespace, itemKey] = key.split('|');
+          const regex = /\"(.+?)\"/g;
+          const domain = regex.exec(itemKey)?.[1];
+          if (domain) {
+            clearCommitInfo(domain);
+            setRigisterToStep(domain, RegisterStep.WaitCommit);
+          }
+          LocalStorage.removeItem(itemKey, namespace);
+        });
     }
 
     if (account) {
       setPreAccount(account);
     }
   }, [account, preAccount]);
-}
+};

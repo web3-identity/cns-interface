@@ -3,7 +3,7 @@ import { setRecoil, getRecoil } from 'recoil-nexus';
 import { persistAtom } from '@utils/recoilUtils';
 import { convertCfxToHex, convertHexToCfx, validateCfxAddress, validateHexAddress } from '@utils/addressUtils';
 import { accountState as fluentAccountState, connect as connectFluent, switchChain as switchChainFluent, sendTransaction as sendTransactionWithFluent } from './fluent';
-import { accountState as anywebAccountState, connect as connectAnyweb, switchChain as switchChainAnyweb, sendTransaction as sendTransactionWithAnyweb} from './anyweb';
+import { accountState as anywebAccountState, connect as connectAnyweb, switchChain as switchChainAnyweb, sendTransaction as sendTransactionWithAnyweb } from './anyweb';
 import isProduction from '@utils/isProduction';
 export const targetChainId = isProduction ? '1029' : '1';
 
@@ -12,13 +12,13 @@ const methodsMap = {
     accountState: fluentAccountState,
     connect: connectFluent,
     switchChain: switchChainFluent,
-    sendTransaction: sendTransactionWithFluent
+    sendTransaction: sendTransactionWithFluent,
   },
   anyweb: {
     accountState: anywebAccountState,
     connect: connectAnyweb,
     switchChain: switchChainAnyweb,
-    sendTransaction: sendTransactionWithAnyweb
+    sendTransaction: sendTransactionWithAnyweb,
   },
 } as const;
 
@@ -57,7 +57,6 @@ export const hexAccountState = selector({
 export const chainIdState = selector({
   key: 'chainIdState',
   get: ({ get }) => {
-
     const account = get(accountState);
     if (!account) return null;
     if (account.startsWith('cfxtest')) return '1';
@@ -80,16 +79,15 @@ export const switchChain = () => {
   const method = getAccountMethod();
   if (!method) return;
   methodsMap[method].switchChain();
-}
+};
 
-export const sendTransaction = async (params: Parameters<typeof sendTransactionWithFluent>[0] & { from: string; }) => {
+export const sendTransaction = async (params: Parameters<typeof sendTransactionWithFluent>[0] & { from: string }) => {
   const accountMethod = getAccountMethod();
   if (!accountMethod) {
     throw new Error('No account connected');
   }
   return methodsMap[accountMethod].sendTransaction(params) as unknown as string;
 };
-
 
 export const disconnect = () => setRecoil(accountMethodFilter, null);
 export const useAccount = () => useRecoilValue(accountState);

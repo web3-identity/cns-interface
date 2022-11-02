@@ -1,0 +1,7 @@
+.status-search-header:focus-within + label {
+  @apply pointer-events-none opacity-0;
+}
+
+.status-search-header:not(:focus-within) {
+  @apply opacity-0 pointer-events-none;
+}

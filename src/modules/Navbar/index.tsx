@@ -23,11 +23,11 @@ const Navbar: React.FC = () => {
           </span>
         </Link>
 
-        {pathname !== '/' && <StatusSearch where="header" className="mr-28px"/>}
+        {pathname !== '/' && <StatusSearch where="header" className="mr-24px"/>}
         {!account && <Button onClick={showAccountConnector}>连接</Button>}
         {account && (
           <>
-            <span className="ml-26px mr-10px text-16px text-#AAA9C1">{shortenAddress(account)}</span>
+            <span className="mr-10px text-16px text-#AAA9C1">{shortenAddress(account)}</span>
             <Account />
           </>
         )}

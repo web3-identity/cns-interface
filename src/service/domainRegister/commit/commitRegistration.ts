@@ -13,7 +13,7 @@ import { setCommitInfo } from '../';
 const isCommitReceipt = (commitmentHash: string) =>
   fetchChain<string>({
     params: [{ data: Web3Controller.func.encodeFunctionData('commitments', [commitmentHash]), to: Web3Controller.address }, 'latest_state'],
-  }).then((timestamp) => timestamp ? Number(timestamp) * 1000 : null);
+  }).then((timestamp) => (timestamp ? Number(timestamp) * 1000 : null));
 
 interface Params {
   domain: string;
@@ -51,7 +51,7 @@ export const commitRegistration = async ({ domain, durationYears }: Params) => {
     await receiptPromise;
 
     const [receiptCommit] = waitAsyncResult(() => isCommitReceipt(commitmentHash));
-    const commitTime =  await receiptCommit;
+    const commitTime = await receiptCommit;
 
     if (payMethod === 'web2' && !isMobile()) {
       const _ = await postCommitmentToBackend(commitmentHash, commitParams);

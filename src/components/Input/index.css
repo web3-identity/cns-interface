@@ -34,7 +34,7 @@
 
 
 .prefix-icon ~ .input {
-  @apply !px-1.9em;
+  @apply !pl-1.9em;
 }
 
 .prefix-icon ~ .input.outer-placeholder + * {
@@ -50,7 +50,7 @@
 }
 
 .input:not(:placeholder-shown) + .clear-icon {
-  @apply opacity-100 pointer-events-auto;
+  @apply block;
 }
 
 input::-webkit-outer-spin-button,

@@ -17,16 +17,16 @@ export const web3Pay = async ({ domain, durationYears }: Params) => {
     const hexAccount = getHexAccount();
     const commitInfo = getCommitInfo(domain);
     const payPrice = getPayPrice(domain);
-    
+
     const params = [domain, hexAccount, durationSeconds, commitInfo.secret, PublicResolver.hexAddress, [], true, 0, 1659467455 + durationSeconds];
-    
+
     const txHash = await sendTransaction({
       data: Web3Controller.func.encodeFunctionData('register', params),
       from: account!,
       to: Web3Controller.address,
-      value: payPrice.toHexMinUnit()
+      value: payPrice.toHexMinUnit(),
     });
-    
+
     setWaitPayConfrim(domain, true);
     setTimeout(() => setWaitPayConfrim(domain, false), 1000 * 180);
   } catch (err) {

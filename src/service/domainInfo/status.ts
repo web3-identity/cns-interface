@@ -9,7 +9,7 @@ export enum DomainStatus {
   IllegalChar,
   Locked,
   Registered,
-  NotOpen
+  NotOpen,
 }
 
 const domainStatusQuery = selectorFamily<DomainStatus, string>({

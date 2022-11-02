@@ -24,4 +24,5 @@ const generateCommitmentParams = (commitmentHash: string, params: Array<any>) =>
 /**
  * The api of backend
  */
-export const postCommitmentToBackend = (commitmentHash: string, params: Array<any>)  => fetchApi({ path: 'commits', method: 'POST', params: generateCommitmentParams(commitmentHash, params) });
+export const postCommitmentToBackend = (commitmentHash: string, params: Array<any>) =>
+  fetchApi({ path: 'commits', method: 'POST', params: generateCommitmentParams(commitmentHash, params) });
