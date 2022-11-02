@@ -75,9 +75,9 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
               )}
               支付域名注册费
             </p>
-            <p className="mt-2px">
+            <p className="mt-2px flex items-center">
               请在
-              <span ref={remainTimeDOM} className="inline-block mx-4px min-w-68px text-center text-grey-normal">
+              <span ref={remainTimeDOM} className="contain-content inline-block mx-4px min-w-68px text-center text-grey-normal">
                 09:30秒
               </span>
               内完成支付

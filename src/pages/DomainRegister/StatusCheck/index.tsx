@@ -45,6 +45,9 @@ const statusMap = {
   [DomainStatus.IllegalChar]: {
     text: '域名包含不支持的字符',
   },
+  [DomainStatus.NotOpen]: {
+    text: '域名未开放',
+  }
 } as const;
 
 const Warning = () => (

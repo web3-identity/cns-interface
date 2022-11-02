@@ -70,12 +70,17 @@ const statusMap = {
     text: '域名包含不支持的字符',
     color: 'text-error-normal',
   },
+  [DomainStatus.NotOpen]: {
+    icon: StatusReserved,
+    text: '未开放',
+    color: 'text-#83828F',
+  }
 } as const;
 
 const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) => {
   const status = useDomainStatus(domain);
-
   const Icon = statusMap[status].icon;
+  
   return (
     <>
       <Icon className="mr-12px w-40px h-40px -translate-y-2px" />

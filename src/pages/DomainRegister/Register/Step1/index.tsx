@@ -2,6 +2,7 @@ import React, { Suspense, useTransition } from 'react';
 import { atomFamily, useRecoilState } from 'recoil';
 import { persistAtomWithDefault } from '@utils/recoilUtils';
 import Button from '@components/Button';
+import AuthConnectButton from '@modules/AuthConnectButton';
 import { useMinCommitLockTime, commitRegistration as _commitRegistration } from '@service/domainRegister';
 import useInTranscation from '@hooks/useInTranscation';
 import { RegisterBox } from '@pages/DomainRegister';
@@ -56,9 +57,11 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
           </div>
         </div>
 
-        <Button className="mb-4px w-156px h-44px self-end justify-self-end" loading={inTranscation} onClick={() => commitRegistration({ domain, durationYears })}>
-          申请
-        </Button>
+        <AuthConnectButton className="mb-4px w-156px h-44px self-end justify-self-end">
+          <Button className="mb-4px w-156px h-44px self-end justify-self-end" loading={inTranscation} onClick={() => commitRegistration({ domain, durationYears })}>
+            申请
+          </Button>
+        </AuthConnectButton>
       </div>
 
       <p className="mt-auto px-24px py-16px rounded-12px leading-24px bg-#26233E whitespace-normal">

@@ -2,6 +2,7 @@ import { atom } from 'recoil';
 import { setRecoil, getRecoil } from 'recoil-nexus';
 import { persistAtom } from '@utils/recoilUtils';
 import { Provider } from '@idealight-labs/anyweb-js-sdk';
+import { targetChainId } from '..';
 import { sendTransaction as send } from '@cfxjs/use-wallet-react/conflux/Fluent';
 
 export const provider = new Provider({
@@ -85,3 +86,7 @@ export const sendTransaction = (params: Parameters<typeof send>[0]) =>
     ...params,
     from: getRecoil(accountState),
   }))
+
+export const switchChain = () => {
+  // targetChainId
+};

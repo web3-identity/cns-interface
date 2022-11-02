@@ -10,8 +10,6 @@ const waitPayConfrimState = atomFamily<boolean, string>({
   effects: [persistAtomWithDefault(false)],
 });
 
-export const setWaitPayConfrim = (domain: string, state: boolean) => {
-  setRecoil(waitPayConfrimState(domain), state);
-};
+export const setWaitPayConfrim = (domain: string, state: boolean) => setRecoil(waitPayConfrimState(domain), state);
 
 export const useWaitPayConfrimState = (domain: string) => useRecoilValue(waitPayConfrimState(domain));

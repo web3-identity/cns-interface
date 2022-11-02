@@ -5,7 +5,7 @@ import { setRecoil, getRecoil } from 'recoil-nexus';
 import JobSchedule from '@utils/JobSchedule';
 import { persistAtomWithNamespace } from '@utils/recoilUtils';
 import { getMinCommitLockTime, getMaxCommitLockTime } from './MinMaxCommitLockTime';
-import { setRigisterToStep, RegisterStep } from '..';
+import { setRigisterToStep, RegisterStep, setWaitPayConfrim } from '..';
 
 export type CommitInfo = {
   commitmentHash: string;
@@ -48,6 +48,7 @@ export const setCommitInfo = (domain: string, commitInfo: { commitmentHash: stri
 export const clearCommitInfo = (domain: string) => {
   setRecoil(commitInfoState(domain), null);
   JobSchedule.removeJob(domain);
+  setWaitPayConfrim(domain, false);
 };
 
 const scheduleJob = (domain: string, validTime: CommitInfo['validTime']) => {
@@ -56,11 +57,9 @@ const scheduleJob = (domain: string, validTime: CommitInfo['validTime']) => {
     triggerTime: [validTime.start, validTime.end],
     callback: [
       () => {
-        console.log('start time callback');
         setRigisterToStep(domain, RegisterStep.WaitPay);
       },
       () => {
-        console.log('end time callback');
         setRigisterToStep(domain, RegisterStep.WaitCommit);
         clearCommitInfo(domain);
       },

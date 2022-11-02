@@ -16,9 +16,9 @@ const AccountDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ childre
 const AccountDropdown: React.FC = () => {
   return (
     <div className="mt-24px flex flex-col gap-16px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow">
-      <AccountDropdownItem>
-        <Link to="/my-domains" className="text-white no-underline">域名管理</Link>
-      </AccountDropdownItem>
+      <Link to="/my-domains" className="text-white no-underline">
+        <AccountDropdownItem>域名管理</AccountDropdownItem>
+      </Link>
       <AccountDropdownItem onClick={disconnect}>退出登录</AccountDropdownItem>
     </div>
   );

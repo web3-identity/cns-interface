@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import Button from '@components/Button';
 import { useAccount } from '@service/account';
+import { useClearRegisterInfoWhenAccountChange } from '@service/domainRegister';
 import StatusSearch from '@modules/StatusSearch';
 import { shortenAddress } from '@utils/addressUtils';
 import Account from './Account';
@@ -10,6 +11,7 @@ import showAccountConnector from './AccountConnector';
 const Navbar: React.FC = () => {
   const account = useAccount();
   const { pathname } = useLocation();
+  useClearRegisterInfoWhenAccountChange(account);
 
   return (
     <header className="relative flex items-center h-88px pt-40px text-grey-normal whitespace-nowrap">

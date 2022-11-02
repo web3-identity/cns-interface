@@ -6,8 +6,10 @@
   "scripts": {
     "dev:web2": "vite --mode web2-dev --host",
     "dev:web3": "vite --mode web3-dev --host",
-    "build:web2": "vite build --mode web2-prod",
-    "build:web3": "vite build --mode web3-prod"
+    "build:web2-dev": "vite build --mode web2-dev",
+    "build:web3-dev": "vite build --mode web3-dev",
+    "build:web2-prod": "vite build --mode web2-prod",
+    "build:web3-prod": "vite build --mode web3-prod"
   },
   "dependencies": {
     "@cfxjs/use-wallet-react": "0.0.1-33",

@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
-import { atomFamily, useRecoilValue } from 'recoil';
+import { useEffect, useRef } from 'react';
+import { atom, atomFamily, useRecoilValue } from 'recoil';
 import { setRecoil, getRecoil } from 'recoil-nexus';
-import { persistAtomWithDefault } from '@utils/recoilUtils';
+import { persistAtom, persistAtomWithDefault } from '@utils/recoilUtils';
 import { useRefreshDomainStatus } from '@service/domainInfo';
 import { fetchDomainOwner } from '@service/domainInfo';
 import { usePayMethod } from '@service/payMethod';
-import { getAccount } from '@service/account';
+import { useAccount, getAccount } from '@service/account';
+import LocalStorage from 'localstorage-enhance';
 import waitAsyncResult from '@utils/waitAsyncResult';
 import { clearCommitInfo, useCommitInfo } from './commit';
 import { setWaitPayConfrim, isOrderPaid } from './pay';
@@ -30,12 +31,10 @@ export const setRigisterToStep = (domain: string, step: RegisterStep) => {
 
 export const useRegisterStep = (domain: string) => useRecoilValue(registerStep(domain));
 
-
 export const backToStep1 = (domain: string) => {
   clearCommitInfo(domain);
   setRigisterToStep(domain, RegisterStep.WaitCommit);
-  setWaitPayConfrim(domain, false);
-}
+};
 
 export const useMonitorDomainState = (domain: string) => {
   const refreshDomainStatus = useRefreshDomainStatus(domain);
@@ -48,7 +47,6 @@ export const useMonitorDomainState = (domain: string) => {
         stop = _stop;
         const owner = await ownerPromise;
         clearCommitInfo(domain);
-        setWaitPayConfrim(domain, false);
         if (getAccount() === owner) {
           setRigisterToStep(domain, RegisterStep.Success);
         } else {
@@ -91,3 +89,47 @@ export const useMonitorDomainState = (domain: string) => {
     return () => clearInterval(timer);
   }, []);
 };
+
+
+
+
+const preAccount = atom<string>({
+  key: 'preAccountState',
+  effects: [persistAtom],
+});
+export const setPreAccount = (account: string) => setRecoil(preAccount, account);
+export const usePreAccount = () => useRecoilValue(preAccount);
+
+
+export const useClearRegisterInfoWhenAccountChange = (account: string | null | undefined) => {
+  const preAccount = usePreAccount();
+  
+  useEffect(() => {
+    if (account && preAccount && account !== preAccount) {
+      const _storageData = localStorage.getItem('localStorage_enhance');
+      if (!_storageData) return;
+      const storageData = JSON.parse(_storageData);
+      if (!Array.isArray(storageData)) return;
+      storageData.filter(
+        ([key]: [string, any]) =>
+          key?.startsWith?.('default|waitPayConfrim') ||
+          key?.startsWith?.('CommitInfo|CommitInfo') ||
+          key?.startsWith?.('default|RegisterStep') ||
+          key?.startsWith?.('default|registerDurationYears')
+      ).forEach(([key]: [string, any]) => {
+        const [namespace, itemKey] = key.split('|');
+        const regex = /\"(.+?)\"/g;
+        const domain = regex.exec(itemKey)?.[1];
+        if (domain) {
+          clearCommitInfo(domain);
+          setRigisterToStep(domain, RegisterStep.WaitCommit);
+        }
+        LocalStorage.removeItem(itemKey, namespace);
+      });
+    }
+
+    if (account) {
+      setPreAccount(account);
+    }
+  }, [account, preAccount]);
+}
