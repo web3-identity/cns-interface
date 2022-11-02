@@ -2,6 +2,7 @@ import { getAccount, getHexAccount, sendTransaction } from '@service/account';
 import { getPayMethod } from '@service/payMethod';
 import { randomSecret } from '@utils/domainHelper';
 import { fetchChain } from '@utils/fetch';
+import dayjs from 'dayjs';
 import isMobile from '@utils/isMobie';
 import { yearsToSeconds } from '@utils/date';
 import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
@@ -26,7 +27,8 @@ export const commitRegistration = async ({ domain, durationYears }: Params) => {
     const hexAccount = getHexAccount();
     const payMethod = getPayMethod();
     const secret = randomSecret();
-    const commitParams = [domain, hexAccount, durationSeconds, secret, PublicResolver.hexAddress, [], true, 0, 1659467455 + durationSeconds];
+    const now = dayjs().unix()
+    const commitParams = [domain, hexAccount, durationSeconds, secret, PublicResolver.hexAddress, [], true, 0, now + durationSeconds];
 
     const commitmentHash: string = await fetchChain({
       params: [

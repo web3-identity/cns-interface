@@ -36,6 +36,7 @@ const domainReverseRegistrarQuery = selector({
         params: [{ data: PublicResolver.func.encodeFunctionData('name', [node]), to: PublicResolver.address }, 'latest_state'],
       }).then((response) => {
         const domain = PublicResolver.func.decodeFunctionResult('name', response)?.[0];
+        console.log('domain', domain)
         return domain;
       });
     } catch (err) {
