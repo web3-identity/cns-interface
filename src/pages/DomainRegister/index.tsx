@@ -29,7 +29,7 @@ const DomainRegister: React.FC = () => {
   return (
     <PageWrapper className="pt-72px">
       <BorderBox variant="gradient" className="mb-40px w-fit min-w-200px h-60px leading-58px rounded-24px text-center text-green-normal text-22px font-bold">
-        {domain}
+        {domain}.web3
       </BorderBox>
       <StatusCheck domain={domain}>
         <Register domain={domain} />

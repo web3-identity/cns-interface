@@ -33,6 +33,7 @@ export const setCommitInfo = (domain: string, commitInfo: { commitmentHash: stri
     start: commitInfo.commitTime + minCommitLockTime * 1000,
     end: commitInfo.commitTime + maxCommitLockTime * 1000,
   };
+  console.log(validTime, maxCommitLockTime)
 
   setRecoil(commitInfoState(domain), {
     commitmentHash: commitInfo.commitmentHash,
@@ -77,7 +78,6 @@ export const getCommitInfo = (domain: string) => getRecoil(commitInfoState(domai
     let storageData = JSON.parse(_storageData);
     if (!Array.isArray(storageData)) return;
     const allCommitInfo = storageData.filter((data: [string, any]) => data?.[0]?.startsWith('CommitInfo'));
-    console.log(allCommitInfo)
     allCommitInfo.forEach((data: [string, any]) => {
       const regex = /\"(.+?)\"/g;
       const domain = regex.exec(data?.[0])?.[1];

@@ -18,7 +18,7 @@ interface Props {
 }
 
 const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, where, className, ...props }) => {
-  const handleRefresh = useRefreshDomainStatus(domain);
+  const refreshDomainStatus = useRefreshDomainStatus(domain);
 
   return (
     <div
@@ -28,7 +28,7 @@ const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, wher
       })}
       {...props}
     >
-      <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} where={where} />} onReset={handleRefresh}>
+      <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} where={where} />} onReset={refreshDomainStatus}>
         <Suspense fallback={<StatusLoading />}>
           <StatusContent domain={domain} where={where} />
         </Suspense>
