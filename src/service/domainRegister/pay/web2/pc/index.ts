@@ -14,12 +14,14 @@ const postOrder = (commitmentHash: string, domain: string) =>
   });
 
 const getOrder = (commitmentHash: string) => fetchApi({ path: `registers/order/${commitmentHash}`, method: 'GET' });
-export const isOrderPaid = (commitmentHash: string) =>
+
+
+export const getOrderStatus = (commitmentHash: string) =>
   fetchApi<Response>({ path: `registers/order/${commitmentHash}`, method: 'GET' }).then((res) => {
-    if (res?.trade_state === 'REFUND' && !!res?.refund_state && res?.refund_state !== 'NIL') {
+    if (!!res?.tx_state && res.tx_state !== 'INIT') {
       return res?.tx_state;
     }
-    return !!res?.trade_state && res.trade_state === 'SUCCESS' ? true : null;
+    return !!res?.trade_state && res.trade_state === 'SUCCESS' ? 'Paid' : null;
   });
 
 export const refreshRegisterOrder = (domain: string) => {
@@ -63,7 +65,7 @@ const makeOrderQuery = selectorFamily<Response, string>({
               throw new Error(getRes.message);
             }
 
-            if (postRes?.trade_state === 'REFUND' && !!getRes?.refund_state && postRes?.refund_state !== 'NIL') {
+            if (!!getRes?.tx_state && postRes?.tx_state !== 'INIT') {
               throw new Error(postRes?.tx_state);
             }
             return postRes;
@@ -72,12 +74,11 @@ const makeOrderQuery = selectorFamily<Response, string>({
           }
         }
 
-        if (getRes?.trade_state === 'REFUND' && !!getRes?.refund_state && getRes?.refund_state !== 'NIL') {
+        if (!!getRes?.tx_state && getRes?.tx_state !== 'INIT') {
           throw new Error(getRes?.tx_state);
         }
         return getRes;
       } catch (err) {
-        console.log(err);
         throw err;
       }
     },
