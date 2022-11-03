@@ -59,8 +59,8 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
           </div>
         </div>
 
-        <AuthConnectButton className="mb-4px w-156px h-44px">
-          <Button className="mb-4px w-156px h-44px self-end justify-self-end" loading={inTranscation} onClick={() => commitRegistration({ domain, durationYears })}>
+        <AuthConnectButton className="w-152px h-48px self-end justify-self-end">
+          <Button className="w-152px h-48px self-end justify-self-end" loading={inTranscation} onClick={() => commitRegistration({ domain, durationYears })}>
             申请
           </Button>
         </AuthConnectButton>

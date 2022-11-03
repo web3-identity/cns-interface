@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { disconnect } from '@service/account';
 import Dropdown from '@components/Dropdown';
 import Avatar from '@components/Avatar';
+import isMobile from '@utils/isMobie';
 import { useAccount } from '@service/account';
 
 const AccountDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, onClick }) => {
@@ -28,8 +29,8 @@ const Account: React.FC = () => {
   const account = useAccount();
   return (
     <Dropdown placement="bottom-start" trigger="click" interactiveDebounce={100} Content={<AccountDropdown />}>
-      <span className="w-48px h-48px flex-shrink-0 cursor-pointer">
-        <Avatar address={account} diameter={48} />
+      <span className="flex-shrink-0 cursor-pointer">
+        <Avatar address={account} diameter={!isMobile() ? 48 : 32} />
       </span>
     </Dropdown>
   );

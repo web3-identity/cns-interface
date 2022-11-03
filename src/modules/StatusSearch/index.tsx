@@ -2,11 +2,13 @@ import React, { useState, useCallback, useLayoutEffect, memo, type HTMLAttribute
 import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import cx from 'clsx';
+import isMobile from '@utils/isMobie';
 import BorderBox from '@components/Box/BorderBox';
 import Input from '@components/Input';
 import Button from '@components/Button';
 import Status from '@modules/StatusSearch/Status';
 import './index.css';
+import { is } from '@react-spring/shared';
 
 interface Props {
   where: 'home' | 'header';
@@ -20,16 +22,19 @@ const StatusSearch: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ where,
   useLayoutEffect(() => setDomain(''), [currentInput, pathname]);
   useLayoutEffect(() => setValue('domain', ''), [pathname]);
 
-  const handleSearch = useCallback(withForm(({ domain }) => setDomain((domain as string).toLowerCase().trim())), []);
+  const handleSearch = useCallback(
+    withForm(({ domain }) => setDomain((domain as string).toLowerCase().trim())),
+    []
+  );
 
   return (
     <form onSubmit={handleSearch} className={cx('relative', className)}>
       <BorderBox
         variant={where === 'home' ? 'gradient' : 'purple'}
         className={cx(`status-search-${where} flex items-center`, {
-          'relative h-92px pl-16px pr-12px rounded-24px': where === 'home',
+          'relative h-92px pl-16px pr-12px rounded-24px lt-md:h-56px lt-md:px-8px lt-md:rounded-12px': where === 'home',
           'min-w-400px h-48px pl-12px pr-8px rounded-10px border-2px border-purple-normal': where === 'header',
-          '!opacity-100 !pointer-events-auto': domain || currentInput
+          '!opacity-100 !pointer-events-auto': domain || currentInput,
         })}
         withInput
         {...props}
@@ -37,13 +42,17 @@ const StatusSearch: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ where,
         <Input
           id="status-search"
           className="lowercase"
-          size={where === 'header' ? 'normal' : 'medium'}
-          prefixIcon="i-charm:search"
+          size={where === 'header' || isMobile() ? 'normal' : 'medium'}
+          prefixIcon={!isMobile() ? 'i-charm:search' : ''}
           placeholder="获取您的.web3"
           autoFocus={where === 'home'}
           {...register('domain', { required: true })}
         />
-        {!domain && <Button size={where === 'header' ? 'small' : 'medium'}>搜索</Button>}
+        {!domain && (
+          <Button size={where === 'header' ? 'small' : isMobile() ? 'normal' : 'medium'} className="w-48px">
+            {!isMobile() ? '搜索' : <span className="i-charm:search w-32px h-32px text-grey-normal" />}
+          </Button>
+        )}
       </BorderBox>
 
       {where === 'header' && (

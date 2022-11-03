@@ -20,7 +20,7 @@ button.absolute {
 }
 
 .button--normal {
-  @apply text-[16px] h-[48px] px-[32px] rounded-10px leading-48px;
+  @apply text-[16px] h-[48px] lt-md:h-[44px] px-[32px] lt-md:px-[16px] rounded-10px leading-48px lt-md:leading-44px;
 }
 
 .button--medium {

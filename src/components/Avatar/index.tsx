@@ -11,7 +11,7 @@ const Avatar: React.FC<HTMLAttributes<HTMLDivElement> & { address: string | null
     removeAllChild(avatarContainerRef.current);
     avatarContainerRef.current.appendChild(avatarDom);
   }, [diameter, renderAddress]);
-  return <div className={`h-${diameter}px`} ref={avatarContainerRef} />;
+  return <div className={`h-${diameter}px w-${diameter}px`} ref={avatarContainerRef} />;
 };
 
 export default Avatar;
