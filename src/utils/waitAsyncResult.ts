@@ -58,8 +58,8 @@ export const getAsyncResult = <T extends () => Promise<any>, K>(fetcher: T, call
       if (isStop) {
         return;
       }
+      
       const res = await fetcher();
-
       if (res) {
         callback(res);
       }
