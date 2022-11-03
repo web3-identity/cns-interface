@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import { RecoilRoot } from 'recoil';
 import RecoilNexus from 'recoil-nexus';
+import { completeDetect } from '@cfxjs/use-wallet-react/conflux';
 import Router from './router';
 import isMobile from '@utils/isMobie';
 import { ModalPopup } from '@components/showPopup/Modal';
@@ -12,11 +13,12 @@ import './index.css';
 if (isMobile()) {
   document.styleSheets[0].insertRule('.scrollbar__thumbPlaceholder--vertical { display:none; }', 0);
 }
-
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+completeDetect().then(() => {
+  ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <RecoilRoot>
       <RecoilNexus />
       <ModalPopup.Provider />
       <Router />
     </RecoilRoot>
-);
+  );
+});
