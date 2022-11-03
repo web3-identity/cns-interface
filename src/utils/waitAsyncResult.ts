@@ -22,13 +22,12 @@ async function* endlessGenerator() {
 export const waitSeconds = (seconds: number) => new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
 /**
-* @param {Number} maxWaitTime - max wait time in seconds; 0 means endless;
-*/
+ * @param {Number} maxWaitTime - max wait time in seconds; 0 means endless;
+ */
 const waitAsyncResult = <T extends () => Promise<any>>(fetcher: T, maxWaitTime: number = 44) => {
   let isStop = false;
-  const stop = () => isStop = true;
+  const stop = () => (isStop = true);
   const promise = new Promise<NonNullable<Awaited<ReturnType<T>>>>(async (resolve, reject) => {
-
     const generator = maxWaitTime === 0 ? endlessGenerator() : Array.from({ length: Math.floor(maxWaitTime / 1) });
 
     for await (const _ of generator) {
@@ -47,6 +46,29 @@ const waitAsyncResult = <T extends () => Promise<any>>(fetcher: T, maxWaitTime: 
   });
 
   return [promise, stop] as const;
+};
+
+export const getAsyncResult = <T extends () => Promise<any>, K>(fetcher: T, callback: (args: K) => void, maxWaitTime: number = 44) => {
+  let isStop = false;
+  const stop = () => (isStop = true);
+
+  const generator = maxWaitTime === 0 ? endlessGenerator() : Array.from({ length: Math.floor(maxWaitTime / 1) });
+  const start = async () => {
+    for await (const _ of generator) {
+      if (isStop) {
+        return;
+      }
+      const res = await fetcher();
+
+      if (res) {
+        callback(res);
+      }
+      await waitSeconds(2);
+    }
+  };
+  start();
+
+  return stop;
 };
 
 export default waitAsyncResult;

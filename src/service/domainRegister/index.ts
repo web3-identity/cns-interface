@@ -7,9 +7,9 @@ import { fetchDomainOwner } from '@service/domainInfo';
 import { usePayMethod } from '@service/payMethod';
 import { getAccount } from '@service/account';
 import LocalStorage from 'localstorage-enhance';
-import waitAsyncResult from '@utils/waitAsyncResult';
+import waitAsyncResult, { getAsyncResult } from '@utils/waitAsyncResult';
 import { clearCommitInfo, useCommitInfo } from './commit';
-import { setWaitPayConfrim, isOrderPaid, useRefreshMakeOrder } from './pay';
+import { setWaitPayConfrim, getWaitPayConfrim, getOrderStatus, useRefreshMakeOrder } from './pay';
 export * from './commit';
 export * from './pay';
 
@@ -66,30 +66,35 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
   const payMethod = usePayMethod();
   const commitInfo = useCommitInfo(domain);
   useEffect(() => {
-    if (payMethod === 'web3' || !commitInfo || registerStep !== RegisterStep.WaitPay) return;
+    if (payMethod === 'web3' || !commitInfo?.commitmentHash || registerStep !== RegisterStep.WaitPay || !domain) return;
 
-    let stop: VoidFunction;
-    const startFetch = async () => {
-      try {
-        const [orderPaidPromise, _stop] = waitAsyncResult(() => isOrderPaid(commitInfo.commitmentHash), 0);
-        stop = _stop;
-        const orderStatus = await orderPaidPromise;
-        if (getRigisterToStep(domain) === RegisterStep.WaitPay) {
-          if (orderStatus === true) {
-            setWaitPayConfrim(domain, true);
-          } else {
-            refreshMakeOrder();
-          }
+    let preOrderStatus: string | null = null;
+    const stop = getAsyncResult(
+      () => getOrderStatus(commitInfo.commitmentHash),
+      (orderStatus: string) => {
+        const isWaitPayConfrim = getWaitPayConfrim(domain);
+        if (preOrderStatus === orderStatus) {
+          return ;
         }
-      } catch (_) {
-      }
-    };
+        preOrderStatus = orderStatus;
+        if (orderStatus === 'Paid') {
+          if (!isWaitPayConfrim) {
+            setWaitPayConfrim(domain, true);
+          }
+        } else {
+          if (isWaitPayConfrim) {
+            setWaitPayConfrim(domain, false);
+          }
+          refreshMakeOrder();
+        }
+      },
+      0
+    );
 
-    startFetch();
     return () => {
       stop?.();
     };
-  }, [payMethod, registerStep, commitInfo]);
+  }, [domain, payMethod, registerStep, commitInfo?.commitmentHash]);
 };
 
 const preAccount = atom<string>({
