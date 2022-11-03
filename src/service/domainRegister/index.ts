@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { atom, atomFamily, useRecoilValue } from 'recoil';
 import { setRecoil, getRecoil } from 'recoil-nexus';
 import { persistAtom, persistAtomWithDefault } from '@utils/recoilUtils';
@@ -9,7 +9,7 @@ import { getAccount } from '@service/account';
 import LocalStorage from 'localstorage-enhance';
 import waitAsyncResult from '@utils/waitAsyncResult';
 import { clearCommitInfo, useCommitInfo } from './commit';
-import { setWaitPayConfrim, isOrderPaid } from './pay';
+import { setWaitPayConfrim, isOrderPaid, useRefreshMakeOrder } from './pay';
 export * from './commit';
 export * from './pay';
 
@@ -38,12 +38,13 @@ export const backToStep1 = (domain: string) => {
 
 export const useMonitorDomainState = (domain: string, registerStep: RegisterStep) => {
   const refreshDomainStatus = useRefreshDomainStatus(domain);
+  const refreshMakeOrder = useRefreshMakeOrder(domain);
 
   useEffect(() => {
     let stop: VoidFunction;
     const startFetch = async () => {
       try {
-        const [ownerPromise, _stop] = waitAsyncResult(() => fetchDomainOwner(domain));
+        const [ownerPromise, _stop] = waitAsyncResult(() => fetchDomainOwner(domain), 0);
         stop = _stop;
         const owner = await ownerPromise;
         clearCommitInfo(domain);
@@ -61,6 +62,7 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
     };
   }, [domain]);
 
+  
   const payMethod = usePayMethod();
   const commitInfo = useCommitInfo(domain);
   useEffect(() => {
@@ -69,13 +71,18 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
     let stop: VoidFunction;
     const startFetch = async () => {
       try {
-        const [orderPaidPromise, _stop] = waitAsyncResult(() => isOrderPaid(commitInfo.commitmentHash));
+        const [orderPaidPromise, _stop] = waitAsyncResult(() => isOrderPaid(commitInfo.commitmentHash), 0);
         stop = _stop;
-        const _ = await orderPaidPromise;
+        const orderStatus = await orderPaidPromise;
         if (getRigisterToStep(domain) === RegisterStep.WaitPay) {
-          setWaitPayConfrim(domain, true);
+          if (orderStatus === true) {
+            setWaitPayConfrim(domain, true);
+          } else {
+            refreshMakeOrder();
+          }
         }
-      } catch (_) {}
+      } catch (_) {
+      }
     };
 
     startFetch();
@@ -83,11 +90,6 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
       stop?.();
     };
   }, [payMethod, registerStep, commitInfo]);
-
-  useEffect(() => {
-    const timer = setInterval(() => refreshDomainStatus, 10000);
-    return () => clearInterval(timer);
-  }, []);
 };
 
 const preAccount = atom<string>({

@@ -16,6 +16,9 @@ const postOrder = (commitmentHash: string, domain: string) =>
 const getOrder = (commitmentHash: string) => fetchApi({ path: `registers/order/${commitmentHash}`, method: 'GET' });
 export const isOrderPaid = (commitmentHash: string) =>
   fetchApi<Response>({ path: `registers/order/${commitmentHash}`, method: 'GET' }).then((res) => {
+    if (res?.trade_state === 'REFUND' && !!res?.refund_state && res?.refund_state !== 'NIL') {
+      return res?.tx_state;
+    }
     return !!res?.trade_state && res.trade_state === 'SUCCESS' ? true : null;
   });
 
@@ -37,6 +40,8 @@ interface Response {
   code_url: string;
   commit_hash: string;
   trade_state: string;
+  refund_state: string;
+  tx_state: string;
 }
 
 const makeOrderQuery = selectorFamily<Response, string>({
@@ -57,10 +62,18 @@ const makeOrderQuery = selectorFamily<Response, string>({
             if (postRes?.code === 50000) {
               throw new Error(getRes.message);
             }
+
+            if (postRes?.trade_state === 'REFUND' && !!getRes?.refund_state && postRes?.refund_state !== 'NIL') {
+              throw new Error(postRes?.tx_state);
+            }
             return postRes;
           } else {
             throw new Error(getRes.message);
           }
+        }
+
+        if (getRes?.trade_state === 'REFUND' && !!getRes?.refund_state && getRes?.refund_state !== 'NIL') {
+          throw new Error(getRes?.tx_state);
         }
         return getRes;
       } catch (err) {

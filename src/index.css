@@ -3,6 +3,7 @@ html {
   scroll-behavior: smooth;
 }
 
+
 @font-face {
   font-family: 'SF Pro Display';
   src: url('./assets/fonts/SFProDisplay-Regular.woff2') format('woff2');
