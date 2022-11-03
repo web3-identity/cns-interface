@@ -11,7 +11,7 @@ const Register: React.FC<{ domain: string }> = ({ domain }) => {
   const registerStep = useRegisterStep(domain);
   const commitInfo = useCommitInfo(domain);
   const isWaitPayConfrim = useWaitPayConfrimState(domain);
-  useMonitorDomainState(domain);
+  useMonitorDomainState(domain, registerStep);
   
   if (!account) return <Step1 domain={domain} />;
   if (registerStep === RegisterStep.WaitCommit) {

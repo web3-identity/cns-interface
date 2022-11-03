@@ -1,6 +1,6 @@
 import { selectorFamily, useRecoilValue, atom } from 'recoil';
-import { getRecoil } from 'recoil-nexus';
-import { persistAsynAtom } from '@utils/recoilUtils';
+import { getRecoil, setRecoil } from 'recoil-nexus';
+import { persistAtom } from '@utils/recoilUtils';
 import dayjs from 'dayjs';
 import { fetchChain } from '@utils/fetch';
 import { BaseRegistrar } from '@contracts/index';
@@ -20,9 +20,9 @@ interface DomainExpire {
   isExpired: boolean;
 }
 
-const fetchGracePeriod = () => async () => {
+const fetchGracePeriod = async () => {
   try {
-    const response = await fetchChain({
+    const response: string = await fetchChain({
       params: [{ data: BaseRegistrar.func.encodeFunctionData('GRACE_PERIOD'), to: BaseRegistrar.address }, 'latest_state'],
     });
     const GRACE_PERIOD = BaseRegistrar.func.decodeFunctionResult('GRACE_PERIOD', response)?.[0]?.toString();
@@ -34,8 +34,14 @@ const fetchGracePeriod = () => async () => {
 
 export const gracePeriodState = atom<number>({
   key: 'gracePeriod',
-  effects: [persistAsynAtom(fetchGracePeriod())],
+  effects: [persistAtom],
 });
+
+(() => {
+  setTimeout(() => {
+    fetchGracePeriod().then((res) => setRecoil(gracePeriodState, res));
+  }, 1000);
+})();
 
 const domainExpireQuery = selectorFamily<DomainExpire, string>({
   key: 'domainExpire',

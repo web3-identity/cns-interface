@@ -9,6 +9,8 @@ import useInTranscation from '@hooks/useInTranscation';
 import { backToStep1 } from '@service/domainRegister';
 import { useMakeOrder, useRefreshMakeOrder, refreshRegisterOrder as _refreshRegisterOrder } from '@service/domainRegister/pay/web2/pc';
 
+const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
 const QRCode: React.FC<{ domain: string; refreshMakeOrder: VoidFunction }> = ({ domain, refreshMakeOrder }) => {
   const makeOrder = useMakeOrder(domain);
   const { inTranscation, execTranscation: refreshRegisterOrder } = useInTranscation(_refreshRegisterOrder);
@@ -31,7 +33,7 @@ const QRCode: React.FC<{ domain: string; refreshMakeOrder: VoidFunction }> = ({ 
         refreshMakeOrder();
       }}
     >
-      <QRCodeCreate className="group-hover:opacity-30" size={88} value={makeOrder?.code_url || ''} viewBox={`0 0 88 88`} />
+      <QRCodeCreate className="group-hover:opacity-30" size={88} value={makeOrder?.code_url || ''} viewBox={`0 0 88 88`} fgColor={isDarkMode() ? "green" : undefined} />
       <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-14px text-grey-normal font-bold opacity-0 group-hover:opacity-100">刷新二维码</span>
     </div>
   );

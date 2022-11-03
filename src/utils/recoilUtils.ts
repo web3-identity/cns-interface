@@ -28,24 +28,3 @@ export const persistAtomWithDefault = (defaultValue: any): AtomEffect<any> => ({
     LocalStorage.setItem({ key, data });
   });
 };
-
-export const persistAsynAtom =
-  (fetcher: () => Promise<any>): AtomEffect<any> =>
-  ({ setSelf, trigger, node: { key } }) => {
-    if (trigger === 'get') {
-      const storageData = LocalStorage.getItem(key) as number;
-      if (storageData !== null) {
-        setSelf(storageData);
-        fetcher().then((data) => {
-          LocalStorage.setItem({ key, data });
-          return data;
-        })
-      } else
-        setSelf(
-          fetcher().then((data) => {
-            LocalStorage.setItem({ key, data });
-            return data;
-          })
-        );
-    }
-  };
