@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import path from 'path';
 import react from '@vitejs/plugin-react';
-import Unocss from '@unocss/vite';
+import Unocss from 'unocss/vite';
 import presetIcons from '@unocss/preset-icons';
 import presetWind from '@unocss/preset-wind';
 import transformerDirective from '@unocss/transformer-directives';
