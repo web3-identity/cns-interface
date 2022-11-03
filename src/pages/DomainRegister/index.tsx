@@ -1,4 +1,4 @@
-import React, { type HTMLAttributes } from 'react';
+import React, { useEffect, useState, useTransition, memo, type HTMLAttributes } from 'react';
 import cx from 'clsx';
 import { useParams } from 'react-router-dom';
 import PageWrapper from '@components/Layout/PageWrapper';
@@ -25,14 +25,16 @@ export const RegisterBox: React.FC<HTMLAttributes<HTMLDivElement> & { title?: st
 
 const DomainRegister: React.FC = () => {
   const { domain: _domain } = useParams();
-  const domain = _domain?.toLocaleLowerCase().trim() ?? '';
+  const [domain, setDomain] = useState<string>('');
+  const [isPending, startTransition] = useTransition();
+  useEffect(() => startTransition(() => setDomain(_domain?.toLocaleLowerCase().trim() ?? '')), [_domain]);
 
   return (
-    <PageWrapper className="pt-72px">
+    <PageWrapper className="relative pt-72px">
       <BorderBox variant="gradient" className="mb-40px w-fit px-24px min-w-200px h-60px leading-58px rounded-24px text-center text-green-normal text-22px font-bold">
         <Domain domain={domain} />
       </BorderBox>
-      <StatusCheck domain={domain}>
+      <StatusCheck domain={domain} isPending={isPending}>
         <Register domain={domain} />
         <ProgressBar domain={domain} />
       </StatusCheck>

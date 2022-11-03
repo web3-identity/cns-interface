@@ -8,11 +8,7 @@ interface FetchParams {
   equalKey?: string;
 }
 
-interface RequestParams{
-  body?:string,
-  headers:HeadersInit,
-  method:string
-}
+type RequestParams = Parameters<typeof fetch>[1];
 
 const equalMap = new Map<string, any>();
 
@@ -29,16 +25,13 @@ export function fetchApi() {
     let { path, method, params } = param;
     const bodyParams = params ?? {};
     method = method ?? 'GET';
-    const requestParams:RequestParams = {
-      body: JSON.stringify(
-        bodyParams,
-      ),
+    const requestParams: RequestParams = {
+      body: JSON.stringify(bodyParams),
       headers: { 'content-type': 'application/json' },
       method: method,
     };
     if (method == 'GET') delete requestParams.body;
-    fetcher = fetch(`${import.meta.env.VITE_BackendUrl}/v0/${path}`,requestParams)
-      .then((response) => response.json())
+    fetcher = fetch(`${import.meta.env.VITE_BackendUrl}/v0/${path}`, requestParams).then((response) => response.json());
   }
 
   if (isPromise(fetcher)) {

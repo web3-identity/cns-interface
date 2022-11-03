@@ -1,4 +1,5 @@
-import React, { Suspense, type PropsWithChildren } from 'react';
+import React, { memo, Suspense, type PropsWithChildren, type ComponentProps } from 'react';
+import cx from 'clsx';
 import { Link } from 'react-router-dom';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import Button from '@components/Button';
@@ -12,19 +13,27 @@ interface Props {
   domain: string;
 }
 
-const Status = ({ domain, children }: PropsWithChildren<Props>) => {
+const Status = ({ domain, isPending, children }: PropsWithChildren<Props & { isPending: boolean }>) => {
   const handleRefresh = useRefreshDomainStatus(domain);
 
   return (
-    <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} />} onReset={handleRefresh}>
-      <Suspense fallback={<StatusLoading />}>
-        <StatusContent domain={domain} children={children} />
-      </Suspense>
-    </ErrorBoundary>
+    <>
+      <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} />} onReset={handleRefresh}>
+        <Suspense fallback={<StatusLoading />}>
+          <StatusContent domain={domain} children={children} />
+        </Suspense>
+      </ErrorBoundary>
+      
+      {isPending && (
+        <Delay>
+          <StatusLoading className="absolute top-172px w-full lt-lg:w-[calc(100%-48px)]" />
+        </Delay>
+      )}
+    </>
   );
 };
 
-export default Status;
+export default memo(Status);
 
 const statusMap = {
   [DomainStatus.Valid]: {
@@ -47,7 +56,7 @@ const statusMap = {
   },
   [DomainStatus.NotOpen]: {
     text: '域名未开放',
-  }
+  },
 } as const;
 
 const Warning = () => (
@@ -63,7 +72,7 @@ const StatusContent = ({ domain, children }: PropsWithChildren<Props>) => {
 
   return (
     <>
-      {(status === DomainStatus.Valid || owner === account) ? (
+      {status === DomainStatus.Valid || owner === account ? (
         children
       ) : (
         <RegisterBox className="relative flex flex-col items-center pt-66px">
@@ -86,8 +95,8 @@ const StatusContent = ({ domain, children }: PropsWithChildren<Props>) => {
   );
 };
 
-const StatusLoading: React.FC = () => (
-  <RegisterBox className="flex flex-col items-center pt-66px">
+const StatusLoading: React.FC<ComponentProps<'div'>> = ({ className, ...props }) => (
+  <RegisterBox className={cx('flex flex-col items-center pt-66px', className)} {...props}>
     <Delay>
       <Spin className="text-80px" />
       <p className="mt-16px text-14px text-grey-normal">查询中...</p>
