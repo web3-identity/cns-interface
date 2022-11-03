@@ -27,7 +27,6 @@ export function fetchApi() {
     method = method ?? 'GET';
     const requestParams: RequestParams = {
       body: JSON.stringify(bodyParams),
-      headers: { 'content-type': 'application/json' },
       method: method,
     };
     if (method == 'GET') delete requestParams.body;
