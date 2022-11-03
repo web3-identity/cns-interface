@@ -36,7 +36,7 @@ export const backToStep1 = (domain: string) => {
   setRigisterToStep(domain, RegisterStep.WaitCommit);
 };
 
-export const useMonitorDomainState = (domain: string) => {
+export const useMonitorDomainState = (domain: string, registerStep: RegisterStep) => {
   const refreshDomainStatus = useRefreshDomainStatus(domain);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export const useMonitorDomainState = (domain: string) => {
   const payMethod = usePayMethod();
   const commitInfo = useCommitInfo(domain);
   useEffect(() => {
-    if (payMethod === 'web3' || !commitInfo) return;
+    if (payMethod === 'web3' || !commitInfo || registerStep !== RegisterStep.WaitPay) return;
 
     let stop: VoidFunction;
     const startFetch = async () => {
@@ -82,7 +82,7 @@ export const useMonitorDomainState = (domain: string) => {
     return () => {
       stop?.();
     };
-  }, [payMethod, commitInfo]);
+  }, [payMethod, registerStep, commitInfo]);
 
   useEffect(() => {
     const timer = setInterval(() => refreshDomainStatus, 10000);

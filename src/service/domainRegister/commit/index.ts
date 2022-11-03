@@ -33,7 +33,6 @@ export const setCommitInfo = (domain: string, commitInfo: { commitmentHash: stri
     start: commitInfo.commitTime + minCommitLockTime * 1000,
     end: commitInfo.commitTime + maxCommitLockTime * 1000,
   };
-  console.log(validTime, maxCommitLockTime);
 
   setRecoil(commitInfoState(domain), {
     commitmentHash: commitInfo.commitmentHash,
