@@ -4,7 +4,6 @@ import { uniqueId } from 'lodash-es';
 import runAsync from '@utils/runAsync';
 import Mask from '@components/Mask';
 import List, { type ItemProps } from '../List';
-import './index.css';
 
 export interface PopupProps extends ItemProps {
   Content: React.ReactNode | Function;

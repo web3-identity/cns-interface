@@ -4,7 +4,7 @@ import RecoilNexus from 'recoil-nexus';
 import { completeDetect } from '@cfxjs/use-wallet-react/conflux';
 import Router from './router';
 import isMobile from '@utils/isMobie';
-import { ModalPopup } from '@components/showPopup/Modal';
+import { ModalPopup, DrawerPopup } from '@components/showPopup';
 import 'uno.css';
 import 'reseter.css/css/reseter.css';
 import 'custom-react-scrollbar/dist/style.css';
@@ -18,6 +18,7 @@ completeDetect().then(() => {
     <RecoilRoot>
       <RecoilNexus />
       <ModalPopup.Provider />
+      <DrawerPopup.Provider />
       <Router />
     </RecoilRoot>
   );
