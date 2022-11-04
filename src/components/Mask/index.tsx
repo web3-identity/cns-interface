@@ -29,7 +29,7 @@ const Mask = ({ open, className, style, ...props }: Props) => {
     (styles, item) =>
       item && (
         <a.div
-          className={classNames('fixed left-0 top-0 w-full h-full bg-black bg-opacity-40 z-[200] contain-strict', className)}
+          className={classNames('fixed left-0 top-0 w-full h-full bg-#110f1b bg-opacity-80 z-[200] contain-strict', className)}
           style={{ ...style, ...styles }}
           {...props}
         />

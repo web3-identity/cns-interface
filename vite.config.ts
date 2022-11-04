@@ -87,9 +87,8 @@ export default defineConfig({
   server:{
     proxy:{
       '/v0': {
-        target: 'http://101.42.88.184/v0',
+        target: 'http://test.web3verse.space/',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/v0/, '')
       },
     }
   }

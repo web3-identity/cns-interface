@@ -1,8 +1,9 @@
 import React, { type HTMLAttributes } from 'react';
-import { showModal } from '@components/showPopup/Modal';
+import { showModal, showDrawer } from '@components/showPopup';
 import fluentImg from '@assets/icons/fluent.svg';
 import anywebImg from '@assets/icons/anyweb.svg';
 import { connect } from '@service/account';
+import isMobile from '@utils/isMobie';
 
 const ConnectWallet: React.FC<HTMLAttributes<HTMLDivElement> & { icon: string; name: string }> = ({ children, onClick, icon, name }) => {
   return (
@@ -23,6 +24,12 @@ const ConnectModalContent: React.FC = () => {
   );
 };
 
-const showAccountConnector = () => showModal({ Content: <ConnectModalContent />, className: '!max-w-370px', title: '连接钱包' });
+const showAccountConnector = () => {
+  if (isMobile()) {
+    showDrawer({ Content: <ConnectModalContent />, title: '连接钱包' })
+  } else {
+    showModal({ Content: <ConnectModalContent />, className: '!max-w-370px', title: '连接钱包' })
+  }
+};
 
 export default showAccountConnector;

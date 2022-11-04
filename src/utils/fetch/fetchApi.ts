@@ -30,7 +30,7 @@ export function fetchApi() {
       method: method,
     };
     if (method == 'GET') delete requestParams.body;
-    fetcher = fetch(`${import.meta.env.VITE_BackendUrl}/v0/${path}`, requestParams).then((response) => response.json());
+    fetcher = fetch(`${import.meta.env.VITE_IsLocal === false ? '' : '/v0'}/${path}`, requestParams).then((response) => response.json());
   }
 
   if (isPromise(fetcher)) {

@@ -30,7 +30,7 @@ const Modal: React.FC<{ Content: ReactNode | Function; title: string; className?
         {title}
         <span className="i-ep:close-bold text-24px text-green-normal cursor-pointer" onClick={ModalPopup.hideAll} />
       </div>
-      <div className="mt-20px h-1px bg-#6667ab4c" />
+      <div className="mt-20px h-1px bg-#6667ab4c pointer-events-none" />
 
       {renderReactNode(Content)}
     </div>

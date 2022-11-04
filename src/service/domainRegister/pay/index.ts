@@ -3,10 +3,11 @@ export * from './web3';
 export * from './web2/pc';
 import { atomFamily, useRecoilValue } from 'recoil';
 import { setRecoil, getRecoil } from 'recoil-nexus';
+import { persistAtomWithDefault } from '@utils/recoilUtils';
 
 const waitPayConfirmState = atomFamily<boolean, string>({
   key: 'waitPayConfirm',
-  default: false
+  effects: [persistAtomWithDefault(false)]
 });
 
 export const setWaitPayConfirm = (domain: string, state: boolean) => setRecoil(waitPayConfirmState(domain), state);
