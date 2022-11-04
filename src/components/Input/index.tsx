@@ -35,7 +35,7 @@ const Input = forwardRef<HTMLInputElement, Props>(({ wrapperClassName, className
           {error}
         </span>
       )}
-      
+
       <span
         className="i-carbon:close-filled clear-icon display-none absolute right-.5em top-[50%] -translate-y-[calc(50%+1px)] text-1em text-grey-normal-hover cursor-pointer"
         onClick={handleClickClear}

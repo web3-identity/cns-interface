@@ -8,7 +8,6 @@ import Input from '@components/Input';
 import Button from '@components/Button';
 import Status from '@modules/StatusSearch/Status';
 import './index.css';
-import { is } from '@react-spring/shared';
 
 interface Props {
   where: 'home' | 'header';
@@ -41,7 +40,7 @@ const StatusSearch: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ where,
       >
         <Input
           id="status-search"
-          className="lowercase"
+          className="lowercase lt-md:font-normal"
           size={where === 'header' || isMobile() ? 'normal' : 'medium'}
           prefixIcon={!isMobile() ? 'i-charm:search' : ''}
           placeholder="获取您的.web3"
