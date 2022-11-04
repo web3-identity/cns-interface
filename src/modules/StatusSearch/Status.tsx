@@ -1,6 +1,7 @@
 import React, { Suspense, type HTMLAttributes } from 'react';
 import { Link } from 'react-router-dom';
 import cx from 'clsx';
+import isMobile from '@utils/isMobie';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import Button from '@components/Button';
 import Delay from '@components/Delay';
@@ -24,7 +25,7 @@ const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, wher
   return (
     <div
       className={cx('flex items-center pl-24px bg-purple-dark-active whitespace-nowrap', className, {
-        'h-92px pr-12px text-22px rounded-24px': where === 'home',
+        'h-92px pr-12px text-22px rounded-24px lt-md:h-56px lt-md:text-16px lt-md:leading-18px lt-md:rounded-12px lt-md:px-8px': where === 'home',
         'h-48px text-16px rounded-10px': where === 'header',
       })}
       {...props}
@@ -75,24 +76,24 @@ const statusMap = {
     icon: StatusReserved,
     text: '未开放',
     color: 'text-#83828F',
-  }
+  },
 } as const;
 
 const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) => {
   const status = useDomainStatus(domain);
   const Icon = statusMap[status].icon;
-  
+
   return (
     <>
-      <Icon className="mr-12px w-40px h-40px -translate-y-2px flex-shrink-0" />
+      <Icon className="mr-12px w-40px h-40px -translate-y-2px flex-shrink-0 lt-md:mr-0px lt-md:w-32px lt-md:h-32px" />
       <span className={cx('mr-auto', statusMap[status].color)}>
         {statusMap[status].text}
-        <Domain className={cx('font-bold', where === 'header' ? 'ml-16px' : 'ml-24px')} domain={domain} ellipsisLength={where === 'header' ? 12 : 20}/>
+        <Domain className={cx('font-bold lt-md:text-grey-normal', where === 'header' ? 'ml-16px' : 'ml-24px lt-md:ml-4px')} domain={domain} ellipsisLength={where === 'header' ? 12 : 20} />
       </span>
 
       {status === DomainStatus.Valid && (
         <Link to={`/register/${domain}`} className="no-underline">
-          <Button size={where === 'header' ? 'small' : 'medium'} color="gradient">
+          <Button size={where === 'header' ? 'small' : isMobile() ? 'normal' : 'medium'} color={isMobile() ? 'purple' : 'gradient'}>
             注册
           </Button>
         </Link>
