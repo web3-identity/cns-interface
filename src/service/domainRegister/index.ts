@@ -9,7 +9,7 @@ import { getAccount } from '@service/account';
 import LocalStorage from 'localstorage-enhance';
 import waitAsyncResult, { getAsyncResult } from '@utils/waitAsyncResult';
 import { clearCommitInfo, useCommitInfo } from './commit';
-import { setWaitPayConfrim, getWaitPayConfrim, getOrderStatus, useRefreshMakeOrder } from './pay';
+import { setWaitPayConfirm, getWaitPayConfirm, getOrderStatus, useRefreshMakeOrder } from './pay';
 export * from './commit';
 export * from './pay';
 
@@ -24,8 +24,8 @@ const registerStep = atomFamily<RegisterStep, string>({
   effects: [persistAtomWithDefault(RegisterStep.WaitCommit)],
 });
 
-const getRigisterToStep = (domain: string) => getRecoil(registerStep(domain));
-export const setRigisterToStep = (domain: string, step: RegisterStep) => {
+const getRegisterToStep = (domain: string) => getRecoil(registerStep(domain));
+export const setRegisterToStep = (domain: string, step: RegisterStep) => {
   setRecoil(registerStep(domain), step);
 };
 
@@ -33,7 +33,7 @@ export const useRegisterStep = (domain: string) => useRecoilValue(registerStep(d
 
 export const backToStep1 = (domain: string) => {
   clearCommitInfo(domain);
-  setRigisterToStep(domain, RegisterStep.WaitCommit);
+  setRegisterToStep(domain, RegisterStep.WaitCommit);
 };
 
 export const useMonitorDomainState = (domain: string, registerStep: RegisterStep) => {
@@ -49,7 +49,7 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
         const owner = await ownerPromise;
         clearCommitInfo(domain);
         if (getAccount() === owner) {
-          setRigisterToStep(domain, RegisterStep.Success);
+          setRegisterToStep(domain, RegisterStep.Success);
         } else {
           refreshDomainStatus();
         }
@@ -62,7 +62,7 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
     };
   }, [domain]);
 
-  
+
   const payMethod = usePayMethod();
   const commitInfo = useCommitInfo(domain);
   useEffect(() => {
@@ -72,18 +72,18 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
     const stop = getAsyncResult(
       () => getOrderStatus(commitInfo.commitmentHash),
       (orderStatus: string) => {
-        const isWaitPayConfrim = getWaitPayConfrim(domain);
+        const isWaitPayConfirm = getWaitPayConfirm(domain);
         if (preOrderStatus === orderStatus) {
           return ;
         }
         preOrderStatus = orderStatus;
         if (orderStatus === 'Paid') {
-          if (!isWaitPayConfrim) {
-            setWaitPayConfrim(domain, true);
+          if (!isWaitPayConfirm) {
+            setWaitPayConfirm(domain, true);
           }
         } else {
-          if (isWaitPayConfrim) {
-            setWaitPayConfrim(domain, false);
+          if (isWaitPayConfirm) {
+            setWaitPayConfirm(domain, false);
           }
           refreshMakeOrder();
         }
@@ -116,7 +116,7 @@ export const useClearRegisterInfoWhenAccountChange = (account: string | null | u
       storageData
         .filter(
           ([key]: [string, any]) =>
-            key?.startsWith?.('default|waitPayConfrim') ||
+            key?.startsWith?.('default|waitPayConfirm') ||
             key?.startsWith?.('CommitInfo|CommitInfo') ||
             key?.startsWith?.('default|RegisterStep') ||
             key?.startsWith?.('default|registerDurationYears')
@@ -127,7 +127,7 @@ export const useClearRegisterInfoWhenAccountChange = (account: string | null | u
           const domain = regex.exec(itemKey)?.[1];
           if (domain) {
             clearCommitInfo(domain);
-            setRigisterToStep(domain, RegisterStep.WaitCommit);
+            setRegisterToStep(domain, RegisterStep.WaitCommit);
           }
           LocalStorage.removeItem(itemKey, namespace);
         });

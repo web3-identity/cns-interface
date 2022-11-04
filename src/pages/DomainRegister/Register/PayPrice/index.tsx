@@ -11,7 +11,7 @@ const PrideFetch: React.FC<{ domain: string; payMethod: ReturnType<typeof usePay
   if (payMethod === 'web3') {
     return <>{Math.round(+payPrice?.toDecimalStandardUnit())}</>;
   }
-  
+
   return <>{payPrice?.toDecimalStandardUnit(2, 8)}</>
 };
 
@@ -29,7 +29,7 @@ const PayPrice: React.FC<{ domain: string; isPending?: boolean; className?: stri
   return (
     <div className={cx('relative flex items-baseline', className)}>
       <Suspense fallback={<Loading />}>
-        <span className="mr-3px text-.35em text-grey-normal-hover text-opacity-50">{payMethod === 'web3' ? 'CFX' : '￥'}</span>
+        <span className="mr-4px text-.35em text-grey-normal-hover text-opacity-50">{payMethod === 'web3' ? 'CFX' : '￥'}</span>
         <span className="text-grey-normal font-bold">
           <PrideFetch domain={domain} payMethod={payMethod} />
         </span>

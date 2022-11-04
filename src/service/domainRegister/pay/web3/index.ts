@@ -3,7 +3,7 @@ import { Web3Controller, PublicResolver } from '@contracts/index';
 import { yearsToSeconds } from '@utils/date';
 import { getCommitInfo } from '@service/domainRegister/commit';
 import { getPayPrice } from '@service/domainRegister/pay';
-import { setWaitPayConfrim } from '../';
+import { setWaitPayConfirm } from '../';
 
 interface Params {
   domain: string;
@@ -27,8 +27,8 @@ export const web3Pay = async ({ domain, durationYears }: Params) => {
       value: payPrice.toHexMinUnit(),
     });
 
-    setWaitPayConfrim(domain, true);
-    setTimeout(() => setWaitPayConfrim(domain, false), 1000 * 180);
+    setWaitPayConfirm(domain, true);
+    setTimeout(() => setWaitPayConfirm(domain, false), 1000 * 180);
   } catch (err) {
     console.error('err', err);
   }

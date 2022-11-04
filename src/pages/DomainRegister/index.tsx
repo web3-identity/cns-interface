@@ -10,11 +10,11 @@ import StatusCheck from './StatusCheck';
 
 export const RegisterBox: React.FC<HTMLAttributes<HTMLDivElement> & { title?: string }> = ({ title, children, className, ...props }) => {
   return (
-    <div className={cx('h-341px p-24px rounded-24px bg-purple-dark-active dropdown-shadow whitespace-nowrap', className)} {...props}>
+    <div className={cx('h-340px p-24px rounded-24px bg-purple-dark-active dropdown-shadow whitespace-nowrap lt-md:px-16px lt-md:h-392px rounded-8px', className)} {...props}>
       {title && (
         <>
-          <p className="text-22px leading-26px text-grey-normal">{title}</p>
-          <div className="mt-22px h-1px bg-purple-normal bg-opacity-30" />
+          <p className="text-22px leading-26px text-grey-normal font-bold lt-md:text-16px lt-md:leading-18px">{title}</p>
+          <div className="mt-22px h-1px bg-purple-normal bg-opacity-30 lt-md:mt-16px" />
         </>
       )}
 
@@ -31,7 +31,7 @@ const DomainRegister: React.FC = () => {
 
   return (
     <PageWrapper className="relative pt-72px">
-      <BorderBox variant="gradient" className="mb-40px w-fit px-24px min-w-200px h-60px leading-58px rounded-24px text-center text-green-normal text-22px font-bold">
+      <BorderBox variant="gradient" className="mb-40px w-fit px-24px py-14px leading-26px rounded-16px text-center text-green-normal text-22px font-bold lt-md:w-full lt-md:rounded-12px lt-md:text-20px lt-md:text-left lt-md:leading-24px lt-md:mb-16px">
         <Domain domain={domain} />
       </BorderBox>
       <StatusCheck domain={domain} isPending={isPending}>

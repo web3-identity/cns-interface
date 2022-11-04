@@ -4,12 +4,12 @@ export * from './web2/pc';
 import { atomFamily, useRecoilValue } from 'recoil';
 import { setRecoil, getRecoil } from 'recoil-nexus';
 
-const waitPayConfrimState = atomFamily<boolean, string>({
-  key: 'waitPayConfrim',
+const waitPayConfirmState = atomFamily<boolean, string>({
+  key: 'waitPayConfirm',
   default: false
 });
 
-export const setWaitPayConfrim = (domain: string, state: boolean) => setRecoil(waitPayConfrimState(domain), state);
-export const getWaitPayConfrim = (domain: string) => getRecoil(waitPayConfrimState(domain));
+export const setWaitPayConfirm = (domain: string, state: boolean) => setRecoil(waitPayConfirmState(domain), state);
+export const getWaitPayConfirm = (domain: string) => getRecoil(waitPayConfirmState(domain));
 
-export const useWaitPayConfrimState = (domain: string) => useRecoilValue(waitPayConfrimState(domain));
+export const useWaitPayConfirmState = (domain: string) => useRecoilValue(waitPayConfirmState(domain));
