@@ -20,7 +20,7 @@ button.absolute {
 }
 
 .button--normal {
-  @apply text-[16px] h-[48px] lt-md:h-[44px] px-[32px] lt-md:px-[16px] rounded-10px leading-48px lt-md:leading-44px;
+  @apply text-[16px] h-[48px] lt-md:h-[40px] px-[32px] lt-md:px-[16px] rounded-10px leading-48px lt-md:leading-40px;
 }
 
 .button--medium {
@@ -85,6 +85,21 @@ button.button--text.is-disabled {
 .button--text.button--purple:hover,
 .button--text.button--purple:focus-visible {
   @apply bg-purple-normal bg-opacity-10 text-purple-normal-hover;
+}
+
+
+/* outlined button */
+.button--outlined {
+  @apply bg-transparent;
+}
+
+.button--outlined.button--purple {
+  @apply border border-purple-normal text-grey-normal;
+}
+
+.button--outlined.button--purple:hover,
+.button--outlined.button--purple:focus-visible {
+  @apply border-purple-normal-hover text-grey-normal-hover;
 }
 
 

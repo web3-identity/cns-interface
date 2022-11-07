@@ -100,7 +100,7 @@ const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) 
       )}
       {status === DomainStatus.Registered && (
         <Link to={`/register/${domain}`} className="no-underline">
-          <Button size={where === 'header' ? 'small' : 'medium'}>查看</Button>
+          <Button size={where === 'header' ? 'small' : isMobile() ? 'normal' : 'medium'}>查看</Button>
         </Link>
       )}
     </>
@@ -118,7 +118,7 @@ const ErrorBoundaryFallback: React.FC<FallbackProps & Pick<Props, 'where'>> = ({
     <>
       <StatusInvalid className="mr-12px w-40px h-40px -translate-y-2px" />
       <span className="mr-auto text-error-normal">网络错误</span>
-      <Button onClick={resetErrorBoundary} size={where === 'header' ? 'small' : 'medium'}>
+      <Button onClick={resetErrorBoundary} size={where === 'header' ? 'small' : isMobile() ? 'normal' : 'medium'}>
         重试
       </Button>
     </>

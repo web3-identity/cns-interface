@@ -5,7 +5,7 @@ import renderReactNode from '@utils/renderReactNode';
 import './index.css';
 
 export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'contained' | 'text';
+  variant?: 'contained' | 'text' | 'outlined';
   color?: 'purple' | 'gradient';
   size?: 'small' | 'normal' | 'medium';
   fullWidth?: boolean;
