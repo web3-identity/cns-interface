@@ -66,7 +66,10 @@ export default defineConfig({
       '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@components': path.resolve(__dirname, 'src/components'),
       '@service': path.resolve(__dirname, 'src/service'),
+      punycode: "rollup-plugin-node-polyfills/polyfills/punycode",
       buffer: 'rollup-plugin-node-polyfills/polyfills/buffer-es6',
+      'crypto-addr-codec': 'crypto-addr-codec/dist/index.js',
+      '@web3identity/address-encoder': '@web3identity/address-encoder/dist/index.modern.js',
     },
   },
   build: {
@@ -84,12 +87,12 @@ export default defineConfig({
       plugins: [NodeGlobalsPolyfillPlugin({ buffer: true, process: true }), NodeModulesPolyfillPlugin()],
     },
   },
-  server:{
-    proxy:{
+  server: {
+    proxy: {
       '/v0': {
         target: 'http://test.web3verse.space/',
         changeOrigin: true,
       },
-    }
-  }
+    },
+  },
 });

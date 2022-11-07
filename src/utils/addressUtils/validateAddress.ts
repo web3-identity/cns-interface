@@ -1,5 +1,6 @@
 import JSBI from 'jsbi';
 import { Buffer } from 'buffer';
+import { NetId } from '../isProduction';
 const ALPHABET = 'ABCDEFGHJKMNPRSTUVWXYZ0123456789';
 const VERSION_BYTE = 0;
 const NET_ID_LIMIT = 0xffffffff;
@@ -164,7 +165,7 @@ function polyMod(buffer: any) {
   return JSBI.bitwiseXor(checksumBigInt, BIGINT_1);
 }
 
-export function encode(_hexAddress: string, netId: number, verbose = false) {
+export function encode(_hexAddress: string, netId: number = 1029, verbose = false) {
   let hexAddress!: any;
   if (validateHexAddress(_hexAddress)) {
     hexAddress = Buffer.from(_hexAddress.slice(2), 'hex');

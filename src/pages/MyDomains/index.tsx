@@ -1,15 +1,16 @@
 import React, { Suspense } from 'react';
-import cx from 'clsx';
+import { Link } from 'react-router-dom';
 import PageWrapper from '@components/Layout/PageWrapper';
+import BorderBox from '@components/Box/BorderBox';
+import Button from '@components/Button';
+import Avatar from '@components/Avatar';
 import { useMyDomains } from '@service/myDomains';
 import { useAccount } from '@service/account';
 import { useDomainExpire } from '@service/domainInfo';
 import { useDomainReverseRegistrar } from '@service/domainReverseRegistrar';
 import { shortenAddress } from '@utils/addressUtils';
 import { getLabelDomain } from '@utils/domainHelper';
-import BorderBox from '@components/Box/BorderBox';
-import Button from '@components/Button';
-import Avatar from '@components/Avatar';
+
 
 interface Props {
   domain: string;
@@ -17,6 +18,7 @@ interface Props {
 }
 const DomainItem: React.FC<Props> = ({ domain, index }) => {
   const { dateFormatForSecond, gracePeriod, isExpired } = useDomainExpire(domain);
+
   return (
     <>
       {index !== 0 && <div className="h-1px w-full bg-purple-normal opacity-30" />}
@@ -36,7 +38,9 @@ const DomainItem: React.FC<Props> = ({ domain, index }) => {
         </div>
         <div className="flex gap-60px">
           <Button variant="text">续费</Button>
-          <Button>域名管理</Button>
+          <Link to={`/setting/${domain}`} className="no-underline">
+            <Button>域名管理</Button>
+          </Link>
         </div>
       </div>
     </>
@@ -55,7 +59,7 @@ const DomainList: React.FC = () => {
           <span className="text-grey-normal-hover text-opacity-50 text-14px leading-18px">当前账户</span>
           {!domain ? (
             <div className="flex gap-16px items-center">
-              <Avatar address={account} diameter={30} />
+              {account && <Avatar address={account} size={30} />}
               <span>{shortenAddress(account!)}</span>
             </div>
           ) : (
@@ -78,7 +82,7 @@ const DomainList: React.FC = () => {
 
 const MyDomains: React.FC = () => {
   return (
-    <PageWrapper className="pt-230px">
+    <PageWrapper className="pt-80px">
       <Suspense fallback={null}>
         <DomainList />
       </Suspense>

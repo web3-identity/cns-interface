@@ -3,6 +3,7 @@ import cx from 'clsx';
 import { uniqueId } from 'lodash-es';
 import runAsync from '@utils/runAsync';
 import Mask from '@components/Mask';
+import usePressEsc from '@hooks/usePressEsc';
 import List, { type ItemProps } from '../List';
 
 export interface PopupProps extends ItemProps {
@@ -117,20 +118,15 @@ const PopupContainer = forwardRef<PopupMethods>((_, ref) => {
     setMaskClickHandler(() => func);
   }, []);
 
-  useEffect(() => {
-    const handleKeypress = (evt: KeyboardEvent) => {
-      if (evt?.key !== 'Escape') return;
-      popupListRef.current.forEach((popup) => {
-        if (popup.pressEscToClose) {
-          popPopup(popup.key);
-          popup?.onClose?.();
-        }
-      });
-    };
-    document.addEventListener('keydown', handleKeypress);
-
-    return () => document.removeEventListener('keydown', handleKeypress);
+  const handlePressEsc = useCallback(() => {
+    popupListRef.current.forEach((popup) => {
+      if (popup.pressEscToClose) {
+        popPopup(popup.key);
+        popup?.onClose?.();
+      }
+    });
   }, []);
+  usePressEsc(handlePressEsc);
 
   useImperativeHandle(ref, () => ({
     show: pushPopup,

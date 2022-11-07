@@ -1,13 +1,13 @@
-import React, { createElement, forwardRef, type ReactNode, type PropsWithChildren } from 'react';
+import React, { createElement, forwardRef, type ReactNode, type PropsWithChildren, type ComponentProps } from 'react';
 import cx from 'clsx';
 import Spin from '@components/Spin';
 import renderReactNode from '@utils/renderReactNode';
 import './index.css';
 
-export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface Props extends ComponentProps<'button'> {
   variant?: 'contained' | 'text';
-  color?: 'purple' | 'gradient';
-  size?: 'small' | 'normal' | 'medium';
+  color?: 'purple' | 'gradient' | 'white';
+  size?: 'mini' | 'small' | 'normal' | 'medium';
   fullWidth?: boolean;
   loading?: boolean | 'start' | 'end';
   icon?: ReactNode;

@@ -1,8 +1,9 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useCallback, useImperativeHandle, forwardRef } from 'react';
 import { useDrag } from '@use-gesture/react';
 import { a, useSpring, config } from '@react-spring/web';
 import Mask from '@components/Mask';
 import renderReactNode from '@utils/renderReactNode';
+import usePressEsc from '@hooks/usePressEsc';
 
 export interface DrawerMethod {
   show: (Content: React.ReactNode) => void;
@@ -16,20 +17,20 @@ const Drawer = forwardRef<DrawerMethod>((_, ref) => {
   const [maskOpen, setModalOpen] = useState(false);
   const [{ y }, api] = useSpring(() => ({ y: height }));
 
-  const show = (Content: React.ReactNode, params?: { canceled: boolean }) => {
+  const show = useCallback((Content: React.ReactNode, params?: { canceled: boolean }) => {
     const { canceled } = params || {};
     api.start({ y: 0, immediate: false, config: canceled ? config.wobbly : config.stiff });
     setModalOpen(true);
     if (Content) {
       setContent(Content);
     }
-  };
+  }, []);
 
-  const hide = (velocity = 0) => {
+  const hide = useCallback((velocity = 0) => {
     api.start({ y: height, immediate: false, config: { ...config.stiff, velocity } });
     setModalOpen(false);
     setContent(null);
-  };
+  }, []);
 
   const bind = useDrag(
     ({ last, velocity: [, vy], direction: [, dy], movement: [, my], cancel, canceled }) => {
@@ -43,6 +44,8 @@ const Drawer = forwardRef<DrawerMethod>((_, ref) => {
   );
 
   const display = y.to((py) => (py < height ? 'block' : 'none'));
+
+  usePressEsc(hide);
 
   useImperativeHandle(ref, () => ({
     show,

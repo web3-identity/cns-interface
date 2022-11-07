@@ -99,7 +99,7 @@ const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) 
         </Link>
       )}
       {status === DomainStatus.Registered && (
-        <Link to={`/register/${domain}`} className="no-underline">
+        <Link to={`/setting/${domain}`} className="no-underline">
           <Button size={where === 'header' ? 'small' : 'medium'}>查看</Button>
         </Link>
       )}

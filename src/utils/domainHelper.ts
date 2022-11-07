@@ -16,7 +16,7 @@ export const randomSecret = () => {
 };
 
 
-export const getNameHash = LRUCacheFunction(_getNameHash, 'getNameHash')
+export const getNameHash: (name: string) => string = LRUCacheFunction(_getNameHash, 'getNameHash')
 
 export const dnsNameNotationDecode = (message: string) => {
   const labels = [];

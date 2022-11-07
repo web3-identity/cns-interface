@@ -15,6 +15,10 @@ button.absolute {
   @apply flex w-full;
 }
 
+.button--mini {
+  @apply text-[14px] h-[28px] px-[20px] rounded-6px leading-28px;
+}
+
 .button--small {
   @apply text-[14px] h-[32px] px-[24px] rounded-8px leading-32px;
 }
@@ -79,13 +83,24 @@ button.button--text.is-disabled {
 }
 
 .button--text.button--purple {
-  @apply bg-transparent bg-opacity-100 text-purple-normal;;
+  @apply bg-transparent bg-opacity-100 text-purple-normal;
 }
 
 .button--text.button--purple:hover,
 .button--text.button--purple:focus-visible {
   @apply bg-purple-normal bg-opacity-10 text-purple-normal-hover;
 }
+
+
+.button--text.button--white {
+  @apply bg-transparent bg-opacity-100 text-grey-normal;
+}
+
+.button--text.button--white:hover,
+.button--text.button--white:focus-visible {
+  @apply bg-grey-normal bg-opacity-10 text-grey-normal-hover;
+}
+
 
 
 
