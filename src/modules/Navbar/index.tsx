@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
         {account && (
           <>
             {!isMobile() && <span className="mr-10px text-16px text-#AAA9C1">{shortenAddress(account)}</span>}
-            <Account />
+            <Account account={account}/>
           </>
         )}
       </nav>

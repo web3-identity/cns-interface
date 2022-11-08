@@ -1,4 +1,4 @@
-import React, { Suspense, type HTMLAttributes } from 'react';
+import React, { Suspense, type ComponentProps } from 'react';
 import { Link } from 'react-router-dom';
 import cx from 'clsx';
 import isMobile from '@utils/isMobie';
@@ -19,7 +19,7 @@ interface Props {
   where: 'home' | 'header';
 }
 
-const Status: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ domain, where, className, ...props }) => {
+const Status: React.FC<Props & ComponentProps<'div'>> = ({ domain, where, className, ...props }) => {
   const refreshDomainStatus = useRefreshDomainStatus(domain);
 
   return (
@@ -99,8 +99,8 @@ const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) 
         </Link>
       )}
       {status === DomainStatus.Registered && (
-        <Link to={`/register/${domain}`} className="no-underline">
-          <Button size={where === 'header' ? 'small' : isMobile() ? 'normal' : 'medium'}>查看</Button>
+        <Link to={`/setting/${domain}`} className="no-underline">
+          <Button size={where === 'header' ? 'small' : 'medium'}>查看</Button>
         </Link>
       )}
     </>

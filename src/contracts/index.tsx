@@ -1,11 +1,9 @@
 import { Contract, providers, type ContractInterface } from 'ethers';
-import {
-  Web3RegistrarController as Web3ControllerABI,
-  PublicResolver as PublicResolverABI,
-  NameWrapper as NameWrapperABI,
-  BaseRegistrarImplementation as BaseRegistrarABI,
-  ReverseRegistrar as ReverseRegistrarABI,
-} from '@web3identity/cns-contracts';
+import Web3ControllerABI from './abis/Web3Controller.json';
+import PublicResolverABI from './abis/PublicResolver.json';
+import NameWrapperABI from './abis/NameWrapper.json';
+import BaseRegistrarABI from './abis/BaseRegistrar.json';
+import ReverseRegistrarABI from './abis/ReverseRegistrar.json';
 import { convertCfxToHex } from '@utils/addressUtils';
 import isProduction from '@utils/isProduction';
 export const HttpProvider = new providers.JsonRpcProvider(import.meta.env.VITE_CoreSpaceRpcUrl);

@@ -70,8 +70,8 @@ const DomainList: React.FC = () => {
           <span className="text-grey-normal-hover text-opacity-50 text-14px leading-18px lt-md:text-12px lt-md:leading-14px">当前账户</span>
           {!domain ? (
             <div className="flex gap-16px items-center lt-md:gap-4px lt-md:mt-2px">
-              <Avatar address={account} diameter={30} />
-              <span>{shortenAddress(account!)}</span>
+              {account && <Avatar address={account} size={30} /> }
+              <span>{shortenAddress(account)}</span>
             </div>
           ) : (
             <span className="lt-md:inline-block lt-md:mt-4px">{domain}</span>
@@ -93,7 +93,7 @@ const DomainList: React.FC = () => {
 
 const MyDomains: React.FC = () => {
   return (
-    <PageWrapper className="pt-230px lt-md:pt-16px">
+    <PageWrapper className="pt-80px lt-md:pt-16px">
       <Suspense fallback={null}>
         <DomainList />
       </Suspense>

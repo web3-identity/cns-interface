@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useTransition, memo, type HTMLAttributes } from 'react';
+import React, { type  ComponentProps } from 'react';
 import cx from 'clsx';
-import { useParams } from 'react-router-dom';
 import PageWrapper from '@components/Layout/PageWrapper';
 import BorderBox from '@components/Box/BorderBox';
 import Domain from '@modules/Domain';
+import { useParamsDomainWithTransition } from '@hooks/useParamsDomain';
 import Register from './Register';
 import ProgressBar from './ProgressBar';
 import StatusCheck from './StatusCheck';
 
-export const RegisterBox: React.FC<HTMLAttributes<HTMLDivElement> & { title?: string }> = ({ title, children, className, ...props }) => {
+export const RegisterBox: React.FC< ComponentProps<'div'> & { title?: string }> = ({ title, children, className, ...props }) => {
   return (
     <div className={cx('h-340px p-24px rounded-24px bg-purple-dark-active dropdown-shadow whitespace-nowrap lt-md:px-16px lt-md:pb-16px lt-md:h-392px rounded-8px', className)} {...props}>
       {title && (
@@ -24,10 +24,7 @@ export const RegisterBox: React.FC<HTMLAttributes<HTMLDivElement> & { title?: st
 };
 
 const DomainRegister: React.FC = () => {
-  const { domain: _domain } = useParams();
-  const [domain, setDomain] = useState<string>('');
-  const [isPending, startTransition] = useTransition();
-  useEffect(() => startTransition(() => setDomain(_domain?.toLocaleLowerCase().trim() ?? '')), [_domain]);
+  const { domain, isPending } = useParamsDomainWithTransition();
 
   return (
     <PageWrapper className="relative pt-72px">
