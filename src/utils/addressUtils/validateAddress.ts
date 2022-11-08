@@ -1,6 +1,6 @@
 import JSBI from 'jsbi';
 import { Buffer } from 'buffer';
-import { NetId } from '../isProduction';
+
 const ALPHABET = 'ABCDEFGHJKMNPRSTUVWXYZ0123456789';
 const VERSION_BYTE = 0;
 const NET_ID_LIMIT = 0xffffffff;

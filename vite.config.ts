@@ -68,11 +68,11 @@ export default defineConfig({
       '@service': path.resolve(__dirname, 'src/service'),
       punycode: "rollup-plugin-node-polyfills/polyfills/punycode",
       buffer: 'rollup-plugin-node-polyfills/polyfills/buffer-es6',
-      'crypto-addr-codec': 'crypto-addr-codec/dist/index.js',
-      '@web3identity/address-encoder': '@web3identity/address-encoder/dist/index.modern.js',
+      'crypto-addr-codec': 'crypto-addr-codec/dist/index.js'
     },
   },
   build: {
+    minify: false,
     rollupOptions: {
       plugins: [visualizer()],
     },

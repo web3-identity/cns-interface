@@ -1,7 +1,7 @@
 import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
-import { formatsByCoinType } from "@ensdomains/address-encoder";
 import { fetchChain } from '@utils/fetch';
 import { getNameHash } from '@utils/domainHelper';
+import { formatsByCoinType } from '@utils/addressUtils';
 import { PublicResolver } from '@contracts/index';
 import { Buffer } from 'buffer';
 
@@ -27,6 +27,7 @@ export const fetchDomainResolution = (domain: string, chain: Chain = 'Bitcoin') 
     if (decodeRes === '0x') return '';
     const coinTypeInstance = formatsByCoinType[chainsType[chain]];
     const res = coinTypeInstance.encoder(Buffer.from(decodeRes.slice(2), 'hex'));
+    console.log(res);
     return res;
   });
 

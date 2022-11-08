@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import isMobile from '@utils/isMobie';
+import { Link } from 'react-router-dom';
 import PageWrapper from '@components/Layout/PageWrapper';
 import { useMyDomains } from '@service/myDomains';
 import { useAccount } from '@service/account';
@@ -7,6 +7,7 @@ import { useDomainExpire } from '@service/domainInfo';
 import { useDomainReverseRegistrar } from '@service/domainReverseRegistrar';
 import { shortenAddress } from '@utils/addressUtils';
 import { getLabelDomain } from '@utils/domainHelper';
+import isMobile from '@utils/isMobie';
 import BorderBox from '@components/Box/BorderBox';
 import Button from '@components/Button';
 import Avatar from '@components/Avatar';
@@ -41,12 +42,16 @@ const DomainItem: React.FC<Props> = ({ domain, index }) => {
           {!isMobile() && (
             <>
               <Button variant="text">续费</Button>
-              <Button>域名管理</Button>
+              <Link to={`/setting/${domain}`} className="no-underline">
+                <Button>域名管理</Button>
+              </Link>
             </>
           )}
           {isMobile() && (
             <>
-              <Button className="w-120px">域名管理</Button>
+              <Link to={`/setting/${domain}`} className="no-underline">
+                <Button className="w-120px">域名管理</Button>
+              </Link>
               <Button variant="outlined" className="w-120px">
                 续费
               </Button>
