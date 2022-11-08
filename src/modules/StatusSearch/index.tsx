@@ -21,10 +21,7 @@ const StatusSearch: React.FC<Props & HTMLAttributes<HTMLDivElement>> = ({ where,
   useLayoutEffect(() => setDomain(''), [currentInput, pathname]);
   useLayoutEffect(() => setValue('domain', ''), [pathname]);
 
-  const handleSearch = useCallback(
-    withForm(({ domain }) => setDomain((domain as string).toLowerCase().trim())),
-    []
-  );
+  const handleSearch = useCallback(withForm(({ domain }) => setDomain((domain as string).toLowerCase().trim())), []);
 
   return (
     <form onSubmit={handleSearch} className={cx('relative', className)}>

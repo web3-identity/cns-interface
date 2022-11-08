@@ -1,10 +1,9 @@
 import React, { type HTMLAttributes } from 'react';
 import { Link } from 'react-router-dom';
-import { disconnect } from '@service/account';
 import Dropdown from '@components/Dropdown';
 import Avatar from '@components/Avatar';
 import isMobile from '@utils/isMobie';
-import { useAccount } from '@service/account';
+import { disconnect } from '@service/account';
 
 const AccountDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, onClick }) => {
   return (
@@ -25,12 +24,12 @@ const AccountDropdown: React.FC = () => {
   );
 };
 
-const Account: React.FC = () => {
-  const account = useAccount();
+const size = !isMobile() ? 48 : 32
+const Account: React.FC<{ account: string; }> = ({ account }) => {
   return (
     <Dropdown placement="bottom-start" trigger="click" interactiveDebounce={100} Content={<AccountDropdown />}>
       <span className="flex-shrink-0 cursor-pointer">
-        <Avatar address={account} diameter={!isMobile() ? 48 : 32} />
+        <Avatar address={account} size={size} />
       </span>
     </Dropdown>
   );

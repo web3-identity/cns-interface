@@ -1,0 +1,5 @@
+.domain-card {
+  background: linear-gradient(137.89deg, #bcf9ff -1.34%, #b1b3ff 104.3%);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset -1px -1px 1px rgba(46, 46, 77, 0.3), inset 1px 1px 1px rgba(245, 245, 245, 0.8);
+  border-radius: 10px;
+}

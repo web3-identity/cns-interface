@@ -1,17 +1,20 @@
-import React, { useRef, useLayoutEffect, type HTMLAttributes } from 'react';
+import React, { memo, useRef, useLayoutEffect, type ComponentProps } from 'react';
 import jazzIcon from '@utils/jazzIcon';
 import { addressToNumber, convertCfxToHex } from '@utils/addressUtils';
 import removeAllChild from '@utils/removeAllChild';
 
-const Avatar: React.FC<HTMLAttributes<HTMLDivElement> & { address: string | null | undefined; diameter: number }> = ({ address, diameter }) => {
-  const renderAddress = addressToNumber(convertCfxToHex(address!));
+const Avatar: React.FC<ComponentProps<'div'> & { address: string; size: number }> = ({ address, size, ...props }) => {
   const avatarContainerRef = useRef<HTMLDivElement>(null!);
+
   useLayoutEffect(() => {
-    const avatarDom = jazzIcon(diameter, renderAddress);
     removeAllChild(avatarContainerRef.current);
+    if (!address) return;
+    const renderAddress = addressToNumber(convertCfxToHex(address));
+    const avatarDom = jazzIcon(size, renderAddress);
     avatarContainerRef.current.appendChild(avatarDom);
-  }, [diameter, renderAddress]);
-  return <div className={`h-${diameter}px w-${diameter}px`} ref={avatarContainerRef} />;
+  }, [size, address]);
+
+  return <div {...props} style={{ width: size, height: size, ...props.style }} ref={avatarContainerRef} />;
 };
 
-export default Avatar;
+export default memo(Avatar);

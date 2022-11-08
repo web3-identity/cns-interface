@@ -33,7 +33,7 @@ const QRCode: React.FC<{ domain: string; refreshMakeOrder: VoidFunction }> = ({ 
         refreshMakeOrder();
       }}
     >
-      <QRCodeCreate className="group-hover:opacity-30" size={88} value={makeOrder?.code_url || ''} viewBox={`0 0 88 88`} fgColor={isDarkMode() ? "green" : undefined} />
+      <QRCodeCreate className="group-hover:opacity-30  pointer-events-none" size={88} value={makeOrder?.code_url || ''} viewBox={`0 0 88 88`} fgColor={isDarkMode() ? "green" : undefined} />
       <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-14px text-grey-normal font-bold opacity-0 group-hover:opacity-100">刷新二维码</span>
     </div>
   );
