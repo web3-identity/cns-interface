@@ -10,7 +10,7 @@ import StatusCheck from './StatusCheck';
 
 export const RegisterBox: React.FC<HTMLAttributes<HTMLDivElement> & { title?: string }> = ({ title, children, className, ...props }) => {
   return (
-    <div className={cx('h-340px p-24px rounded-24px bg-purple-dark-active dropdown-shadow whitespace-nowrap lt-md:px-16px lt-md:h-392px rounded-8px', className)} {...props}>
+    <div className={cx('h-340px p-24px rounded-24px bg-purple-dark-active dropdown-shadow whitespace-nowrap lt-md:px-16px lt-md:pb-16px lt-md:h-392px rounded-8px', className)} {...props}>
       {title && (
         <>
           <p className="text-22px leading-26px text-grey-normal font-bold lt-md:text-16px lt-md:leading-18px">{title}</p>
