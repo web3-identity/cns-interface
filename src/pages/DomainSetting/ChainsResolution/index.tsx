@@ -3,7 +3,7 @@ import Button from '@components/Button';
 import Spin from '@components/Spin';
 import Delay from '@components/Delay';
 import { shortenAddress } from '@utils/addressUtils';
-import { useDomainResolution } from '@service/domainResolution';
+import { useDomainRegistrar } from '@service/domainRegistrar';
 import usePressEsc from '@hooks/usePressEsc';
 
 const ChainsResolution: React.FC<{ domain: string }> = ({ domain }) => {
@@ -46,7 +46,7 @@ const ChainsResolution: React.FC<{ domain: string }> = ({ domain }) => {
 };
 
 const Chains: React.FC<{ domain: string }> = ({ domain }) => {
-  const abc = useDomainResolution(domain);
+  const abc = useDomainRegistrar(domain);
   return null;
 };
 

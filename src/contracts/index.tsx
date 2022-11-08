@@ -4,6 +4,7 @@ import PublicResolverABI from './abis/PublicResolver.json';
 import NameWrapperABI from './abis/NameWrapper.json';
 import BaseRegistrarABI from './abis/BaseRegistrar.json';
 import ReverseRegistrarABI from './abis/ReverseRegistrar.json';
+import MulticallABI from './abis/Multicall.json';
 import { convertCfxToHex } from '@utils/addressUtils';
 import isProduction from '@utils/isProduction';
 export const HttpProvider = new providers.JsonRpcProvider(import.meta.env.VITE_CoreSpaceRpcUrl);
@@ -40,4 +41,9 @@ export const BaseRegistrar = createContract(
 export const ReverseRegistrar = createContract(
   isProduction ? 'cfxtest:ach1p03gkptxz07p4ecn66gjpd0xrnkkbj1n6p96d5' : 'cfxtest:ach1p03gkptxz07p4ecn66gjpd0xrnkkbj1n6p96d5',
   ReverseRegistrarABI
+);
+
+export const Multicall = createContract(
+  isProduction ? 'cfxtest:acedvt79ncbjs6zmfgj4gjurtb26gsmr1jv9kzmgy2' : 'cfxtest:acedvt79ncbjs6zmfgj4gjurtb26gsmr1jv9kzmgy2', 
+  MulticallABI
 );

@@ -1,6 +1,10 @@
 import React, { Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import PageWrapper from '@components/Layout/PageWrapper';
+import BorderBox from '@components/Box/BorderBox';
+import Button from '@components/Button';
+import Avatar from '@components/Avatar';
+import AuthConnectButton from '@modules/AuthConnectButton';
 import { useMyDomains } from '@service/myDomains';
 import { useAccount } from '@service/account';
 import { useDomainExpire } from '@service/domainInfo';
@@ -8,9 +12,6 @@ import { useDomainReverseRegistrar } from '@service/domainReverseRegistrar';
 import { shortenAddress } from '@utils/addressUtils';
 import { getLabelDomain } from '@utils/domainHelper';
 import isMobile from '@utils/isMobie';
-import BorderBox from '@components/Box/BorderBox';
-import Button from '@components/Button';
-import Avatar from '@components/Avatar';
 
 interface Props {
   domain: string;
@@ -99,9 +100,11 @@ const DomainList: React.FC = () => {
 const MyDomains: React.FC = () => {
   return (
     <PageWrapper className="pt-80px lt-md:pt-16px">
-      <Suspense fallback={null}>
-        <DomainList />
-      </Suspense>
+      <AuthConnectButton className='flex mx-auto mt-180px'>
+        <Suspense fallback={null}>
+          <DomainList />
+        </Suspense>
+      </AuthConnectButton>
     </PageWrapper>
   );
 };
