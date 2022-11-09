@@ -20,8 +20,8 @@ const DomainItem: React.FC<Props> = ({ domain, index }) => {
   const { dateFormatForSecond, gracePeriod, isExpired } = useDomainExpire(domain);
   return (
     <>
-      {index !== 0 && <div className="h-1px w-full bg-purple-normal opacity-30" />}
-      <div className="lt-md:flex lt-md:justify-between lt-md:items-center">
+      {index !== 0 && !isMobile() && <div className="h-1px w-full bg-purple-normal opacity-30" />}
+      <div className="lt-md:flex lt-md:justify-between lt-md:items-center lt-md:rounded-12px lt-md:px-16px lt-md:bg-purple-dark-active">
         <div className="flex py-24px justify-between lt-md:flex-col lt-md:py-16px">
           <div className="flex flex-col gap-6px lt-md:gap-8px">
             <span className="text-grey-normal text-22px font-bold lt-md:text-16px lt-md:leading-18px">{getLabelDomain(domain)}</span>
@@ -78,7 +78,7 @@ const DomainList: React.FC = () => {
         </div>
       </BorderBox>
       <span className="text-grey-normal text-22px leading-26px lt-md:text-16px lt-md:leading-18px">注册人</span>
-      <div className="bg-purple-dark-active px-24px rounded-24px dropdown-shadow lt-md:px-16px">
+      <div className="bg-purple-dark-active px-24px rounded-24px dropdown-shadow lt-md:px-0px lt-md:rounded-none lt-md:bg-transparent lt-md:flex lt-md:flex-col lt-md:gap-16px">
         {myDomains.map((domain: string, index: number) => (
           <DomainItem key={index} domain={domain} index={index} />
         ))}
