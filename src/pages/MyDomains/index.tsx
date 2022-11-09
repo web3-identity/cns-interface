@@ -21,43 +21,34 @@ const DomainItem: React.FC<Props> = ({ domain, index }) => {
   return (
     <>
       {index !== 0 && <div className="h-1px w-full bg-purple-normal opacity-30" />}
-      <div className="flex py-24px justify-between lt-md:flex-col lt-md:py-16px">
-        <div className="flex flex-col gap-6px lt-md:gap-8px">
-          <span className="text-grey-normal text-22px font-bold lt-md:text-16px lt-md:leading-18px">{getLabelDomain(domain)}</span>
+      <div className="lt-md:flex lt-md:justify-between lt-md:items-center">
+        <div className="flex py-24px justify-between lt-md:flex-col lt-md:py-16px">
+          <div className="flex flex-col gap-6px lt-md:gap-8px">
+            <span className="text-grey-normal text-22px font-bold lt-md:text-16px lt-md:leading-18px">{getLabelDomain(domain)}</span>
 
-          <span className="text-grey-normal-hover text-opacity-50 text-14px lt-md:text-12px ;t-md:leading-14px">
-            {!isExpired ? (
-              <>
-                预计到期
-                <span className="ml-8px text-grey-normal lt-md:ml-4px">{dateFormatForSecond}</span>
-              </>
-            ) : (
-              <>
-                域名已到期，将于<span className="text-grey-normal font-bold">{gracePeriod}</span>天后到期
-              </>
-            )}
-          </span>
-        </div>
-        <div className="flex gap-60px lt-md:gap-6px lt-md:mt-16px">
+            <span className="text-grey-normal-hover text-opacity-50 text-14px lt-md:text-12px ;t-md:leading-14px">
+              {!isExpired ? (
+                <>
+                  预计到期
+                  <span className="ml-8px text-grey-normal lt-md:ml-4px">{dateFormatForSecond}</span>
+                </>
+              ) : (
+                <>
+                  域名已到期，将于<span className="text-grey-normal font-bold">{gracePeriod}</span>天后到期
+                </>
+              )}
+            </span>
+          </div>
           {!isMobile() && (
-            <>
+            <div className="flex gap-60px lt-md:gap-6px lt-md:mt-16px">
               <Button variant="text">续费</Button>
               <Link to={`/setting/${domain}`} className="no-underline">
                 <Button>域名管理</Button>
               </Link>
-            </>
-          )}
-          {isMobile() && (
-            <>
-              <Link to={`/setting/${domain}`} className="no-underline">
-                <Button className="w-120px">域名管理</Button>
-              </Link>
-              <Button variant="outlined" className="w-120px">
-                续费
-              </Button>
-            </>
+            </div>
           )}
         </div>
+        <Link to={`/setting/${domain}`}>{isMobile() && <span className="i-dashicons:arrow-right-alt2 text-24px text-grey-normal" />}</Link>
       </div>
     </>
   );
@@ -75,7 +66,7 @@ const DomainList: React.FC = () => {
           <span className="text-grey-normal-hover text-opacity-50 text-14px leading-18px lt-md:text-12px lt-md:leading-14px">当前账户</span>
           {!domain ? (
             <div className="flex gap-16px items-center lt-md:gap-4px lt-md:mt-2px">
-              {account && <Avatar address={account} size={30} /> }
+              {account && <Avatar address={account} size={30} />}
               <span>{shortenAddress(account)}</span>
             </div>
           ) : (
