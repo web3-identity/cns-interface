@@ -59,7 +59,7 @@ export const connect = async () => {
       method: 'cfx_accounts',
       params: [
         {
-          availableNetwork: [1, 1029],
+          availableNetwork: [isProduction ? 1029 : 1],
           scopes: ['baseInfo', 'identity'],
         },
       ],
