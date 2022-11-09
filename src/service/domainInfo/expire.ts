@@ -1,6 +1,6 @@
-import { selectorFamily, useRecoilValue, atom } from 'recoil';
+import { atom, selectorFamily, useRecoilValue } from 'recoil';
 import { getRecoil, setRecoil } from 'recoil-nexus';
-import { persistAtom } from '@utils/recoilUtils';
+import { persistAtom, handleRecoilInit } from '@utils/recoilUtils';
 import dayjs from 'dayjs';
 import { fetchChain } from '@utils/fetch';
 import { BaseRegistrar } from '@contracts/index';
@@ -38,9 +38,14 @@ export const gracePeriodState = atom<number>({
 });
 
 (() => {
-  setTimeout(() => {
-    fetchGracePeriod().then((res) => setRecoil(gracePeriodState, res));
-  }, 1000);
+  fetchGracePeriod().then((res) => {
+    try {
+      handleRecoilInit((set) => set(gracePeriodState, res));
+    } catch (_) {
+      setRecoil(gracePeriodState, res);
+    }
+  });
+
 })();
 
 const domainExpireQuery = selectorFamily<DomainExpire, string>({

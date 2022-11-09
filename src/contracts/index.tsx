@@ -43,7 +43,4 @@ export const ReverseRegistrar = createContract(
   ReverseRegistrarABI
 );
 
-export const Multicall = createContract(
-  isProduction ? 'cfxtest:acedvt79ncbjs6zmfgj4gjurtb26gsmr1jv9kzmgy2' : 'cfxtest:acedvt79ncbjs6zmfgj4gjurtb26gsmr1jv9kzmgy2', 
-  MulticallABI
-);
+export const Multicall = createContract(isProduction ? 'cfxtest:acedvt79ncbjs6zmfgj4gjurtb26gsmr1jv9kzmgy2' : 'cfxtest:acedvt79ncbjs6zmfgj4gjurtb26gsmr1jv9kzmgy2', MulticallABI);
