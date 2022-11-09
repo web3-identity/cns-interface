@@ -3,6 +3,7 @@ import { setRecoil, getRecoil } from 'recoil-nexus';
 import { persistAtom } from '@utils/recoilUtils';
 import { Provider } from '@idealight-labs/anyweb-js-sdk';
 import { targetChainId } from '..';
+import isProduction from '@utils/isProduction';
 import { sendTransaction as send } from '@cfxjs/use-wallet-react/conflux/Fluent';
 
 export const provider = new Provider({
@@ -31,7 +32,7 @@ export const accountState = atom<string | null | undefined>({
                   method: 'cfx_accounts',
                   params: [
                     {
-                      availableNetwork: [1, 1029],
+                      availableNetwork: [isProduction ? 1029 : 1],
                       scopes: ['baseInfo', 'identity'],
                     },
                   ],
