@@ -17,7 +17,7 @@ const ConnectWallet: React.FC<HTMLAttributes<HTMLDivElement> & { icon: string; n
 
 const ConnectModalContent: React.FC = () => {
   return (
-    <div className="flex items-center justify-evently gap-12px pt-24px">
+    <div className="flex items-center justify-evently gap-12px pt-24px lt-md:justify-center">
       <ConnectWallet onClick={() => connect('fluent')} icon={fluentImg} name="Fluent" />
       <ConnectWallet onClick={() => connect('anyweb')} icon={anywebImg} name="AnyWeb" />
     </div>

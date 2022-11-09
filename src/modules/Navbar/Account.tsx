@@ -7,7 +7,7 @@ import { disconnect } from '@service/account';
 
 const AccountDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, onClick }) => {
   return (
-    <div onClick={onClick} className="w-160px h-48px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-colors cursor-pointer">
+    <div onClick={onClick} className="w-160px h-48px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-colors cursor-pointer lt-md:w-120px lt-md:h-40px">
       {children}
     </div>
   );
@@ -15,7 +15,7 @@ const AccountDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ childre
 
 const AccountDropdown: React.FC = () => {
   return (
-    <div className="mt-24px flex flex-col gap-16px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow">
+    <div className="mt-24px flex flex-col gap-16px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow lt-md:mt-16px lt-md:p-16px">
       <Link to="/my-domains" className="text-white no-underline">
         <AccountDropdownItem>域名管理</AccountDropdownItem>
       </Link>
