@@ -73,6 +73,14 @@ export const connect = async () => {
     });
 };
 
+export const disconnect = async () => {
+  provider
+    .request({
+      method: 'anyweb_revoke',
+    })
+    .then(() => {});
+};
+
 export const sendTransaction = (params: Parameters<typeof send>[0]) =>
   provider
     .request({

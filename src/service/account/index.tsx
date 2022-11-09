@@ -2,8 +2,8 @@ import { atom, selector, useRecoilValue } from 'recoil';
 import { setRecoil, getRecoil } from 'recoil-nexus';
 import { persistAtom } from '@utils/recoilUtils';
 import { convertCfxToHex, convertHexToCfx, validateCfxAddress, validateHexAddress } from '@utils/addressUtils';
-import { accountState as fluentAccountState, connect as connectFluent, switchChain as switchChainFluent, sendTransaction as sendTransactionWithFluent } from './fluent';
-import { accountState as anywebAccountState, connect as connectAnyweb, switchChain as switchChainAnyweb, sendTransaction as sendTransactionWithAnyweb } from './anyweb';
+import { accountState as fluentAccountState, connect as connectFluent, disconnect as disconnectFluent, switchChain as switchChainFluent, sendTransaction as sendTransactionWithFluent } from './fluent';
+import { accountState as anywebAccountState, connect as connectAnyweb, disconnect as disconnectAnyweb, switchChain as switchChainAnyweb, sendTransaction as sendTransactionWithAnyweb } from './anyweb';
 import isProduction from '@utils/isProduction';
 export const targetChainId = isProduction ? '1029' : '1';
 
@@ -13,12 +13,14 @@ const methodsMap = {
     connect: connectFluent,
     switchChain: switchChainFluent,
     sendTransaction: sendTransactionWithFluent,
+    disconnect: disconnectFluent,
   },
   anyweb: {
     accountState: anywebAccountState,
     connect: connectAnyweb,
     switchChain: switchChainAnyweb,
     sendTransaction: sendTransactionWithAnyweb,
+    disconnect: disconnectAnyweb,
   },
 } as const;
 
@@ -75,6 +77,13 @@ export const connect = async (method: Methods) => {
   } catch (_) {}
 };
 
+export const disconnect = async (method: Methods) => {
+  try {
+    await methodsMap[method].disconnect();
+    setRecoil(accountMethodFilter, null);
+  } catch (_) {}
+}
+
 export const switchChain = () => {
   const method = getAccountMethod();
   if (!method) return;
@@ -89,7 +98,6 @@ export const sendTransaction = async (params: Parameters<typeof sendTransactionW
   return methodsMap[accountMethod].sendTransaction(params) as unknown as string;
 };
 
-export const disconnect = () => setRecoil(accountMethodFilter, null);
 export const useAccount = () => useRecoilValue(accountState);
 export const useAccountMethod = () => useRecoilValue(accountMethodFilter);
 export const useChainId = () => useRecoilValue(chainIdState);

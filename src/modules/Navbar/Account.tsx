@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Dropdown from '@components/Dropdown';
 import Avatar from '@components/Avatar';
 import isMobile from '@utils/isMobie';
-import { disconnect } from '@service/account';
+import { disconnect, useAccountMethod } from '@service/account';
 
 const AccountDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, onClick }) => {
   return (
@@ -14,12 +14,13 @@ const AccountDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ childre
 };
 
 const AccountDropdown: React.FC = () => {
+  const accountMethod = useAccountMethod()
   return (
     <div className="mt-24px flex flex-col gap-16px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow lt-md:mt-16px lt-md:p-16px">
       <Link to="/my-domains" className="text-white no-underline">
         <AccountDropdownItem>域名管理</AccountDropdownItem>
       </Link>
-      <AccountDropdownItem onClick={disconnect}>退出登录</AccountDropdownItem>
+      <AccountDropdownItem onClick={() => disconnect(accountMethod!)}>退出登录</AccountDropdownItem>
     </div>
   );
 };
