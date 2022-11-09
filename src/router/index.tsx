@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import CustomScrollbar from 'custom-react-scrollbar';
 import ErrorBoundary from '@modules/ErrorBoundary';

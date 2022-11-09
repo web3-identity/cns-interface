@@ -3,6 +3,9 @@ html {
   scroll-behavior: smooth;
 }
 
+input {
+  font-family: 'SF Pro Display';
+}
 
 @font-face {
   font-family: 'SF Pro Display';

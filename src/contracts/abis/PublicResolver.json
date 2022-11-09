@@ -28,7 +28,6 @@
   "function recordVersions(bytes32) view returns (uint64)",
   "function setABI(bytes32,uint256,bytes)",
   "function setAddr(bytes32,uint256,bytes)",
-  "function setAddr(bytes32,address)",
   "function setApprovalForAll(address,bool)",
   "function setContenthash(bytes32,bytes)",
   "function setDNSRecords(bytes32,bytes)",

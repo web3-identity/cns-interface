@@ -1,0 +1,7 @@
+.registrars-chain-input:focus-within > span {
+  @apply opacity-0 select-none;
+}
+
+.registrars-chain-input:focus-within > div:last-child {
+  @apply !opacity-100 !select-auto;
+}
