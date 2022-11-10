@@ -8,9 +8,9 @@ import Input from '@components/Input';
 import usePressEsc from '@hooks/usePressEsc';
 import useInTranscation from '@hooks/useInTranscation';
 import isMobile from '@utils/isMobie';
-import { useRefreshRegistrar, setRegistrarAddress as _setRegistrarAddress, type Chain, type useDomainRegistrar } from '@service/domainRegistrar';
+import { setRegistrarAddress as _setRegistrarAddress, type Chain, type DomainRegistrar } from '@service/domainRegistrar';
 
-const ModalContent: React.FC<{ domain: string; registrableChains: ReturnType<typeof useDomainRegistrar> }> = ({ domain, registrableChains }) => {
+const ModalContent: React.FC<{ domain: string; registrableChains: Array<DomainRegistrar> }> = ({ domain, registrableChains }) => {
   const { register, handleSubmit: withForm } = useForm();
 
   const [visible, setVisible] = useState(false);
@@ -26,9 +26,9 @@ const ModalContent: React.FC<{ domain: string; registrableChains: ReturnType<typ
   }, []);
 
   const { inTranscation, execTranscation: setRegistrarAddress } = useInTranscation(_setRegistrarAddress);
-  const handleRefreshRegistrar = useRefreshRegistrar(domain);
+
   const handleSetRegistrarAddress = useCallback(
-    withForm(({ address }) => setRegistrarAddress({ domain, chain: selectedChain, address, handleRefreshRegistrar })),
+    withForm(({ address }) => setRegistrarAddress({ domain, chain: selectedChain, address })),
     [selectedChain]
   );
 
@@ -86,7 +86,7 @@ const ChainSelect: React.FC<{ selectableChains: Array<string>; selectChain: Func
   );
 };
 
-const showAddNewResolutionModal = (domain: string, registrableChains: ReturnType<typeof useDomainRegistrar>) => {
+const showAddNewResolutionModal = (domain: string, registrableChains: Array<DomainRegistrar>) => {
   if (isMobile()) {
     showDrawer({ Content: <ModalContent domain={domain} registrableChains={registrableChains} />, title: '新增解析地址' });
   } else {

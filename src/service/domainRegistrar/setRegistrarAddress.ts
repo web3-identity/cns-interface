@@ -3,19 +3,9 @@ import { getNameHash } from '@utils/domainHelper';
 import { PublicResolver } from '@contracts/index';
 import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
 import { hideAllModal } from '@components/showPopup';
-import { chainsType, chainsEncoder, type Chain } from './';
+import { chainsType, chainsEncoder, setDomainRegistrarStatusUpdate, getDomainRegistrar, type Chain } from './';
 
-export const setRegistrarAddress = async ({
-  domain,
-  chain,
-  address,
-  handleRefreshRegistrar,
-}: {
-  domain: string;
-  chain: Chain;
-  address: string;
-  handleRefreshRegistrar: VoidFunction;
-}) => {
+export const setRegistrarAddress = async ({ domain, chain, address }: { domain: string; chain: Chain; address: string }) => {
   try {
     const account = getAccount();
 
@@ -24,29 +14,22 @@ export const setRegistrarAddress = async ({
       from: account!,
       to: PublicResolver.address,
     });
+    setDomainRegistrarStatusUpdate(domain);
 
     const [receiptPromise] = waitAsyncResult(() => isTransactionReceipt(txHash));
     await receiptPromise;
     hideAllModal();
-    handleRefreshRegistrar();
+    await getDomainRegistrar(domain);
   } catch (_) {
     console.log('setRegistrarAddress err', _);
   }
 };
 
-export const setMultiRegistrarAddress = async ({
-  domain,
-  data,
-  handleRefreshRegistrar,
-}: {
-  domain: string;
-  data: Array<{ chain: Chain; address: string }>;
-  handleRefreshRegistrar: VoidFunction;
-}) => {
+export const setMultiRegistrarAddress = async ({ domain, data }: { domain: string; data: Array<{ chain: Chain; address: string }> }) => {
   try {
     const account = getAccount();
     const allRegistrar = data.map(({ chain, address }) => {
-      return PublicResolver.func.encodeFunctionData('setAddr', [getNameHash(domain + '.web3'), chainsType[chain], chainsEncoder[chain].decode(address)]);
+      return PublicResolver.func.encodeFunctionData('setAddr', [getNameHash(domain + '.web3'), chainsType[chain], !address ? '0x' : chainsEncoder[chain].decode(address)]);
     });
 
     const txHash = await sendTransaction({
@@ -54,11 +37,12 @@ export const setMultiRegistrarAddress = async ({
       from: account!,
       to: PublicResolver.address,
     });
+    setDomainRegistrarStatusUpdate(domain);
 
     const [receiptPromise] = waitAsyncResult(() => isTransactionReceipt(txHash));
     await receiptPromise;
     hideAllModal();
-    handleRefreshRegistrar();
+    await getDomainRegistrar(domain);
   } catch (_) {
     console.log('setMultiRegistrarAddress err', _);
   }

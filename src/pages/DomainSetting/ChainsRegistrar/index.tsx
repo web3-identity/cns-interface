@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useMemo, useEffect, useTransition, memo, Suspense } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, memo } from 'react';
 import cx from 'clsx';
+import { cloneDeep, isEqual } from 'lodash-es';
 import Button from '@components/Button';
 import Spin from '@components/Spin';
 import Delay from '@components/Delay';
@@ -9,8 +10,8 @@ import BorderBox from '@components/Box/BorderBox';
 import useClipboard from 'react-use-clipboard';
 import usePressEsc from '@hooks/usePressEsc';
 import useInTranscation from '@hooks/useInTranscation';
-import { useDomainRegistrar, type DomainRegistrar } from '@service/domainRegistrar';
-import BinanceIcon from '@assets/chains/binance.png';
+import { getDomainRegistrar, useDomainRegistrar, setMultiRegistrarAddress as _setMultiRegistrarAddress, type Status, type DomainRegistrar } from '@service/domainRegistrar';
+import BinanceIcon from '@assets/chains/Binance.png';
 import BitcoinIcon from '@assets/chains/Bitcoin.png';
 import ConfluxIcon from '@assets/chains/Conflux.png';
 import DogechainIcon from '@assets/chains/Dogechain.png';
@@ -19,8 +20,6 @@ import EthereumIcon from '@assets/chains/Ethereum.png';
 import SolanaIcon from '@assets/chains/Solana.png';
 import FlowIcon from '@assets/chains/Flow.png';
 import showAddNewResolutionModal from './AddNewResolutionModal';
-import { useRefreshRegistrar, setMultiRegistrarAddress as _setMultiRegistrarAddress } from '@service/domainRegistrar';
-import { cloneDeep, isEqual } from 'lodash-es';
 import './index.css';
 
 const chainsIcon = {
@@ -35,41 +34,54 @@ const chainsIcon = {
 } as const;
 
 const ChainsRegistrar: React.FC<{ domain: string }> = ({ domain }) => {
-  const [inEdit, setInEdit] = useState(false);
-  const enterEdit = useCallback(() => setInEdit(true), []);
-  const exitEdit = useCallback(() => setInEdit(false), []);
-  usePressEsc(exitEdit);
+  const { status, domainRegistrars } = useDomainRegistrar(domain);
 
+  if (status === 'init') return <ChainsLoading />;
+  if (status === 'error' && !domainRegistrars) return <ErrorBoundary domain={domain} />;
+  if (!domainRegistrars) return null;
+  return <Chains domain={domain} domainRegistrars={domainRegistrars} status={status} />;
+};
+
+const ErrorBoundary: React.FC<{ domain: string }> = ({ domain }) => {
   return (
-    <div className="mt-16px gap-16px p-16px rounded-16px bg-purple-dark-active dropdown-shadow">
-      <Suspense fallback={null}>
-        <Chains domain={domain} inEdit={inEdit} enterEdit={enterEdit} exitEdit={exitEdit} />
-      </Suspense>
+    <div className="relative mt-16px gap-16px p-16px min-h-140px rounded-16px bg-purple-dark-active dropdown-shadow">
+      <div className="flex items-center w-full mb-4px h-28px">
+        <span className="mr-auto text-14px text-purple-normal">地址解析</span>
+      </div>
+      <p className="mt-12px mb-12px text-center text-14px text-grey-normal">数据拉取失败</p>
+      <Button size="mini" className="flex mx-auto" onClick={() => getDomainRegistrar(domain)}>
+        重试
+      </Button>
     </div>
   );
 };
 
-export default ChainsRegistrar;
+const ChainsLoading: React.FC = () => {
+  return (
+    <Delay>
+      <div className="relative mt-16px gap-16px p-16px min-h-140px rounded-16px bg-purple-dark-active dropdown-shadow">
+        <div className="flex items-center w-full mb-4px h-28px">
+          <span className="mr-auto text-14px text-purple-normal">地址解析</span>
+        </div>
+        <Spin className="mt-12px mx-auto text-48px" />
+      </div>
+    </Delay>
+  );
+};
 
-interface Props {
+export default ChainsRegistrar;
+const Operation: React.FC<{
   domain: string;
   inEdit: boolean;
-  exitEdit: VoidFunction;
-  enterEdit: VoidFunction;
-}
-
-const Operation: React.FC<
-  Pick<Props, 'domain' | 'inEdit'> & {
-    inTranscation: boolean;
-    domainRegistrars: ReturnType<typeof useDomainRegistrar>;
-    handleClickSave: VoidFunction;
-    handleClickExit: VoidFunction;
-  }
-> = memo(({ domain, domainRegistrars, inEdit, inTranscation, handleClickSave, handleClickExit }) => {
+  inTranscation: boolean;
+  domainRegistrars: Array<DomainRegistrar>;
+  handleClickSave: VoidFunction;
+  handleClickExit: VoidFunction;
+}> = memo(({ domain, domainRegistrars, inEdit, inTranscation, handleClickSave, handleClickExit }) => {
   const registrableChains = useMemo(() => domainRegistrars.filter(({ address }) => !address), [domainRegistrars]);
 
   return (
-    <div className="flex items-center w-full mb-4px">
+    <div className="flex items-center w-full mb-4px h-28px">
       <span className="mr-auto text-14px text-purple-normal">地址解析</span>
 
       {inEdit && (
@@ -93,9 +105,12 @@ const Operation: React.FC<
   );
 });
 
-const Chains: React.FC<Props> = memo(({ domain, inEdit, enterEdit, exitEdit }) => {
-  const handleRefreshRegistrar = useRefreshRegistrar(domain);
-  const domainRegistrars = useDomainRegistrar(domain);
+const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array<DomainRegistrar> }> = memo(({ status, domain, domainRegistrars }) => {
+  const [inEdit, setInEdit] = useState(false);
+  const enterEdit = useCallback(() => setInEdit(true), []);
+  const exitEdit = useCallback(() => setInEdit(false), []);
+  usePressEsc(exitEdit);
+
   const { inTranscation, execTranscation: setMultiRegistrarAddress } = useInTranscation(_setMultiRegistrarAddress);
 
   const hasRegistrarChains = useMemo(() => domainRegistrars?.filter((registrars) => !!registrars.address), [domainRegistrars]);
@@ -121,7 +136,7 @@ const Chains: React.FC<Props> = memo(({ domain, inEdit, enterEdit, exitEdit }) =
   }, [hasRegistrarChains]);
 
   const handleClickSave = useCallback(() => {
-    const data: ReturnType<typeof useDomainRegistrar> = [];
+    const data: Array<DomainRegistrar> = [];
     editDomainRegistrars.forEach(({ address, chain }, index) => {
       if (address !== hasRegistrarChains[index].address) {
         data.push({ address, chain });
@@ -129,13 +144,12 @@ const Chains: React.FC<Props> = memo(({ domain, inEdit, enterEdit, exitEdit }) =
     });
     setMultiRegistrarAddress({
       domain,
-      handleRefreshRegistrar,
       data,
     });
   }, [hasRegistrarChains, editDomainRegistrars]);
 
   return (
-    <>
+    <div className="relative mt-16px gap-16px p-16px min-h-140px rounded-16px bg-purple-dark-active dropdown-shadow">
       <Operation
         domain={domain}
         domainRegistrars={domainRegistrars}
@@ -144,7 +158,8 @@ const Chains: React.FC<Props> = memo(({ domain, inEdit, enterEdit, exitEdit }) =
         handleClickExit={handleClickExit}
         handleClickSave={handleClickSave}
       />
-      <div className={cx('relative flex flex-col gap-8px')}>
+      {!hasRegistrarChains?.length && <p className="mt-32px text-center text-14px text-grey-normal">尚未添加地址解析</p>}
+      <div className="relative flex flex-col gap-8px">
         {hasRegistrarChains.map((registrar, index) => (
           <Chain
             index={index}
@@ -156,7 +171,22 @@ const Chains: React.FC<Props> = memo(({ domain, inEdit, enterEdit, exitEdit }) =
           />
         ))}
       </div>
-    </>
+      {(status === 'update' || status === 'error') && (
+        <Delay>
+          <div className="!absolute left-0 top-0 w-full h-full flex flex-col justify-center items-center bg-purple-dark-active bg-opacity-75">
+            {status === 'update' && <Spin className="text-48px" />}
+            {status === 'error' && (
+              <>
+                <p className="mt-12px mb-12px text-center text-14px text-grey-normal">数据更新失败</p>
+                <Button size="mini" className="flex mx-auto mb-12px" onClick={() => getDomainRegistrar(domain)}>
+                  重试
+                </Button>
+              </>
+            )}
+          </div>
+        </Delay>
+      )}
+    </div>
   );
 });
 
