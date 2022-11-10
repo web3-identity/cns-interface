@@ -29,7 +29,7 @@ export const fetchDomainRegistrar = (domain: string): Promise<Array<DomainRegist
       };
       try {
         const decodeRes: string = PublicResolver.func.decodeFunctionResult('addr', undecodeRes)?.[0];
-        if (decodeRes === '0x') return res;
+        if (decodeRes === '0x' || decodeRes === '0x0000000000000000000000000000000000000000') return res;
         // may encode error
         res.address = decodeRes;
         res.address = chainsEncoder[chain].encode(decodeRes);

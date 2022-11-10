@@ -42,13 +42,13 @@ export const chainsEncoder = {
     validate: createValidate(createEncode('Bitcoin')),
   },
   'Ethereum/Conflux eSpace': {
-    encode: (hexString: string) => hexString,
-    decode: (hexString: string) => hexString,
+    encode: (address: string) => address,
+    decode: (address: string) => address,
     validate: validateHexAddress,
   },
   Binance: {
-    encode: (hexString: string) => hexString,
-    decode: (hexString: string) => hexString,
+    encode: (address: string) => address,
+    decode: (address: string) => address,
     validate: validateHexAddress,
   },
   Dogechain: {
@@ -57,8 +57,8 @@ export const chainsEncoder = {
     validate: createValidate(createEncode('Dogechain')),
   },
   'Ether Classic': {
-    encode: (hexString: string) => hexString,
-    decode: (hexString: string) => hexString,
+    encode: (address: string) => address,
+    decode: (address: string) => address,
     validate: validateHexAddress,
   },
   Solana: {

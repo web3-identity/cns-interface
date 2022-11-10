@@ -6,12 +6,18 @@ import Dropdown from '@components/Dropdown';
 import { showModal, showDrawer, hideAllModal } from '@components/showPopup';
 import Input from '@components/Input';
 import usePressEsc from '@hooks/usePressEsc';
-import useInTranscation from '@hooks/useInTranscation';
 import isMobile from '@utils/isMobie';
 import { setRegistrarAddress as _setRegistrarAddress, type Chain, type DomainRegistrar } from '@service/domainRegistrar';
 
-const ModalContent: React.FC<{ domain: string; registrableChains: Array<DomainRegistrar> }> = ({ domain, registrableChains }) => {
-  const { register, handleSubmit: withForm } = useForm();
+interface Props {
+  domain: string;
+  registrableChains: Array<DomainRegistrar>;
+  setEditAddress: (chain: Chain, newAddress: string) => void;
+}
+
+const ModalContent: React.FC<Props> = ({ setEditAddress, registrableChains }) => {
+  const { register, handleSubmit: withForm, setValue } = useForm();
+  const [savedChains, setSavedChains] = useState<Array<Chain>>([]);
 
   const [visible, setVisible] = useState(false);
   const hideDropdown = useCallback(() => setVisible(false), []);
@@ -19,17 +25,31 @@ const ModalContent: React.FC<{ domain: string; registrableChains: Array<DomainRe
   usePressEsc(hideDropdown);
 
   const [selectedChain, setSelectedChain] = React.useState(() => registrableChains[0].chain);
-  const selectableChains = useMemo(() => registrableChains.map(({ chain }) => chain).filter((chain) => chain !== selectedChain), [selectedChain, registrableChains]);
+  const selectableChains = useMemo(
+    () => registrableChains.map(({ chain }) => chain).filter((chain) => chain !== selectedChain && !savedChains?.includes(chain)),
+    [selectedChain, registrableChains]
+  );
+
   const selectChain = useCallback((chain: Chain) => {
     setVisible(false);
     setTimeout(() => setSelectedChain(chain), 32);
   }, []);
 
-  const { inTranscation, execTranscation: setRegistrarAddress } = useInTranscation(_setRegistrarAddress);
-
   const handleSetRegistrarAddress = useCallback(
-    withForm(({ address }) => setRegistrarAddress({ domain, chain: selectedChain, address })),
-    [selectedChain]
+    withForm(({ address }) => {
+      setEditAddress(selectedChain, address);
+      setSavedChains((prev) => {
+        prev.push(selectedChain);
+        return [...prev];
+      });
+      setValue('address', '');
+      if (selectableChains.length === 0) {
+        hideAllModal();
+      } else {
+        setSelectedChain(selectableChains[0]);
+      }
+    }),
+    [selectableChains]
   );
 
   return (
@@ -64,11 +84,9 @@ const ModalContent: React.FC<{ domain: string; registrableChains: Array<DomainRe
 
       <div className="mt-140px flex justify-center items-center gap-16px">
         <Button variant="outlined" className="min-w-152px" onClick={hideAllModal} type="button">
-          取消
+          返回
         </Button>
-        <Button className="min-w-152px" loading={inTranscation}>
-          确定
-        </Button>
+        <Button className="min-w-152px">暂存</Button>
       </div>
     </form>
   );
@@ -86,11 +104,11 @@ const ChainSelect: React.FC<{ selectableChains: Array<string>; selectChain: Func
   );
 };
 
-const showAddNewResolutionModal = (domain: string, registrableChains: Array<DomainRegistrar>) => {
+const showAddNewResolutionModal = (params: Props) => {
   if (isMobile()) {
-    showDrawer({ Content: <ModalContent domain={domain} registrableChains={registrableChains} />, title: '新增解析地址' });
+    showDrawer({ Content: <ModalContent {...params} />, title: '新增解析地址' });
   } else {
-    showModal({ Content: <ModalContent domain={domain} registrableChains={registrableChains} />, title: '新增解析地址' });
+    showModal({ Content: <ModalContent {...params} />, title: '新增解析地址' });
   }
 };
 

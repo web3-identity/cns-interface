@@ -6,10 +6,12 @@ import Spin from '@components/Spin';
 import Delay from '@components/Delay';
 import Domain from '@modules/Domain';
 import { shortenAddress } from '@utils/addressUtils';
-import { useDomainOwner, useDomainExpire } from '@service/domainInfo';
+import { useIsOwner, useDomainOwner, useDomainExpire } from '@service/domainInfo';
 import './index.css';
 
 const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
+  const isOwner = useIsOwner(domain);
+
   return (
     <div className="flex gap-16px p-16px rounded-16px bg-purple-dark-active dropdown-shadow">
       <div className="flex flex-col justify-between w-200px h-200px px-10px py-16px text-purple-dark-active domain-card">
@@ -18,24 +20,30 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
       </div>
 
       <div className="flex-1 flex flex-col justify-end">
-        <div className="relative flex items-center">
+        <div className="relative flex items-center h-28px">
           <span className="text-14px text-grey-normal-hover text-opacity-50">注册人</span>
           <Suspense fallback={<Loading />}>
             <DomainOwner domain={domain} />
           </Suspense>
-          <Button className="ml-auto" size="mini">
-            转让
-          </Button>
+
+          {isOwner && (
+            <Button className="ml-auto" size="mini">
+              转让
+            </Button>
+          )}
         </div>
 
-        <div className="mt-8px relative flex items-center">
+        <div className="mt-8px relative flex items-center h-28px">
           <span className="text-14px text-grey-normal-hover text-opacity-50">到期时间</span>
           <Suspense fallback={<Loading />}>
             <DomainExpire domain={domain} />
           </Suspense>
-          <Button className="ml-auto" size="mini">
-            续费
-          </Button>
+
+          {isOwner && (
+            <Button className="ml-auto" size="mini">
+              续费
+            </Button>
+          )}
         </div>
       </div>
     </div>
