@@ -1,8 +1,9 @@
 import { selectorFamily, useRecoilRefresher_UNSTABLE, useRecoilValue_TRANSITION_SUPPORT_UNSTABLE } from 'recoil';
 import { fetchChain } from '@utils/fetch';
 import { getNameHash } from '@utils/domainHelper';
-import { formatsByCoinType } from '@utils/addressUtils';
 import { PublicResolver } from '@contracts/index';
+import { convertCfxToHex, convertHexToCfx } from '@utils/addressUtils';
+import { formatsByCoinType } from '@web3identity/address-encoder';
 import { Buffer } from 'buffer';
 export * from './setRegistrarAddress';
 
@@ -10,10 +11,46 @@ export const chainsType = {
   'Conflux Core': 503,
   Bitcoin: 0,
   'Ethereum/Conflux eSpace': 60,
-  Binance: 714,
+  Binance: 56,
   Dogechain: 3,
   'Ether Classic': 61,
   Solana: 501,
+  Flow: 539,
+} as const;
+
+export const chainsEncoder = {
+  'Conflux Core': {
+    encode: convertHexToCfx,
+    decode: convertCfxToHex,
+  },
+  Bitcoin: {
+    encode: (hexString: string) => formatsByCoinType[chainsType.Bitcoin].encoder(Buffer.from(hexString.slice(2), 'hex')),
+    decode: formatsByCoinType[chainsType.Bitcoin].decoder,
+  },
+  'Ethereum/Conflux eSpace': {
+    encode: (hexString: string) => hexString,
+    decode: (hexString: string) => hexString,
+  },
+  Binance: {
+    encode: (hexString: string) => hexString,
+    decode: (hexString: string) => hexString,
+  },	
+  Dogechain: {
+    encode: (hexString: string) => formatsByCoinType[chainsType.Bitcoin].encoder(Buffer.from(hexString.slice(2), 'hex')),
+    decode: formatsByCoinType[chainsType.Bitcoin].decoder,
+  },
+  'Ether Classic': {
+    encode: (hexString: string) => hexString,
+    decode: (hexString: string) => hexString,
+  },
+  Solana: {
+    encode: (hexString: string) => formatsByCoinType[chainsType.Solana].encoder(Buffer.from(hexString.slice(2), 'hex')),
+    decode: formatsByCoinType[chainsType.Solana].decoder,
+  },
+  Flow: {
+    encode: (hexString: string) => hexString,
+    decode: (hexString: string) => hexString,
+  }
 } as const;
 
 export type Chain = keyof typeof chainsType;
@@ -41,8 +78,9 @@ export const fetchDomainRegistrar = (domain: string): Promise<Array<DomainRegist
       try {
         const decodeRes: string = PublicResolver.func.decodeFunctionResult('addr', undecodeRes)?.[0];
         if (decodeRes === '0x') return res;
-        const coinTypeInstance = formatsByCoinType[chainsType[chain]];
-        res.address = coinTypeInstance.encoder(Buffer.from(decodeRes.slice(2), 'hex'));
+        // may encode error
+        res.address = decodeRes;
+        res.address = chainsEncoder[chain].encode(decodeRes);
         return res;
       } catch (_) {
         return res;

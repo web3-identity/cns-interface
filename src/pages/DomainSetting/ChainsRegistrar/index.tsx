@@ -17,6 +17,7 @@ import DogechainIcon from '@assets/chains/Dogechain.png';
 import EtherClassicIcon from '@assets/chains/EtherClassic.png';
 import EthereumIcon from '@assets/chains/Ethereum.png';
 import SolanaIcon from '@assets/chains/Solana.png';
+import FlowIcon from '@assets/chains/Flow.png';
 import showAddNewResolutionModal from './AddNewResolutionModal';
 import { useRefreshRegistrar, setMultiRegistrarAddress as _setMultiRegistrarAddress } from '@service/domainRegistrar';
 import { cloneDeep, isEqual } from 'lodash-es';
@@ -30,9 +31,10 @@ const chainsIcon = {
   Dogechain: DogechainIcon,
   'Ether Classic': EtherClassicIcon,
   Solana: SolanaIcon,
+  Flow: FlowIcon,
 } as const;
 
-const ChainsRegister: React.FC<{ domain: string }> = ({ domain }) => {
+const ChainsRegistrar: React.FC<{ domain: string }> = ({ domain }) => {
   const [inEdit, setInEdit] = useState(false);
   const enterEdit = useCallback(() => setInEdit(true), []);
   const exitEdit = useCallback(() => setInEdit(false), []);
@@ -47,7 +49,7 @@ const ChainsRegister: React.FC<{ domain: string }> = ({ domain }) => {
   );
 };
 
-export default ChainsRegister;
+export default ChainsRegistrar;
 
 interface Props {
   domain: string;
@@ -64,6 +66,8 @@ const Operation: React.FC<
     handleClickExit: VoidFunction;
   }
 > = memo(({ domain, domainRegistrars, inEdit, inTranscation, handleClickSave, handleClickExit }) => {
+  const registrableChains = useMemo(() => domainRegistrars.filter(({ address }) => !address), [domainRegistrars]);
+
   return (
     <div className="flex items-center w-full mb-4px">
       <span className="mr-auto text-14px text-purple-normal">地址解析</span>
@@ -80,9 +84,11 @@ const Operation: React.FC<
           </Button>
         </>
       )}
-      <Button size="mini" onClick={() => showAddNewResolutionModal(domain, domainRegistrars)}>
-        添加
-      </Button>
+      {registrableChains?.length > 0 && (
+        <Button size="mini" onClick={() => showAddNewResolutionModal(domain, registrableChains)}>
+          添加
+        </Button>
+      )}
     </div>
   );
 });
@@ -94,6 +100,7 @@ const Chains: React.FC<Props> = memo(({ domain, inEdit, enterEdit, exitEdit }) =
 
   const hasRegistrarChains = useMemo(() => domainRegistrars?.filter((registrars) => !!registrars.address), [domainRegistrars]);
   const [editDomainRegistrars, setEditDomainRegistrars] = useState(() => cloneDeep(hasRegistrarChains));
+  useEffect(() => setEditDomainRegistrars(cloneDeep(hasRegistrarChains)), [hasRegistrarChains]);
   const setEditAddress = useCallback((index: number, newAddress: string) => {
     setEditDomainRegistrars((prev) => {
       prev[index].address = newAddress;
@@ -144,7 +151,7 @@ const Chains: React.FC<Props> = memo(({ domain, inEdit, enterEdit, exitEdit }) =
             key={registrar.chain}
             {...registrar}
             inTranscation={inTranscation}
-            editAddress={editDomainRegistrars[index].address}
+            editAddress={editDomainRegistrars?.[index]?.address ?? registrar.address}
             setEditAddress={setEditAddress}
           />
         ))}

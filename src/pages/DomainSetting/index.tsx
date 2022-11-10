@@ -4,7 +4,7 @@ import PageWrapper from '@components/Layout/PageWrapper';
 import Button from '@components/Button';
 import { useParamsDomainWithTransition } from '@hooks/useParamsDomain';
 import DomainCard from './DomainCard';
-import ChainsRegister from './ChainsRegister';
+import ChainsRegistrar from './ChainsRegistrar';
 
 const DomainSetting: React.FC = () => {
   const { domain } = useParamsDomainWithTransition();
@@ -21,7 +21,7 @@ const DomainSetting: React.FC = () => {
       {domain && (
         <>
           <DomainCard domain={domain} />
-          <ChainsRegister domain={domain} />
+          <ChainsRegistrar domain={domain} />
         </>
       )}
     </PageWrapper>

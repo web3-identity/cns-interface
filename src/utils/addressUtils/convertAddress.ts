@@ -1,10 +1,11 @@
 import { encode, decode } from './validateAddress';
 import { keccak256 } from '@ethersproject/keccak256';
 import { Buffer } from 'buffer';
+import { NetId } from '@utils/isProduction';
 
 export const convertCfxToHex = (cfxAddress: string) => `0x${decode(cfxAddress).hexAddress.toString('hex')}`;
 
-export const convertHexToCfx = (hexAddress: string, chainId: string | number) => encode(hexAddress, Number(chainId));
+export const convertHexToCfx = (hexAddress: string, chainId: string | number = NetId) => encode(hexAddress, Number(chainId));
 
 const checksumAddress = (hexStr: string) => {
   const hash = keccak256(Buffer.from(hexStr)).slice(2);

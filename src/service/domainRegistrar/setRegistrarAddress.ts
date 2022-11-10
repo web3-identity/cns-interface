@@ -1,10 +1,9 @@
 import { getAccount, sendTransaction } from '@service/account';
-import { formatsByCoinType } from '@utils/addressUtils';
 import { getNameHash } from '@utils/domainHelper';
 import { PublicResolver } from '@contracts/index';
 import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
 import { hideAllModal } from '@components/showPopup';
-import { chainsType, type Chain } from './';
+import { chainsType, chainsEncoder, type Chain } from './';
 
 export const setRegistrarAddress = async ({
   domain,
@@ -19,12 +18,9 @@ export const setRegistrarAddress = async ({
 }) => {
   try {
     const account = getAccount();
-    const coinTypeInstance = formatsByCoinType[chainsType[chain]];
-    const encodedAddress = coinTypeInstance.decoder(address);
 
-    // console.log(getNameHash(domain + '.web3'), chainsType[chain], encodedAddress)
     const txHash = await sendTransaction({
-      data: PublicResolver.func.encodeFunctionData('setAddr', [getNameHash(domain + '.web3'), chainsType[chain], encodedAddress]),
+      data: PublicResolver.func.encodeFunctionData('setAddr', [getNameHash(domain + '.web3'), chainsType[chain], chainsEncoder[chain].decode(address)]),
       from: account!,
       to: PublicResolver.address,
     });
@@ -50,9 +46,7 @@ export const setMultiRegistrarAddress = async ({
   try {
     const account = getAccount();
     const allRegistrar = data.map(({ chain, address }) => {
-      const coinTypeInstance = formatsByCoinType[chainsType[chain]];
-      const encodedAddress = coinTypeInstance.decoder(address);
-      return PublicResolver.func.encodeFunctionData('setAddr', [getNameHash(domain + '.web3'), chainsType[chain], encodedAddress]);
+      return PublicResolver.func.encodeFunctionData('setAddr', [getNameHash(domain + '.web3'), chainsType[chain], chainsEncoder[chain].decode(address)]);
     });
 
     const txHash = await sendTransaction({

@@ -11,7 +11,7 @@ import isMobile from '@utils/isMobie';
 import { useRefreshRegistrar, setRegistrarAddress as _setRegistrarAddress, type Chain, type useDomainRegistrar } from '@service/domainRegistrar';
 
 const ModalContent: React.FC<{ domain: string; registrableChains: ReturnType<typeof useDomainRegistrar> }> = ({ domain, registrableChains }) => {
-  const { register, handleSubmit: withForm,  } = useForm();
+  const { register, handleSubmit: withForm } = useForm();
 
   const [visible, setVisible] = useState(false);
   const hideDropdown = useCallback(() => setVisible(false), []);
@@ -27,7 +27,10 @@ const ModalContent: React.FC<{ domain: string; registrableChains: ReturnType<typ
 
   const { inTranscation, execTranscation: setRegistrarAddress } = useInTranscation(_setRegistrarAddress);
   const handleRefreshRegistrar = useRefreshRegistrar(domain);
-  const handleSetRegistrarAddress= useCallback(withForm(({ address }) => setRegistrarAddress({ domain, chain: selectedChain, address, handleRefreshRegistrar })), [selectedChain]);
+  const handleSetRegistrarAddress = useCallback(
+    withForm(({ address }) => setRegistrarAddress({ domain, chain: selectedChain, address, handleRefreshRegistrar })),
+    [selectedChain]
+  );
 
   return (
     <form onSubmit={handleSetRegistrarAddress}>
@@ -39,14 +42,18 @@ const ModalContent: React.FC<{ domain: string; registrableChains: ReturnType<typ
           className="w-200px border-2px border-purple-normal rounded-8px bg-purple-dark-active overflow-hidden dropdown-shadow"
           visible={visible}
           onClickOutside={hideDropdown}
+          disabled={selectableChains?.length <= 0}
           Content={<ChainSelect selectableChains={selectableChains} selectChain={selectChain} />}
         >
           <div
-            className="flex items-center pl-8px pr-12px h-full rounded-l-10px border-2px border-purple-normal text-14px text-grey-normal cursor-pointer"
+            className={cx(
+              'flex items-center pl-8px pr-12px h-full rounded-l-10px border-2px border-purple-normal text-14px text-grey-normal',
+              selectableChains?.length >= 1 && 'cursor-pointer'
+            )}
             onClick={triggerDropdown}
           >
             {selectedChain}
-            <span className={cx('ml-auto i-ant-design:caret-down-outlined text-16px transition-transform', visible && 'rotate-180')} />
+            {selectableChains?.length >= 1 && <span className={cx('ml-auto i-ant-design:caret-down-outlined text-16px transition-transform', visible && 'rotate-180')} />}
           </div>
         </Dropdown>
 
@@ -56,8 +63,12 @@ const ModalContent: React.FC<{ domain: string; registrableChains: ReturnType<typ
       </div>
 
       <div className="mt-140px flex justify-center items-center gap-16px">
-        <Button variant='outlined' className='min-w-152px' onClick={hideAllModal} type="button">取消</Button>
-        <Button className='min-w-152px' loading={inTranscation}>确定</Button>
+        <Button variant="outlined" className="min-w-152px" onClick={hideAllModal} type="button">
+          取消
+        </Button>
+        <Button className="min-w-152px" loading={inTranscation}>
+          确定
+        </Button>
       </div>
     </form>
   );
@@ -75,9 +86,7 @@ const ChainSelect: React.FC<{ selectableChains: Array<string>; selectChain: Func
   );
 };
 
-const showAddNewResolutionModal = (domain: string, domainRegistrars: ReturnType<typeof useDomainRegistrar>) => {
-  const registrableChains = domainRegistrars.filter(({ address }) => !address);
-
+const showAddNewResolutionModal = (domain: string, registrableChains: ReturnType<typeof useDomainRegistrar>) => {
   if (isMobile()) {
     showDrawer({ Content: <ModalContent domain={domain} registrableChains={registrableChains} />, title: '新增解析地址' });
   } else {
