@@ -7,7 +7,6 @@ import { fetchChain } from '@utils/fetch';
 import { getNameHash } from '@utils/domainHelper';
 import { PublicResolver } from '@contracts/index';
 import { chains, chainsType, chainsEncoder, type Chain } from './';
-export * from './setRegistrarAddress';
 
 export interface DomainRegistrar {
   chain: Chain;

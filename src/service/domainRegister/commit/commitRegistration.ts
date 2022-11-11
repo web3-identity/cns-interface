@@ -27,8 +27,8 @@ export const commitRegistration = async ({ domain, durationYears }: Params) => {
     const hexAccount = getHexAccount();
     const payMethod = getPayMethod();
     const secret = randomSecret();
-    const now = dayjs().unix()
-    const commitParams = [domain, hexAccount, durationSeconds, secret, PublicResolver.hexAddress, [], true, 0, now + durationSeconds];
+    const wrapperExpiry = dayjs().unix() + durationSeconds;
+    const commitParams = [domain, hexAccount, durationSeconds, secret, PublicResolver.hexAddress, [], true, 0, wrapperExpiry];
 
     const commitmentHash: string = await fetchChain({
       params: [
@@ -57,7 +57,7 @@ export const commitRegistration = async ({ domain, durationYears }: Params) => {
       const _ = await postCommitmentToBackend(commitmentHash, commitParams);
     }
 
-    setCommitInfo(domain, { commitmentHash, commitTime, secret, durationYears });
+    setCommitInfo(domain, { commitmentHash, commitTime, secret, wrapperExpiry, durationYears });
   } catch (err) {
     console.error('err', err);
   }

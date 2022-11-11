@@ -24,11 +24,11 @@ export const waitSeconds = (seconds: number) => new Promise((resolve) => setTime
 /**
  * @param {Number} maxWaitTime - max wait time in seconds; 0 means endless;
  */
-const waitAsyncResult = <T extends () => Promise<any>>(fetcher: T, maxWaitTime: number = 44) => {
+const waitAsyncResult = <T extends () => Promise<any>>(fetcher: T, maxWaitTime: number = 44, interval = 3) => {
   let isStop = false;
   const stop = () => (isStop = true);
   const promise = new Promise<NonNullable<Awaited<ReturnType<T>>>>(async (resolve, reject) => {
-    const generator = maxWaitTime === 0 ? endlessGenerator() : Array.from({ length: Math.floor(maxWaitTime / 1) });
+    const generator = maxWaitTime === 0 ? endlessGenerator() : Array.from({ length: Math.floor(maxWaitTime / interval) });
 
     for await (const _ of generator) {
       if (isStop) {
@@ -36,11 +36,12 @@ const waitAsyncResult = <T extends () => Promise<any>>(fetcher: T, maxWaitTime: 
         return;
       }
       const res = await fetcher();
+      interval === 1 && console.log(res)
       if (res) {
         resolve(res);
         return;
       }
-      await waitSeconds(3);
+      await waitSeconds(interval);
     }
     reject(new Error('Wait async timeout'));
   });
@@ -48,11 +49,11 @@ const waitAsyncResult = <T extends () => Promise<any>>(fetcher: T, maxWaitTime: 
   return [promise, stop] as const;
 };
 
-export const getAsyncResult = <T extends () => Promise<any>, K>(fetcher: T, callback: (args: K) => void, maxWaitTime: number = 44) => {
+export const getAsyncResult = <T extends () => Promise<any>, K>(fetcher: T, callback: (args: K) => void, maxWaitTime: number = 44, interval = 2) => {
   let isStop = false;
   const stop = () => (isStop = true);
 
-  const generator = maxWaitTime === 0 ? endlessGenerator() : Array.from({ length: Math.floor(maxWaitTime / 1) });
+  const generator = maxWaitTime === 0 ? endlessGenerator() : Array.from({ length: Math.floor(maxWaitTime / interval) });
   const start = async () => {
     for await (const _ of generator) {
       if (isStop) {
@@ -63,7 +64,7 @@ export const getAsyncResult = <T extends () => Promise<any>, K>(fetcher: T, call
       if (res) {
         callback(res);
       }
-      await waitSeconds(2);
+      await waitSeconds(interval);
     }
   };
   start();

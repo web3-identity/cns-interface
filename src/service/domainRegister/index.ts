@@ -1,6 +1,6 @@
-import { useEffect, useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import { atom, atomFamily, useRecoilValue } from 'recoil';
-import { setRecoil, getRecoil } from 'recoil-nexus';
+import { setRecoil } from 'recoil-nexus';
 import { persistAtom, persistAtomWithDefault } from '@utils/recoilUtils';
 import { useRefreshDomainStatus } from '@service/domainInfo';
 import { fetchDomainOwner } from '@service/domainInfo';
@@ -10,6 +10,7 @@ import LocalStorage from 'localstorage-enhance';
 import waitAsyncResult, { getAsyncResult } from '@utils/waitAsyncResult';
 import { clearCommitInfo, useCommitInfo } from './commit';
 import { setWaitPayConfirm, getWaitPayConfirm, getOrderStatus, useRefreshMakeOrder } from './pay';
+import { useRefreshDomainOwner } from '@service/domainInfo/owner';
 export * from './commit';
 export * from './pay';
 
@@ -24,7 +25,6 @@ const registerStep = atomFamily<RegisterStep, string>({
   effects: [persistAtomWithDefault(RegisterStep.WaitCommit)],
 });
 
-const getRegisterToStep = (domain: string) => getRecoil(registerStep(domain));
 export const setRegisterToStep = (domain: string, step: RegisterStep) => {
   setRecoil(registerStep(domain), step);
 };
@@ -39,6 +39,7 @@ export const backToStep1 = (domain: string) => {
 export const useMonitorDomainState = (domain: string, registerStep: RegisterStep) => {
   const refreshDomainStatus = useRefreshDomainStatus(domain);
   const refreshMakeOrder = useRefreshMakeOrder(domain);
+  const refreshDomainOwner = useRefreshDomainOwner(domain);
 
   useEffect(() => {
     let stop: VoidFunction;
@@ -47,6 +48,7 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
         const [ownerPromise, _stop] = waitAsyncResult(() => fetchDomainOwner(domain), 0);
         stop = _stop;
         const owner = await ownerPromise;
+        refreshDomainOwner();
         clearCommitInfo(domain);
         if (getAccount() === owner) {
           setRegisterToStep(domain, RegisterStep.Success);

@@ -48,11 +48,9 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
             <DomainExpire domain={domain} />
           </Suspense>
 
-          {isOwner && (
-            <Button className="ml-auto" size="mini">
-              续费
-            </Button>
-          )}
+          <Button className="ml-auto" size="mini">
+            续费
+          </Button>
         </div>
       </div>
     </div>
@@ -60,7 +58,6 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
 };
 
 export default DomainCard;
-
 
 const Loading = () => (
   <Delay mode="opacity">
@@ -70,13 +67,15 @@ const Loading = () => (
 
 const DomainOwner: React.FC<{ domain: string }> = ({ domain }) => {
   const ownerAddress = useDomainOwner(domain);
-  const [_, copy] = useClipboard(ownerAddress!);
+  const [isCopied, copy] = useClipboard(ownerAddress ?? '', { successDuration: 1000 });
 
   return (
     <div className="absolute left-66px flex items-center h-full">
       {!!ownerAddress && <Avatar address={ownerAddress} size={18} />}
       <span className="mx-8px text-grey-normal">{shortenAddress(ownerAddress)}</span>
-      <span className="i-bxs:copy-alt text-20px text-#838290 cursor-pointer" onClick={copy} />
+      <ToolTip visible={isCopied} text="复制成功">
+        <span className="i-bxs:copy-alt text-20px text-#838290 cursor-pointer" onClick={copy} />
+      </ToolTip>
     </div>
   );
 };
