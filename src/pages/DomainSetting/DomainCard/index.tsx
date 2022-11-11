@@ -1,10 +1,12 @@
-import React, { Suspense } from 'react';
+import React, { memo, useMemo, Suspense, type ComponentProps } from 'react';
+import cx from 'clsx';
 import useClipboard from 'react-use-clipboard';
 import Button from '@components/Button';
 import Avatar from '@components/Avatar';
 import Spin from '@components/Spin';
 import Delay from '@components/Delay';
 import Domain from '@modules/Domain';
+import ToolTip from '@components/Tooltip';
 import { shortenAddress } from '@utils/addressUtils';
 import { useIsOwner, useDomainOwner, useDomainExpire } from '@service/domainInfo';
 import './index.css';
@@ -16,7 +18,7 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
     <div className="flex gap-16px p-16px rounded-16px bg-purple-dark-active dropdown-shadow">
       <div className="flex flex-col justify-between w-200px h-200px px-10px py-16px text-purple-dark-active domain-card">
         <span className="i-bi:box-fill mr-14px text-30px flex-shrink-0" />
-        <Domain className="w-full whitespace-nowrap text-22px font-bold" domain={domain} />
+        <SplitDomain className="w-full break-words text-right text-22px font-bold" domain={domain} />
       </div>
 
       <div className="flex-1 flex flex-col justify-end">
@@ -50,6 +52,9 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
   );
 };
 
+export default DomainCard;
+
+
 const Loading = () => (
   <Delay mode="opacity">
     <Spin className="absolute left-16px text-18px" />
@@ -75,4 +80,35 @@ const DomainExpire: React.FC<{ domain: string }> = ({ domain }) => {
   return <div className="absolute left-66px text-grey-normal">预计 {expire.dateFormatForSecond}</div>;
 };
 
-export default DomainCard;
+const SplitDomain: React.FC<ComponentProps<'span'> & { domain: string }> = memo(({ domain, className, ...props }) => {
+  const splitDomains = useMemo(() => {
+    let _domain = Array.from(domain + '.web3').reverse();
+    const res: Array<string> = [];
+    while (_domain.length && res.length < 4) {
+      if (_domain.length === 1) {
+        res[res.length - 1] = _domain[0] + res[res.length - 1];
+      } else {
+        res.push(_domain.slice(0, 14).reverse().join(''));
+      }
+      _domain = _domain.slice(14);
+    }
+    if (_domain.length) {
+      res.push(_domain.reverse().join(''));
+    }
+    return res;
+  }, [domain]);
+
+  return (
+    <ToolTip disabled={splitDomains.length <= 4} text={`${domain}.web3`}>
+      <span className={cx('inline-flex flex-wrap-reverse justify-end', className)} {...props}>
+        {splitDomains.map((split, index) =>
+          splitDomains.length > 4 && index === splitDomains.length - 1 ? (
+            <Domain key={split} domain={split} suffix={false} useTooltip={false} ellipsisLength={14} />
+          ) : (
+            <span key={split}>{split}</span>
+          )
+        )}
+      </span>
+    </ToolTip>
+  );
+});

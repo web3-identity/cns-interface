@@ -36,5 +36,3 @@ export const dnsNameNotationDecode = (message: string) => {
 }
 
 export const getDomainLabel = (domain: string) => domain?.split('.')?.[0]
-
-export const getLabelDomain = (label: string) => label + '.web3'

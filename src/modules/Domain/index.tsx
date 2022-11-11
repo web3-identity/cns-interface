@@ -4,9 +4,11 @@ import ToolTip from '@components/Tooltip';
 interface Props extends ComponentProps<'span'> {
   domain: string;
   ellipsisLength?: number;
+  suffix?: boolean;
+  useTooltip?: boolean;
 }
 
-const Domain: React.FC<Props> = ({ domain, ellipsisLength = 12, ...props }) => {
+const Domain: React.FC<Props> = ({ domain, ellipsisLength = 12, suffix = false, useTooltip = true, ...props }) => {
   const ellipsisDomain = useMemo(() => {
     if (!domain) return '';
     if (domain.length <= ellipsisLength) return domain;
@@ -14,9 +16,10 @@ const Domain: React.FC<Props> = ({ domain, ellipsisLength = 12, ...props }) => {
     return `${domain.slice(0, half)}...${domain.slice(-half)}`;
   }, [domain, ellipsisLength]);
 
+  if (!useTooltip) return <span {...props}>{domain ? `${ellipsisDomain}${suffix ? '.web3' : ''}` : null}</span>;
   return (
-    <ToolTip text={`${domain}.web3`} disabled={domain?.length <= ellipsisLength}>
-      <span {...props}>{domain ? `${ellipsisDomain}.web3` : null}</span>
+    <ToolTip text={`${domain}${suffix ? '.web3' : ''}`} disabled={domain?.length <= ellipsisLength}>
+      <span {...props}>{domain ? `${ellipsisDomain}${suffix ? '.web3' : ''}` : null}</span>
     </ToolTip>
   );
 };

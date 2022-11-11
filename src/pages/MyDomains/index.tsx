@@ -4,13 +4,13 @@ import PageWrapper from '@components/Layout/PageWrapper';
 import BorderBox from '@components/Box/BorderBox';
 import Button from '@components/Button';
 import Avatar from '@components/Avatar';
+import Domain from '@modules/Domain';
 import AuthConnectButton from '@modules/AuthConnectButton';
 import { useMyDomains } from '@service/myDomains';
 import { useAccount } from '@service/account';
 import { useDomainExpire } from '@service/domainInfo';
 import { useDomainReverseRegistrar } from '@service/domainReverseRegistrar';
 import { shortenAddress } from '@utils/addressUtils';
-import { getLabelDomain } from '@utils/domainHelper';
 import isMobile from '@utils/isMobie';
 
 interface Props {
@@ -25,7 +25,7 @@ const DomainItem: React.FC<Props> = ({ domain, index }) => {
       <div className="lt-md:flex lt-md:justify-between lt-md:items-center lt-md:rounded-12px lt-md:px-16px lt-md:bg-purple-dark-active">
         <div className="flex py-24px justify-between lt-md:flex-col lt-md:py-16px">
           <div className="flex flex-col gap-6px lt-md:gap-8px">
-            <span className="text-grey-normal text-22px font-bold lt-md:text-16px lt-md:leading-18px">{getLabelDomain(domain)}</span>
+            <Domain className="text-grey-normal text-22px font-bold lt-md:text-16px lt-md:leading-18px" domain={domain} />
 
             <span className="text-grey-normal-hover text-opacity-50 text-14px lt-md:text-12px ;t-md:leading-14px">
               {!isExpired ? (
