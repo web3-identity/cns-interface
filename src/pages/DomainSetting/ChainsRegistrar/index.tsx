@@ -12,7 +12,6 @@ import usePressEsc from '@hooks/usePressEsc';
 import useInTranscation from '@hooks/useInTranscation';
 import { useIsOwner } from '@service/domainInfo';
 import {
-  chains,
   chainsEncoder,
   getDomainRegistrar,
   useDomainRegistrar,
@@ -85,6 +84,7 @@ const Operation: React.FC<{
   domain: string;
   hasError: boolean;
   inEdit: boolean;
+  status: Status;
   inTranscation: boolean;
   isOwner: boolean | null;
   editDomainRegistrars: Array<DomainRegistrar>;
@@ -92,7 +92,7 @@ const Operation: React.FC<{
   setEditAddress: (chain: Chain, newAddress: string) => void;
   handleClickSave: VoidFunction;
   handleClickExit: VoidFunction;
-}> = memo(({ domain, isOwner, domainRegistrars, editDomainRegistrars, inEdit, inTranscation, setEditAddress, handleClickSave, handleClickExit }) => {
+}> = memo(({ domain, isOwner, domainRegistrars, editDomainRegistrars, inEdit, status, inTranscation, setEditAddress, handleClickSave, handleClickExit }) => {
   const registrableChains = useMemo(() => editDomainRegistrars.filter(({ address }, index) => !address && !domainRegistrars?.[index]?.address), [editDomainRegistrars]);
 
   return (
@@ -101,13 +101,13 @@ const Operation: React.FC<{
 
       {isOwner && inEdit && (
         <>
-          {!inTranscation && (
+          {!inTranscation && status === 'done' && (
             <Button variant="text" size="mini" onClick={handleClickExit}>
               取消
             </Button>
           )}
-          <Button className="mx-8px" size="mini" onClick={handleClickSave}>
-            保存
+          <Button className="mx-8px" size="mini" onClick={handleClickSave} loading={inTranscation && status !== 'update'}>
+            {status !== 'update' ? '保存' : '更新中...'}
           </Button>
         </>
       )}
@@ -190,6 +190,7 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
         hasError={hasError}
         inEdit={inEdit}
         inTranscation={inTranscation}
+        status={status}
         handleClickExit={handleClickExit}
         handleClickSave={handleClickSave}
         setEditAddress={setEditAddress}
