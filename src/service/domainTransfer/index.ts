@@ -8,7 +8,6 @@ export const domainTransfer = async ({ domain, newOwnerAddress }: { domain: stri
   try {
     const account = getAccount();
     const hexAccount = getHexAccount();
-    debugger;
     const txHash = await sendTransaction({
       data: NameWrapper.func.encodeFunctionData('safeTransferFrom', [hexAccount, newOwnerAddress, getNameHash(domain + '.web3'), 1, '0x']),
       from: account!,

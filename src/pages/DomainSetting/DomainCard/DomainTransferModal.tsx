@@ -13,31 +13,38 @@ interface Props {
 }
 
 const ModalContent: React.FC<Props> = ({ domain }) => {
-  const { register, handleSubmit: withForm, setValue } = useForm();
+  const { register, handleSubmit: withForm, formState: { errors: { newOwnerAddress: error } } } = useForm();
   const { inTranscation, execTranscation: domainTranster } = useInTranscation(_domainTransfer);
 
   const handleDomainTransfer = useCallback(
     withForm(({ newOwnerAddress }) => {
-      debugger
       domainTranster({ domain, newOwnerAddress });
+      hideAllModal();
     })
     , []);
 
   return (
     <form onSubmit={handleDomainTransfer}>
-      <Input
-        id="new-domain-owner"
-        size={isMobile() ? 'normal' : 'medium'}
-        placeholder="输入.Web名称或者Confluxcore地址"
-        {...register('newOwnerAddress', { required: true })}
-      />
-      <p>转让地址</p>
-      <Button
-        size="mini"
-        loading={inTranscation}
-      >
-        确认
-      </Button>
+      <p className='mt-6 mb-4 text-grey-normal-hover text-opacity-50'>转让地址</p>
+      <div className='relative'>
+        <Input
+          id="new-domain-owner"
+          className="border-2px border-purple-normal rounded-8px bg-purple-dark-active overflow-hidden dropdown-shadow p-4 text-14px"
+          size="small"
+          placeholder="输入.Web名称或者Confluxcore地址"
+          {...register('newOwnerAddress', { required: true })}
+        />
+        {error?.type === 'required' && <span className="absolute left-7px top-[calc(100%+.75em)] text-12px text-error-normal">新地址不能为空</span>}
+      </div>
+      <div className='flex justify-center mt-[131px]'>
+        <Button
+          className='mb-12'
+          size="normal"
+          loading={inTranscation}
+        >
+          确认
+        </Button>
+      </div>
     </form>
   )
 }
