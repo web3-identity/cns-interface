@@ -8,7 +8,7 @@ interface Props extends ComponentProps<'span'> {
   useTooltip?: boolean;
 }
 
-const Domain: React.FC<Props> = ({ domain, ellipsisLength = 12, suffix = false, useTooltip = true, ...props }) => {
+const Domain: React.FC<Props> = ({ domain, ellipsisLength = 12, suffix = true, useTooltip = true, ...props }) => {
   const ellipsisDomain = useMemo(() => {
     if (!domain) return '';
     if (domain.length <= ellipsisLength) return domain;

@@ -12,6 +12,8 @@ import usePressEsc from '@hooks/usePressEsc';
 import useInTranscation from '@hooks/useInTranscation';
 import { useIsOwner } from '@service/domainInfo';
 import {
+  chains,
+  chainsEncoder,
   getDomainRegistrar,
   useDomainRegistrar,
   setMultiRegistrarAddress as _setMultiRegistrarAddress,
@@ -81,6 +83,7 @@ export default ChainsRegistrar;
 
 const Operation: React.FC<{
   domain: string;
+  hasError: boolean;
   inEdit: boolean;
   inTranscation: boolean;
   isOwner: boolean | null;
@@ -138,6 +141,8 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
   const hasRegistrarChains = useMemo(() => domainRegistrars?.filter((registrars) => !!registrars.address), [domainRegistrars]);
   const [editDomainRegistrars, setEditDomainRegistrars] = useState(() => cloneDeep(domainRegistrars));
   useEffect(() => setEditDomainRegistrars(cloneDeep(domainRegistrars)), [domainRegistrars]);
+  const errors = useMemo(() => editDomainRegistrars?.map(({ chain, address }) => !!address && !chainsEncoder[chain].validate(address)), [editDomainRegistrars]);
+  const hasError = useMemo(() => errors.some((error) => error), [errors]);
 
   useEffect(() => {
     if (!inEdit && !isEqual(editDomainRegistrars, domainRegistrars)) {
@@ -161,6 +166,7 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
   }, [domainRegistrars]);
 
   const handleClickSave = useCallback(() => {
+    if (hasError) return;
     const data: Array<DomainRegistrar> = [];
     editDomainRegistrars.forEach(({ address, chain }, index) => {
       if (address !== domainRegistrars[index].address) {
@@ -172,7 +178,7 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
       domain,
       data,
     });
-  }, [editDomainRegistrars]);
+  }, [editDomainRegistrars, hasError]);
 
   return (
     <div className={cx('relative mt-16px gap-16px p-16px rounded-16px bg-purple-dark-active dropdown-shadow', !hasRegistrarChains?.length && 'min-h-140px ')}>
@@ -181,6 +187,7 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
         isOwner={isOwner}
         domainRegistrars={domainRegistrars}
         editDomainRegistrars={editDomainRegistrars}
+        hasError={hasError}
         inEdit={inEdit}
         inTranscation={inTranscation}
         handleClickExit={handleClickExit}
@@ -196,6 +203,7 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
             disabled={inTranscation || !isOwner}
             editAddress={editDomainRegistrars?.[index]?.address ?? ''}
             setEditAddress={setEditAddress}
+            hasError={errors[index]}
           />
         ))}
       </div>
@@ -218,15 +226,15 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
   );
 });
 
-const ChainItem: React.FC<DomainRegistrar & { disabled: boolean; editAddress: string; setEditAddress: (chain: Chain, newAddress: string) => void }> = memo(
-  ({ chain, address, disabled, editAddress, setEditAddress }) => {
-    const [isCopied, copy] = useClipboard(address, { successDuration: 1300 });
+const ChainItem: React.FC<DomainRegistrar & { disabled: boolean; editAddress: string; hasError: boolean; setEditAddress: (chain: Chain, newAddress: string) => void }> = memo(
+  ({ chain, address, disabled, editAddress, hasError, setEditAddress }) => {
+    const [isCopied, copy] = useClipboard(address, { successDuration: 1000 });
 
     if (!editAddress && !address) return null;
     return (
       <BorderBox
         variant={editAddress?.trim() !== address?.trim() ? 'gradient' : 'transparent'}
-        className="flex items-center w-fit px-6px h-30px rounded-20px bg-#26233E whitespace-nowrap border-1px"
+        className="relative flex items-center w-fit px-6px h-30px rounded-20px bg-#26233E whitespace-nowrap border-1px"
       >
         <img src={chainsIcon[chain]} alt={`${chain} icon`} className="w-18px h-18px" />
         <span className="ml-4px text-14px text-grey-normal font-bold">{chain}</span>
@@ -251,6 +259,8 @@ const ChainItem: React.FC<DomainRegistrar & { disabled: boolean; editAddress: st
             <span className="i-bxs:copy-alt text-12px text-#838290" />
           </span>
         </ToolTip>
+
+        {hasError && <span className="absolute -right-8px translate-x-100% text-12px text-error-normal">地址格式错误</span>}
       </BorderBox>
     );
   }

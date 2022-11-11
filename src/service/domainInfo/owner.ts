@@ -1,9 +1,9 @@
 import { selectorFamily, useRecoilValue, useRecoilValueLoadable, useRecoilRefresher_UNSTABLE } from 'recoil';
-import { useAccount } from '@service/account';
 import { fetchChain } from '@utils/fetch';
 import { getNameHash } from '@utils/domainHelper';
 import { convertHexToCfx } from '@utils/addressUtils/convertAddress';
 import { NameWrapper } from '@contracts/index';
+import { useAccount } from '@service/account';
 import isProduction from '@utils/isProduction';
 
 const zeroAddress = '0x0000000000000000000000000000000000000000';
@@ -30,10 +30,9 @@ const domainOwnerQuery = selectorFamily<string | null, string>({
 export const useDomainOwner = (domain: string) => useRecoilValue(domainOwnerQuery(domain));
 export const useRefreshDomainOwner = (domain: string) => useRecoilRefresher_UNSTABLE(domainOwnerQuery(domain));
 
-
 export const useIsOwner = (domain: string) => {
   const account = useAccount();
   const { state, contents } = useRecoilValueLoadable(domainOwnerQuery(domain));
   if (state === 'hasValue' && contents) return account === contents;
   return null;
-}
+};

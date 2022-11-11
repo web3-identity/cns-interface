@@ -14,9 +14,10 @@ const AccountDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ childre
 };
 
 const AccountDropdown: React.FC = () => {
-  const accountMethod = useAccountMethod()
+  const accountMethod = useAccountMethod();
+
   return (
-    <div className="mt-24px flex flex-col gap-16px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow lt-md:mt-16px lt-md:p-16px">
+    <div className="mt-8px flex flex-col gap-16px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow lt-md:mt-16px lt-md:p-16px">
       <Link to="/my-domains" className="text-white no-underline">
         <AccountDropdownItem>域名管理</AccountDropdownItem>
       </Link>
@@ -25,10 +26,10 @@ const AccountDropdown: React.FC = () => {
   );
 };
 
-const size = !isMobile() ? 48 : 32
-const Account: React.FC<{ account: string; }> = ({ account }) => {
+const size = !isMobile() ? 48 : 32;
+const Account: React.FC<{ account: string }> = ({ account }) => {
   return (
-    <Dropdown placement="bottom-start" trigger="click" interactiveDebounce={100} Content={<AccountDropdown />}>
+    <Dropdown placement="bottom" trigger="mouseenter click" interactiveDebounce={50} delay={180} Content={<AccountDropdown />} >
       <span className="flex-shrink-0 cursor-pointer">
         <Avatar address={account} size={size} />
       </span>

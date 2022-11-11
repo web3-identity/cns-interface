@@ -11,7 +11,7 @@ const DomainSetting: React.FC = () => {
 
   return (
     <PageWrapper className="pt-36px">
-      <Link to="/my-domains" className="flex no-underline mb-16px">
+      <Link to="/my-domains" className="inline-flex no-underline mb-16px">
         <Button variant="text" color="white" className="relative text-22px pl-36px pr-14px">
           <span className="i-charm:chevron-left text-30px absolute left-0px" />
           域名管理

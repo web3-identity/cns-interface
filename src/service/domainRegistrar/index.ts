@@ -20,12 +20,13 @@ export type Chain = keyof typeof chainsType;
 export const chains = Object.keys(chainsType) as Array<Chain>;
 
 
-const createEncode = (chain: Chain) => (address: string) => formatsByCoinType[chainsType[chain]].encoder(Buffer.from(address.slice(2), 'hex'))
-const createValidate = (encode: Function) => (address: string) => {
+const createEncode = (chain: Chain) => (address: string) => formatsByCoinType[chainsType[chain]].encoder(Buffer.from(address.slice(2), 'hex'));
+const createDecode = (chain: Chain) => (address: string) => formatsByCoinType[chainsType[chain]].decoder(address);
+const createValidate = (decode: Function) => (address: string) => {
   try {
-    encode(address);
+    decode(address);
     return true;
-  } catch (e) {
+  } catch (_) {
     return false;
   }
 };
@@ -38,8 +39,8 @@ export const chainsEncoder = {
   },
   Bitcoin: {
     encode: createEncode('Bitcoin'),
-    decode: formatsByCoinType[chainsType.Bitcoin].decoder,
-    validate: createValidate(createEncode('Bitcoin')),
+    decode: createDecode('Bitcoin'),
+    validate: createValidate(createDecode('Bitcoin')),
   },
   'Ethereum/Conflux eSpace': {
     encode: (address: string) => address,
@@ -53,8 +54,8 @@ export const chainsEncoder = {
   },
   Dogechain: {
     encode: createEncode('Dogechain'),
-    decode: formatsByCoinType[chainsType.Dogechain].decoder,
-    validate: createValidate(createEncode('Dogechain')),
+    decode: createDecode('Dogechain'),
+    validate: createValidate(createDecode('Dogechain')),
   },
   'Ether Classic': {
     encode: (address: string) => address,
@@ -63,12 +64,12 @@ export const chainsEncoder = {
   },
   Solana: {
     encode: createEncode('Solana'),
-    decode: formatsByCoinType[chainsType.Solana].decoder,
-    validate: createValidate(createEncode('Solana')),
+    decode: createDecode('Solana'),
+    validate: createValidate(createDecode('Solana')),
   },
   Flow: {
     encode: createEncode('Flow'),
-    decode: formatsByCoinType[chainsType.Flow].decoder,
-    validate: createValidate(createEncode('Flow')),
+    decode: createDecode('Flow'),
+    validate: createValidate(createDecode('Flow')),
   },
 } as const;

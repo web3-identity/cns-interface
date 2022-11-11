@@ -6,7 +6,7 @@ import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
 import { useAccount } from '@service/account';
-import { useDomainStatus, useRefreshDomainStatus, useDomainOwner, DomainStatus } from '@service/domainInfo';
+import { useDomainStatus, useRefreshDomainStatus, useIsOwner, DomainStatus } from '@service/domainInfo';
 import { RegisterBox } from '@pages/DomainRegister';
 
 interface Props {
@@ -67,12 +67,12 @@ const Warning = () => (
 
 const StatusContent = ({ domain, children }: PropsWithChildren<Props>) => {
   const status = useDomainStatus(domain);
-  const owner = useDomainOwner(domain);
+  const isOwner = useIsOwner(domain);
   const account = useAccount();
 
   return (
     <>
-      {status === DomainStatus.Valid || owner === account ? (
+      {status === DomainStatus.Valid || isOwner ? (
         children
       ) : (
         <RegisterBox className="relative flex flex-col items-center pt-66px">

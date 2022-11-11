@@ -7,7 +7,7 @@ import { showModal, showDrawer, hideAllModal } from '@components/showPopup';
 import Input from '@components/Input';
 import usePressEsc from '@hooks/usePressEsc';
 import isMobile from '@utils/isMobie';
-import { setRegistrarAddress as _setRegistrarAddress, type Chain, type DomainRegistrar } from '@service/domainRegistrar';
+import { chainsEncoder, type Chain, type DomainRegistrar } from '@service/domainRegistrar';
 
 interface Props {
   domain: string;
@@ -16,9 +16,9 @@ interface Props {
 }
 
 const ModalContent: React.FC<Props> = ({ setEditAddress, registrableChains }) => {
-  const { register, handleSubmit: withForm, setValue } = useForm();
+  const { register, handleSubmit: withForm, setValue, formState: { errors: { address: error } } } = useForm();
   const [savedChains, setSavedChains] = useState<Array<Chain>>([]);
-
+  
   const [visible, setVisible] = useState(false);
   const hideDropdown = useCallback(() => setVisible(false), []);
   const triggerDropdown = useCallback(() => setVisible((pre) => !pre), []);
@@ -77,8 +77,9 @@ const ModalContent: React.FC<Props> = ({ setEditAddress, registrableChains }) =>
           </div>
         </Dropdown>
 
-        <div className="flex items-center h-full rounded-r-10px border-2px !border-l-none border-purple-normal text-14px text-grey-normal">
-          <Input id="register-address" size="small" placeholder="请输入地址" autoFocus {...register('address', { required: true })} />
+        <div className="relative flex items-center h-full rounded-r-10px border-2px !border-l-none border-purple-normal text-14px text-grey-normal">
+          <Input id="register-address" size="small" placeholder="请输入地址" autoFocus {...register('address', { required: true, validate: chainsEncoder[selectedChain].validate })} />
+          {error?.type === 'validate' && <span className="absolute left-7px top-[calc(100%+.75em)] text-12px text-error-normal">地址格式错误</span>}
         </div>
       </div>
 
