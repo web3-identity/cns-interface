@@ -9,6 +9,7 @@ import Domain from '@modules/Domain';
 import ToolTip from '@components/Tooltip';
 import { shortenAddress } from '@utils/addressUtils';
 import { useIsOwner, useDomainOwner, useDomainExpire } from '@service/domainInfo';
+import showDomainTransferModal from './DomainTransferModal';
 import './index.css';
 
 const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
@@ -29,7 +30,13 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
           </Suspense>
 
           {isOwner && (
-            <Button className="ml-auto" size="mini">
+            <Button
+              className="ml-auto"
+              size="mini"
+              onClick={() => {
+                showDomainTransferModal({ domain });
+              }}
+            >
               转让
             </Button>
           )}
