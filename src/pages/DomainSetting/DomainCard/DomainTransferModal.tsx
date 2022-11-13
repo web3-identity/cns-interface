@@ -5,7 +5,9 @@ import Button from '@components/Button';
 import { showModal, showDrawer, hideAllModal } from '@components/showPopup';
 import Input from '@components/Input';
 import isMobile from '@utils/isMobie';
+import { validateCNSAddress } from '@utils/addressUtils';
 import { domainTransfer as _domainTransfer } from '@service/domainTransfer';
+import { chainsEncoder, type Chain, type DomainRegistrar } from '@service/domainRegistrar';
 import useInTranscation from '@hooks/useInTranscation';
 
 interface Props {
@@ -26,14 +28,23 @@ const ModalContent: React.FC<Props> = ({ domain }) => {
     <form onSubmit={handleDomainTransfer}>
       <p className='mt-6 mb-4 text-grey-normal-hover text-opacity-50'>转让地址</p>
       <div className='relative'>
+        {/*
+        TODO: ADD validateCNSAddress 
         <Input
           id="new-domain-owner"
           className="border-2px border-purple-normal rounded-8px bg-purple-dark-active overflow-hidden dropdown-shadow p-4 text-14px"
           size="small"
           placeholder="输入.Web名称或者Confluxcore地址"
-          {...register('newOwnerAddress', { required: true })}
+          {...register('newOwnerAddress', { required: true, validate: validateCNSAddress })}
+        /> */}
+        <Input
+          id="new-domain-owner"
+          className="border-2px border-purple-normal rounded-8px bg-purple-dark-active overflow-hidden dropdown-shadow p-4 text-14px"
+          size="small"
+          placeholder="输入.Web名称或者Confluxcore地址"
+          {...register('newOwnerAddress', { required: true, validate: chainsEncoder['Conflux Core'].validate })}
         />
-        {error?.type === 'required' && <span className="absolute left-7px top-[calc(100%+.75em)] text-12px text-error-normal">新地址不能为空</span>}
+        {error?.type === 'validate' && <span className="absolute left-7px top-[calc(100%+.75em)] text-12px text-error-normal">地址格式错误</span>}
       </div>
       <div className='flex justify-center mt-[131px]'>
         <Button

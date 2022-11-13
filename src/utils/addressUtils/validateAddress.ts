@@ -245,6 +245,10 @@ export const validateCfxAddress = (address: string) => {
 
 export const validateHexAddress = (address: string) => /^0x[0-9a-fA-F]{40}$/.test(address);
 
+export const validateCNSAddress = (address: string) => {
+  return address.endsWith('.web3');
+};
+
 export const toHex = (value: string) => {
   let hex;
 
@@ -266,4 +270,4 @@ export const toHex = (value: string) => {
     throw new Error(`${value} not match "hex"`);
   }
   return hex.length % 2 ? `0x0${hex.slice(2)}` : hex;
-}
+};
