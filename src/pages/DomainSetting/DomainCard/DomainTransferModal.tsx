@@ -19,7 +19,6 @@ const ModalContent: React.FC<Props> = ({ domain }) => {
   const handleDomainTransfer = useCallback(
     withForm(({ newOwnerAddress }) => {
       domainTranster({ domain, newOwnerAddress });
-      hideAllModal();
     })
     , []);
 
