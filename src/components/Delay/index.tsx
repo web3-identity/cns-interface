@@ -6,7 +6,7 @@ interface Props {
   mode?: 'display' | 'opacity';
 }
 
-const Delay = ({ delay = 150, mode = 'display', children }: PropsWithChildren<Props>) => {
+const Delay = ({ delay = 200, mode = 'display', children }: PropsWithChildren<Props>) => {
   const [ready, setReady] = useState(false);
   useLayoutEffect(() => {
     const timer = setTimeout(() => setReady(true), delay);
