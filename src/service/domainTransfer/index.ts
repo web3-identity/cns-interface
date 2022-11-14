@@ -6,25 +6,26 @@ import { validateCfxAddress, convertCfxToHex } from '@utils/addressUtils';
 import { NameWrapper } from '@contracts/index';
 import { hideAllModal } from '@components/showPopup';
 
-export const domainTransfer = async ({ domain, newOwnerAddress }: { domain: string; newOwnerAddress: string }) => {
+export const domainTransfer = async ({ domain, newOwnerAddress, refreshDomainOwner }: { domain: string; newOwnerAddress: string; refreshDomainOwner: VoidFunction; }) => {
   try {
-    const account = getAccount();
     if (validateCfxAddress(newOwnerAddress)) {
       newOwnerAddress = convertCfxToHex(newOwnerAddress);
     } else {
-      const newOwnerCFXAddress = await useDomainOwner(newOwnerAddress);
-      if (!newOwnerCFXAddress) throw new Error('Invalid new owner address');
-      newOwnerAddress = convertCfxToHex(newOwnerCFXAddress);
     }
+
+    const account = getAccount();
     const hexAccount = getHexAccount();
+
     const txHash = await sendTransaction({
       data: NameWrapper.func.encodeFunctionData('safeTransferFrom', [hexAccount, newOwnerAddress, getNameHash(domain + '.web3'), 1, '0x']),
       from: account!,
       to: NameWrapper.address,
     });
+
     const [receiptPromise] = waitAsyncResult(() => isTransactionReceipt(txHash));
     await receiptPromise;
     hideAllModal();
+    refreshDomainOwner();
   } catch (_) {
     console.log('domainTranster err', _);
   }
