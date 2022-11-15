@@ -20,9 +20,7 @@ const DomainList: React.FC<{}> = ({}) => {
   return (
     <>
       <div className="mb-26px text-grey-normal text-22px leading-26px lt-md:text-16px lt-md:leading-18px">注册人</div>
-      <div className="relative flex flex-col rounded-24px min-h-340px bg-purple-dark-active  dropdown-shadow lt-md:rounded-none lt-md:bg-transparent">
-        <Suspense fallback={<ListLoading />}>{mainScroller && <MyDomains mainScroller={mainScroller} />}</Suspense>
-      </div>
+      <Suspense fallback={<ListLoading />}>{mainScroller && <MyDomains mainScroller={mainScroller} />}</Suspense>
     </>
   );
 };
@@ -34,7 +32,7 @@ const MyDomains: React.FC<{ mainScroller: HTMLDivElement }> = ({ mainScroller })
   const renderRow = useCallback((props: ListRowProps) => DomainItem({ ...props, myDomains }), [myDomains]);
 
   return (
-    <>
+    <div className="relative flex flex-col rounded-24px bg-purple-dark-active dropdown-shadow lt-md:rounded-none lt-md:bg-transparent">
       {!myDomains?.length && (
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+16px)]">
           <img className="w-112px h-88px mb-20px" src={NoDomains} alt="no domains" />
@@ -72,7 +70,7 @@ const MyDomains: React.FC<{ mainScroller: HTMLDivElement }> = ({ mainScroller })
           }}
         </WindowScroller>
       )}
-    </>
+    </div>
   );
 };
 
@@ -82,7 +80,7 @@ const DomainItem = ({ index, style, key, myDomains }: ListRowProps & { myDomains
   return (
     <div key={key} style={style} className="lt-md:pb-20px h-94px">
       <div className="relative flex justify-between items-center px-24px h-full lt-md:px-16px lt-md:rounded-12px lt-md:bg-purple-dark-active">
-        {<div className="absolute left-24px bottom-1px w-[calc(100%-48px)] h-1px bg-purple-normal bg-opacity-30 lt-md:display-none select-none pointer-events-none" />}
+        {index !== 0 && <div className="absolute left-24px top-1px w-[calc(100%-48px)] h-1px bg-purple-normal bg-opacity-30 lt-md:display-none select-none pointer-events-none" />}
         <div className="mr-auto flex flex-col gap-6px lt-md:gap-8px">
           <Domain className="text-grey-normal text-22px font-bold lt-md:text-16px leading-26px lt-md:leading-18px" domain={domain} />
           <div className="flex items-center h-18px lt-md:h-14px text-grey-normal-hover text-opacity-50 text-14px lt-md:text-12px">
@@ -107,7 +105,9 @@ const DomainItem = ({ index, style, key, myDomains }: ListRowProps & { myDomains
 const ListLoading: React.FC = () => {
   return (
     <Delay>
-      <Spin className="!absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+16px)] text-60px" />
+      <div className="relative rounded-24px min-h-340px bg-purple-dark-active dropdown-shadow lt-md:rounded-none lt-md:bg-transparent">
+        <Spin className="!absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+16px)] text-60px" />
+      </div>
     </Delay>
   );
 };
@@ -142,7 +142,7 @@ const ExpireTime: React.FC<{ domain: string }> = ({ domain }) => {
   );
 };
 
-const ExpireLoading: React.FC = () => <Delay mode="opacity">获取到期时间中...</Delay>
+const ExpireLoading: React.FC = () => <Delay mode="opacity">获取到期时间中...</Delay>;
 
 const ExpireErrorBoundaryFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => (
   <span className="text-error-normal cursor-pointer select-none group" onClick={resetErrorBoundary}>
