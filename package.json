@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "postinstall": "patch-package",
     "dev:web2": "vite --mode web2-dev --host",
     "dev:web3": "vite --mode web3-dev --host",
     "build:web2-dev": "vite build --mode web2-dev",

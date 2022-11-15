@@ -7,7 +7,10 @@ import { disconnect, useAccountMethod } from '@service/account';
 
 const AccountDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, onClick }) => {
   return (
-    <div onClick={onClick} className="w-160px h-48px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-colors cursor-pointer lt-md:w-120px lt-md:h-40px">
+    <div
+      onClick={onClick}
+      className="w-160px h-48px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-colors cursor-pointer lt-md:w-120px lt-md:h-40px select-none"
+    >
       {children}
     </div>
   );
@@ -18,7 +21,7 @@ const AccountDropdown: React.FC = () => {
 
   return (
     <div className="mt-8px flex flex-col gap-16px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow lt-md:mt-16px lt-md:p-16px">
-      <Link to="/my-domains" className="text-white no-underline">
+      <Link to="/my-domains" className="text-white no-underline" draggable="false">
         <AccountDropdownItem>域名管理</AccountDropdownItem>
       </Link>
       <AccountDropdownItem onClick={() => disconnect(accountMethod!)}>退出登录</AccountDropdownItem>
@@ -29,7 +32,7 @@ const AccountDropdown: React.FC = () => {
 const size = !isMobile() ? 48 : 32;
 const Account: React.FC<{ account: string }> = ({ account }) => {
   return (
-    <Dropdown placement="bottom" trigger="mouseenter click" interactiveDebounce={50} delay={180} Content={<AccountDropdown />} >
+    <Dropdown placement="bottom" trigger="mouseenter" interactiveDebounce={50} delay={100} Content={<AccountDropdown />}>
       <span className="flex-shrink-0 cursor-pointer">
         <Avatar address={account} size={size} />
       </span>
