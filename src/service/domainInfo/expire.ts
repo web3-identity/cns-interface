@@ -1,5 +1,5 @@
-import { atom, selectorFamily, useRecoilValue } from 'recoil';
-import { getRecoil, setRecoil } from 'recoil-nexus';
+import { atom, selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
+import { getRecoil, setRecoil, resetRecoil } from 'recoil-nexus';
 import { persistAtom, handleRecoilInit } from '@utils/recoilUtils';
 import dayjs from 'dayjs';
 import { fetchChain } from '@utils/fetch';
@@ -57,7 +57,7 @@ const domainExpireQuery = selectorFamily<DomainExpire, string>({
         const response = await fetchChain({
           params: [{ data: BaseRegistrar.func.encodeFunctionData('nameExpires', [getDomainHash(domain)]), to: BaseRegistrar.address }, 'latest_state'],
         });
-
+        
         const timestamp = Number(response) * 1000;
         const dateFormat = dayjs(timestamp).format('YYYY-MM-DD');
         const dateFormatForSecond = dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss');
@@ -86,5 +86,6 @@ const domainExpireQuery = selectorFamily<DomainExpire, string>({
 });
 
 export const useDomainExpire = (domain: string) => useRecoilValue(domainExpireQuery(domain));
+export const useRefreshDomainExpire = (domain: string) => useRecoilRefresher_UNSTABLE(domainExpireQuery(domain));
 export const useGracePeriod = () => useRecoilValue(gracePeriodState);
 export const getGracePeriod = () => getRecoil(gracePeriodState);

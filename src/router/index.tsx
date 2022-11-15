@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import CustomScrollbar from 'custom-react-scrollbar';
 import ErrorBoundary from '@modules/ErrorBoundary';
@@ -7,13 +7,16 @@ import HomePage from '@pages/Home';
 import DomainRegister from '@pages/DomainRegister';
 import DomainSetting from '@pages/DomainSetting';
 import MyDomains from '@pages/MyDomains';
+import useMainScroller from '@hooks/useMainScroller';
 
 const AppRouter: React.FC = () => {
+  useMainScroller();
+  
   return (
     <Router>
       <ErrorBoundary>
         <Navbar />
-        <CustomScrollbar className="main-scroller" contentClassName="pb-160px">
+        <CustomScrollbar className="main-scroller" contentClassName="pb-120px lt-md:pb-80px">
           <Routes>
             <Route index element={<HomePage />} />
             <Route path="setting/:domain" element={<DomainSetting />} />

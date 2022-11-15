@@ -4,7 +4,7 @@ import { NameWrapper } from '@contracts/index';
 import { hexAccountState } from '@service/account';
 import { dnsNameNotationDecode, getDomainLabel } from '@utils/domainHelper';
 
-const myDomainsQuery = selector({
+const myDomainsQuery = selector<Array<string>>({
   key: 'myDomains',
   get: async ({ get }) => {
     try {

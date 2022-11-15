@@ -90,7 +90,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/v0': {
-        target: 'http://test.web3verse.space/',
+        target: 'http://app-test.web3verse.space/',
         changeOrigin: true,
       },
     },

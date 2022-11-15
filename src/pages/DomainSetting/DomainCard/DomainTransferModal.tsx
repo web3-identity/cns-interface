@@ -163,8 +163,8 @@ const DomainAddress: React.FC<Props & { setValidateStatus: Function; setTransfer
         </>
       )}
       {status === 'error' && (
-        <span className="mr-6px text-error-normal hover:underline cursor-pointer select-none" onClick={() => getDomainRegistrar(domain)}>
-          域名解析失败，点此重试
+        <span className="mr-6px text-error-normal cursor-pointer select-none group" onClick={() => getDomainRegistrar(domain)}>
+          域名解析失败，<span className='underline group-hover:underline-none'>点此重试</span>
         </span>
       )}
       {(status === 'init' || status === 'update') && (

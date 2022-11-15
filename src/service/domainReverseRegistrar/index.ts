@@ -1,4 +1,4 @@
-import { selector, useRecoilValue } from 'recoil';
+import { selector, useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
 import { fetchChain } from '@utils/fetch';
 import { getAccount, sendTransaction } from '@service/account';
 import { ReverseRegistrar, PublicResolver } from '@contracts/index';
@@ -8,7 +8,7 @@ interface Params {
   domain: string;
 }
 
-export const domainReverseRegistrar = async ({ domain }: Params) => {
+export const setDomainReverseRegistrar = async ({ domain }: Params) => {
   try {
     const account = getAccount();
     const txHash = await sendTransaction({
@@ -46,3 +46,4 @@ const domainReverseRegistrarQuery = selector({
 });
 
 export const useDomainReverseRegistrar = () => useRecoilValue(domainReverseRegistrarQuery);
+export const useRefreshDomainReverseRegistrar = () => useRecoilRefresher_UNSTABLE(domainReverseRegistrarQuery);
