@@ -25,8 +25,8 @@ const Popper: React.FC<Props> = ({ children, Content, className, style, arrow, a
       ...transitionAnimation[animationType].enter,
       config: {
         mass: 1,
-        tension: 400,
-        friction: 22,
+        tension: 600,
+        friction: 25,
         clamp: false,
         duration: typeof animationDuration === 'number' ? animationDuration : animationDuration?.enter,
       },
@@ -41,8 +41,8 @@ const Popper: React.FC<Props> = ({ children, Content, className, style, arrow, a
         onRest: unmount,
         config: {
           mass: 1,
-          tension: 400,
-          friction: 24,
+          tension: 480,
+          friction: 25,
           clamp: true,
           duration: typeof animationDuration === 'number' ? animationDuration : animationDuration?.leave,
         },

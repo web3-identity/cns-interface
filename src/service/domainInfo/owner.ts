@@ -1,4 +1,4 @@
-import { selectorFamily, useRecoilValue, useRecoilValueLoadable, useRecoilRefresher_UNSTABLE } from 'recoil';
+import { selectorFamily, useRecoilValue, useRecoilCallback, useRecoilValueLoadable, useRecoilRefresher_UNSTABLE } from 'recoil';
 import { fetchChain } from '@utils/fetch';
 import { getNameHash } from '@utils/domainHelper';
 import { convertHexToCfx } from '@utils/addressUtils/convertAddress';
@@ -29,6 +29,7 @@ const domainOwnerQuery = selectorFamily<string | null, string>({
 
 export const useDomainOwner = (domain: string) => useRecoilValue(domainOwnerQuery(domain));
 export const useRefreshDomainOwner = (domain: string) => useRecoilRefresher_UNSTABLE(domainOwnerQuery(domain));
+export const usePrefetchDomainOwner = () => useRecoilCallback(({ snapshot }) => (domain: string) => snapshot.getLoadable(domainOwnerQuery(domain)));
 
 export const useIsOwner = (domain: string) => {
   const account = useAccount();

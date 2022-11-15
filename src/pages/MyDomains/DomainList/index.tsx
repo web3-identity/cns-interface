@@ -11,9 +11,11 @@ import Delay from '@components/Delay';
 import Spin from '@components/Spin';
 import Domain from '@modules/Domain';
 import { useMyDomains } from '@service/myDomains';
-import { useDomainExpire, useRefreshDomainExpire } from '@service/domainInfo';
+import { useDomainExpire, useRefreshDomainExpire, usePrefetchDomainOwner } from '@service/domainInfo';
+import { getDomainRegistrar as prefetchDomainRegistrar } from '@service/domainRegistrar';
 import useMainScroller from '@hooks/useMainScroller';
 import NoDomains from '@assets/images/NoDomains.png';
+import { throttle } from 'lodash-es';
 
 const DomainList: React.FC<{}> = ({}) => {
   const mainScroller = useMainScroller();
@@ -91,9 +93,7 @@ const DomainItem = ({ index, style, key, myDomains }: ListRowProps & { myDomains
         <Button variant="text" className="lt-md:display-none mr-28px">
           续费
         </Button>
-        <Link to={`/setting/${domain}`} className="no-underline lt-md:display-none">
-          <Button>域名管理</Button>
-        </Link>
+        <GotoDomainSettingButton domain={domain} />
 
         <span className="i-dashicons:arrow-right-alt2 text-24px text-grey-normal md:display-none" />
         <Link to={`/setting/${domain}`} className="absolute w-full h-full left-0 top-0 no-underline md:display-none" />
@@ -101,6 +101,24 @@ const DomainItem = ({ index, style, key, myDomains }: ListRowProps & { myDomains
     </div>
   );
 };
+
+const GotoDomainSettingButton = memo(({ domain }: { domain: string }) => {
+  const prefetchDomainOwner = usePrefetchDomainOwner();
+  const prefetch = useCallback(throttle(() => {
+    prefetchDomainOwner(domain);
+    prefetchDomainRegistrar(domain);
+  }, 10000), [domain]);
+
+  return (
+    <Link
+      to={`/setting/${domain}`}
+      className="no-underline lt-md:display-none"
+      onMouseEnter={prefetch}
+    >
+      <Button>域名管理</Button>
+    </Link>
+  );
+});
 
 const ListLoading: React.FC = () => {
   return (
@@ -114,6 +132,7 @@ const ListLoading: React.FC = () => {
 
 const DomainExpire: React.FC<{ domain: string }> = ({ domain }) => {
   const refreshDomainExpire = useRefreshDomainExpire(domain);
+
   return (
     <ErrorBoundary fallbackRender={(fallbackProps) => <ExpireErrorBoundaryFallback {...fallbackProps} />} onReset={refreshDomainExpire}>
       <Suspense fallback={<ExpireLoading />}>

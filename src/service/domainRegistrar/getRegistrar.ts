@@ -1,4 +1,3 @@
-import { waitSeconds } from './../../utils/waitAsyncResult';
 import { useEffect } from 'react';
 import { atomFamily, useRecoilValue } from 'recoil';
 import { setRecoil, getRecoil } from 'recoil-nexus';
@@ -51,11 +50,16 @@ const domainRegistrarStatus = atomFamily<Status, string>({
   effects: [persistAtomWithDefault('init')],
 });
 
-const fetchTick: Record<string, number> = {};
+const fetchTick: Record<string, { id: number; timestamp: number; }> = {};
 
 export const setDomainRegistrarStatusUpdate = (domain: string) => setRecoil(domainRegistrarStatus(domain), 'update');
-export const getDomainRegistrar = async (domain: string) => {
-  const currentFechTick = (fetchTick[domain] ?? 0) + 1;
+export const getDomainRegistrar = async (domain: string, forceUpdate = false) => {
+  const lastFetchTick = fetchTick[domain];
+  const currentTimestamp = Date.now();
+  if (!forceUpdate && lastFetchTick && ((currentTimestamp - lastFetchTick.timestamp) <= 10000)) {
+    return;
+  }
+  const currentFechTick = { id: (lastFetchTick?.id ?? 0) + 1, timestamp: currentTimestamp };
   fetchTick[domain] = currentFechTick;
 
   try {
@@ -67,11 +71,11 @@ export const getDomainRegistrar = async (domain: string) => {
     }
 
     const res = await fetchDomainRegistrar(domain);
-    if (fetchTick[domain] !== currentFechTick) return;
+    if (fetchTick[domain]?.id !== currentFechTick?.id) return;
     setRecoil(domainRegistrarState(domain), res ?? []);
     setRecoil(domainRegistrarStatus(domain), 'done');
   } catch (_) {
-    if (fetchTick[domain] !== currentFechTick) return;
+    if (fetchTick[domain]?.id !== currentFechTick?.id) return;
     setRecoil(domainRegistrarStatus(domain), 'error');
   }
 };

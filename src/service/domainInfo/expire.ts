@@ -1,5 +1,5 @@
 import { atom, selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
-import { getRecoil, setRecoil, resetRecoil } from 'recoil-nexus';
+import { getRecoil, setRecoil } from 'recoil-nexus';
 import { persistAtom, handleRecoilInit } from '@utils/recoilUtils';
 import dayjs from 'dayjs';
 import { fetchChain } from '@utils/fetch';

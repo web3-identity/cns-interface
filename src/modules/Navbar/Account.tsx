@@ -32,8 +32,8 @@ const AccountDropdown: React.FC = () => {
 const size = !isMobile() ? 48 : 32;
 const Account: React.FC<{ account: string }> = ({ account }) => {
   return (
-    <Dropdown placement="bottom" trigger="mouseenter" interactiveDebounce={50} delay={100} Content={<AccountDropdown />}>
-      <span className="flex-shrink-0 cursor-pointer">
+    <Dropdown placement="bottom" trigger="mouseenter" interactiveDebounce={50} delay={[100, 0]} Content={<AccountDropdown />} hideOnClick={false}>
+      <span className="flex-shrink-0 cursor-s-resize">
         <Avatar address={account} size={size} />
       </span>
     </Dropdown>

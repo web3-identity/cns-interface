@@ -195,7 +195,7 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
         handleClickSave={handleClickSave}
         setEditAddress={setEditAddress}
       />
-      {!hasRegistrarChains?.length && <p className="mt-32px text-center text-14px text-grey-normal">尚未添加地址解析</p>}
+      {!hasRegistrarChains?.length && <p className="mt-32px text-center text-14px text-grey-normal">未添加地址解析</p>}
       <div className="relative flex flex-col gap-8px">
         {domainRegistrars.map((registrar, index) => (
           <ChainItem

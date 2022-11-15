@@ -22,7 +22,7 @@ export const setMultiRegistrarAddress = async ({ domain, data }: { domain: strin
     const [receiptPromise] = waitAsyncResult(() => isTransactionReceipt(txHash));
     await receiptPromise;
     hideAllModal();
-    getDomainRegistrar(domain);
+    getDomainRegistrar(domain, true);
   } catch (_) {
   }
 };
