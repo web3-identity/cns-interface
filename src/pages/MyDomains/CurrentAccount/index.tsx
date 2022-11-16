@@ -44,7 +44,7 @@ const AccountContent: React.FC<{}> = ({}) => {
             <span>{shortenAddress(account)}</span>
           </div>
         ) : (
-          <span className="lt-md:inline-block lt-md:mt-4px">{domainReverseRegistrar}</span>
+          <span className="lt-md:inline-block lt-md:mt-4px">{`${domainReverseRegistrar}.web3`}</span>
         )}
       </div>
       <div className="flex items-center lt-md:mt-16px">

@@ -10,7 +10,7 @@ import './index.css';
 
 const Home: React.FC = () => {
   return (
-    <PageWrapper className="flex flex-col justify-center">
+    <PageWrapper className="home-page-wrapper flex flex-col">
       <p className="home-title mb-48px text-center text-32px leading-38px text-grey-normal font-bold lt-md:text-30px lt-md:mb-24px lt-md:leading-36px">SHUTU NAME Service</p>
       <StatusSearch where='home'/>
 

@@ -44,7 +44,6 @@ const chainsIcon = {
 
 const ChainsRegistrar: React.FC<{ domain: string }> = ({ domain }) => {
   const { status, domainRegistrars } = useDomainRegistrar(domain);
-
   if (status === 'init') return <ChainsLoading />;
   if (status === 'error' && !domainRegistrars) return <ErrorBoundary domain={domain} />;
   if (!domainRegistrars) return null;
@@ -53,14 +52,16 @@ const ChainsRegistrar: React.FC<{ domain: string }> = ({ domain }) => {
 
 const ErrorBoundary: React.FC<{ domain: string }> = ({ domain }) => {
   return (
-    <div className="relative mt-16px gap-16px p-16px min-h-140px rounded-16px bg-purple-dark-active dropdown-shadow">
+    <div className="relative mt-16px gap-16px p-16px h-100px rounded-16px bg-purple-dark-active dropdown-shadow">
       <div className="flex items-center w-full mb-4px h-28px">
         <span className="mr-auto text-14px text-purple-normal">地址解析</span>
       </div>
-      <p className="mt-12px mb-12px text-center text-14px text-grey-normal">数据拉取失败</p>
-      <Button size="mini" className="flex mx-auto" onClick={() => getDomainRegistrar(domain)}>
-        重试
-      </Button>
+      <div className='flex justify-center items-center gap-12px'>
+        <span className="text-center text-14px text-grey-normal">数据拉取失败</span>
+        <Button size="mini" onClick={() => getDomainRegistrar(domain)}>
+          重试
+        </Button>
+      </div>
     </div>
   );
 };
@@ -68,11 +69,11 @@ const ErrorBoundary: React.FC<{ domain: string }> = ({ domain }) => {
 const ChainsLoading: React.FC = () => {
   return (
     <Delay>
-      <div className="relative mt-16px gap-16px p-16px min-h-140px rounded-16px bg-purple-dark-active dropdown-shadow">
+      <div className="relative mt-16px gap-16px p-16px h-100px rounded-16px bg-purple-dark-active dropdown-shadow">
         <div className="flex items-center w-full mb-4px h-28px">
           <span className="mr-auto text-14px text-purple-normal">地址解析</span>
         </div>
-        <Spin className="mt-12px mx-auto text-48px" />
+        <Spin className="mx-auto text-32px" />
       </div>
     </Delay>
   );
@@ -96,7 +97,7 @@ const Operation: React.FC<{
   const registrableChains = useMemo(() => editDomainRegistrars.filter(({ address }, index) => !address && !domainRegistrars?.[index]?.address), [editDomainRegistrars]);
 
   return (
-    <div className="flex items-center w-full mb-4px h-28px">
+    <div className="flex items-center w-full mb-6px h-28px">
       <span className="mr-auto text-14px text-purple-normal">地址解析</span>
 
       {isOwner && inEdit && (
@@ -138,7 +139,6 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
 
   const { inTranscation, execTranscation: setMultiRegistrarAddress } = useInTranscation(_setMultiRegistrarAddress);
 
-  const hasRegistrarChains = useMemo(() => domainRegistrars?.filter((registrars) => !!registrars.address), [domainRegistrars]);
   const [editDomainRegistrars, setEditDomainRegistrars] = useState(() => cloneDeep(domainRegistrars));
   useEffect(() => setEditDomainRegistrars(cloneDeep(domainRegistrars)), [domainRegistrars]);
   const errors = useMemo(() => editDomainRegistrars?.map(({ chain, address }) => !!address && !chainsEncoder[chain].validate(address)), [editDomainRegistrars]);
@@ -180,8 +180,11 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
     });
   }, [editDomainRegistrars, hasError]);
 
+  const hasRegistraredChains = useMemo(() => domainRegistrars?.filter((registrars) => !!registrars.address), [domainRegistrars]);
+  const hasRegistraredChainsInEdit = useMemo(() => editDomainRegistrars?.filter((registrars) => !!registrars.address), [editDomainRegistrars]);
+
   return (
-    <div className={cx('relative mt-16px gap-16px p-16px rounded-16px bg-purple-dark-active dropdown-shadow', !hasRegistrarChains?.length && 'min-h-140px ')}>
+    <div className="relative mt-16px gap-16px p-16px rounded-16px bg-purple-dark-active dropdown-shadow min-h-100px">
       <Operation
         domain={domain}
         isOwner={isOwner}
@@ -195,7 +198,7 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
         handleClickSave={handleClickSave}
         setEditAddress={setEditAddress}
       />
-      {!hasRegistrarChains?.length && <p className="mt-32px text-center text-14px text-grey-normal">未添加地址解析</p>}
+      {!hasRegistraredChains?.length && !hasRegistraredChainsInEdit.length && <p className="text-center text-14px text-grey-normal">未添加地址解析</p>}
       <div className="relative flex flex-col gap-8px">
         {domainRegistrars.map((registrar, index) => (
           <ChainItem

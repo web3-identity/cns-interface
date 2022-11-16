@@ -1,11 +1,11 @@
-@media screen and (min-height: 560px) {
-  .home-title {
-    @apply -mt-12%;
+@media screen and (max-height: 767px) {
+  .home-page-wrapper {
+    @apply justify-center;
   }
 }
 
-@media screen and (min-height: 6560px) {
-  .home-title {
-    @apply -mt-18%;
+@media screen and (min-height: 768px) {
+  .home-page-wrapper {
+    @apply pt-232px;
   }
 }
