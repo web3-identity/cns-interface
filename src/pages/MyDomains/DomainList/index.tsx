@@ -105,7 +105,7 @@ const DomainItem = ({ index, style, key, myDomains }: ListRowProps & { myDomains
 
 const GotoDomainSettingButton = memo(({ domain }: { domain: string }) => {
   const prefetchDomainOwner = usePrefetchDomainOwner();
-  const prefetch = useCallback(throttle(() => {
+  const prefetchData = useCallback(throttle(() => {
     prefetchDomainOwner(domain);
     prefetchDomainRegistrar(domain);
   }, 10000), [domain]);
@@ -114,7 +114,8 @@ const GotoDomainSettingButton = memo(({ domain }: { domain: string }) => {
     <Link
       to={`/setting/${domain}`}
       className="no-underline lt-md:display-none"
-      onMouseEnter={prefetch}
+      onMouseEnter={prefetchData}
+      draggable="false"
     >
       <Button>域名管理</Button>
     </Link>

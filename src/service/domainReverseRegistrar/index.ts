@@ -1,14 +1,11 @@
 import { selector, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
 import { fetchChain } from '@utils/fetch';
-import { getAccount, sendTransaction } from '@service/account';
+import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
+import { hexAccountState, accountState, getAccount, sendTransaction } from '@service/account';
 import { ReverseRegistrar, PublicResolver } from '@contracts/index';
-import { hexAccountState } from '@service/account';
+import { hideAllModal } from '@components/showPopup';
 
-interface Params {
-  domain: string;
-}
-
-export const setDomainReverseRegistrar = async ({ domain }: Params) => {
+export const setDomainReverseRegistrar = async ({ domain, refreshDomainReverseRegistrar }: { domain: string; refreshDomainReverseRegistrar: VoidFunction }) => {
   try {
     const account = getAccount();
     const txHash = await sendTransaction({
@@ -16,7 +13,11 @@ export const setDomainReverseRegistrar = async ({ domain }: Params) => {
       from: account!,
       to: ReverseRegistrar.address,
     });
-    return txHash;
+
+    const [receiptPromise] = waitAsyncResult(() => isTransactionReceipt(txHash));
+    await receiptPromise;
+    refreshDomainReverseRegistrar?.();
+    hideAllModal();
   } catch (err) {
     console.error('err', err);
   }
@@ -25,20 +26,21 @@ export const setDomainReverseRegistrar = async ({ domain }: Params) => {
 const domainReverseRegistrarQuery = selector({
   key: 'domainReverseRegistrar',
   get: async ({ get }) => {
+    const account = get(accountState);
     const hexAccount = get(hexAccountState);
     try {
       const node = await fetchChain<string>({
         params: [{ data: ReverseRegistrar.func.encodeFunctionData('node', [hexAccount]), to: ReverseRegistrar.address }, 'latest_state'],
-      }).then((response) => {
-        return response;
       });
-      return await fetchChain<string>({
+
+      const domain = await fetchChain<string>({
         params: [{ data: PublicResolver.func.encodeFunctionData('name', [node]), to: PublicResolver.address }, 'latest_state'],
       }).then((response) => {
         const domain = PublicResolver.func.decodeFunctionResult('name', response)?.[0];
-        // console.log('domain', domain)
         return domain;
       });
+
+      return domain;
     } catch (err) {
       throw err;
     }
@@ -47,4 +49,9 @@ const domainReverseRegistrarQuery = selector({
 
 export const useDomainReverseRegistrar = () => useRecoilValue(domainReverseRegistrarQuery);
 export const useRefreshDomainReverseRegistrar = () => useRecoilRefresher_UNSTABLE(domainReverseRegistrarQuery);
-export const usePrefetchDomainReverseRegistrar = () => useRecoilCallback(({ snapshot }) => () => snapshot.getLoadable(domainReverseRegistrarQuery));
+export const usePrefetchDomainReverseRegistrar = () =>
+  useRecoilCallback(
+    ({ snapshot }) =>
+      () =>
+        snapshot.getLoadable(domainReverseRegistrarQuery)
+  );

@@ -3,7 +3,7 @@ import cx from 'clsx';
 
 const PageWrapper: React.FC<HTMLAttributes<HTMLDivElement>> = ({ className, children, ...props }) => {
   return (
-    <div className={cx('mx-auto max-w-976px lt-lg:px-24px', className)} {...props}>
+    <div className={cx('flex-grow-1 flex-shrink-0 w-full mx-auto max-w-976px lt-lg:px-24px', className)} {...props}>
       {children}
     </div>
   );

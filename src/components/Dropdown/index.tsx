@@ -9,6 +9,7 @@ const Dropdown: React.FC<Props> = ({
   arrow = false,
   trigger = 'click',
   interactive = true,
+  sameWidth = true,
   ...props
 }) => {
   return (
@@ -19,6 +20,7 @@ const Dropdown: React.FC<Props> = ({
       arrow={arrow}
       trigger={'visible' in props ? undefined : trigger}
       interactive={interactive}
+      sameWidth={sameWidth}
       {...props}
     >
       {children}

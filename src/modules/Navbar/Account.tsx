@@ -30,14 +30,14 @@ const AccountDropdown: React.FC = () => {
   
   const prefetchMyDomains = usePrefetchMyDomains();
   const prefetchDomainReverseRegistrar = usePrefetchDomainReverseRegistrar();
-  const prefetch = useCallback(throttle(() => {
+  const prefetchData = useCallback(throttle(() => {
     prefetchMyDomains();
     prefetchDomainReverseRegistrar();
   }, 10000), []);
 
   return (
     <div className="mt-8px flex flex-col gap-16px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow lt-md:mt-16px lt-md:p-16px">
-      <Link to="/my-domains" className="text-white no-underline cursor-default" draggable="false" onMouseEnter={prefetch}>
+      <Link to="/my-domains" className="text-white no-underline cursor-default" draggable="false" onMouseEnter={prefetchData}>
         <AccountDropdownItem isCurrent={pathname?.startsWith('/my-domains')}>域名管理</AccountDropdownItem>
       </Link>
       <AccountDropdownItem onClick={() => disconnect(accountMethod!)}>退出登录</AccountDropdownItem>
@@ -48,7 +48,7 @@ const AccountDropdown: React.FC = () => {
 const size = !isMobile() ? 48 : 32;
 const Account: React.FC<{ account: string }> = ({ account }) => {
   return (
-    <Dropdown placement="bottom" trigger="mouseenter" interactiveDebounce={50} delay={[100, 0]} Content={<AccountDropdown />} hideOnClick={false}>
+    <Dropdown placement="bottom" trigger="mouseenter" interactiveDebounce={50} delay={[100, 0]} Content={<AccountDropdown />} hideOnClick={false} sameWidth={false}>
       <span className="flex-shrink-0 cursor-s-resize">
         <Avatar address={account} size={size} />
       </span>

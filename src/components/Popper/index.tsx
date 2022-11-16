@@ -13,11 +13,24 @@ interface PropsEnhance {
   arrow?: boolean;
   animationType?: TransitionAnimationType;
   animationDuration?: number | { enter: number; leave: number };
+  sameWidth?: boolean;
 }
 
 export type Props = PropsEnhance & TippyProps;
 
-const Popper: React.FC<Props> = ({ children, Content, className, style, arrow, animation, animationType = 'zoom', animationDuration, appendTo = document.body, ...props }) => {
+const Popper: React.FC<Props> = ({
+  children,
+  Content,
+  className,
+  style,
+  arrow,
+  sameWidth,
+  animation,
+  animationType = 'zoom',
+  animationDuration,
+  appendTo = document.body,
+  ...props
+}) => {
   const [styles, api] = useSpring(() => transitionAnimation[animationType].from);
 
   const onMount = useCallback(() => {
@@ -74,10 +87,34 @@ const Popper: React.FC<Props> = ({ children, Content, className, style, arrow, a
       animation={true}
       onMount={onMount}
       onHide={onHide}
+      popperOptions={
+        sameWidth
+          ? {
+              modifiers: [SameWidth],
+            }
+          : undefined
+      }
     >
       {children}
     </Tippy>
   );
+};
+
+type PopperModifier = NonNullable<NonNullable<TippyProps['popperOptions']>['modifiers']>[number];
+
+export const SameWidth: PopperModifier = {
+  enabled: true,
+  fn: ({ instance, state }) => {
+    const triggerReferenceWidth = `${state.rects.reference.width}px`;
+
+    if (state.styles.popper.width !== triggerReferenceWidth) {
+      state.styles.popper.width = triggerReferenceWidth;
+      instance.update();
+    }
+  },
+  name: 'sameWidth',
+  phase: 'beforeWrite',
+  requires: ['computeStyles'],
 };
 
 export default Popper;

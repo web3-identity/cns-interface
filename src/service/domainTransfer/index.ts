@@ -1,12 +1,11 @@
 import { getAccount, getHexAccount, sendTransaction } from '@service/account';
-import { fetchDomainRegistrar } from '@service/domainRegistrar';
 import { getNameHash } from '@utils/domainHelper';
 import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
 import { validateCfxAddress, convertCfxToHex } from '@utils/addressUtils';
 import { NameWrapper } from '@contracts/index';
 import { hideAllModal } from '@components/showPopup';
 
-export const domainTransfer = async ({ domain, transferAddress, refreshDomainOwner }: { domain: string; transferAddress: string; refreshDomainOwner: VoidFunction }) => {
+export const domainTransfer = async ({ domain, transferAddress, refresh }: { domain: string; transferAddress: string; refresh: VoidFunction }) => {
   try {
     if (validateCfxAddress(transferAddress)) {
       transferAddress = convertCfxToHex(transferAddress);
@@ -23,8 +22,8 @@ export const domainTransfer = async ({ domain, transferAddress, refreshDomainOwn
 
     const [receiptPromise] = waitAsyncResult(() => isTransactionReceipt(txHash));
     await receiptPromise;
+    refresh?.();
     hideAllModal();
-    refreshDomainOwner();
   } catch (_) {
     console.log('domainTranster err', _);
   }

@@ -48,7 +48,7 @@ const AccountContent: React.FC<{}> = ({}) => {
         )}
       </div>
       <div className="flex items-center lt-md:mt-16px">
-        <Button fullWidth={isMobile()} onClick={() => showSetReverseRegistrarModal({ account })} disabled={!myDomains?.length}>设置.web3域名</Button>
+        <Button fullWidth={isMobile()} onClick={() => showSetReverseRegistrarModal({ account, myDomains, domainReverseRegistrar })} disabled={!myDomains?.length}>设置.web3域名</Button>
       </div>
     </>
   );

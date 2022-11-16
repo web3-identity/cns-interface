@@ -1,16 +1,17 @@
 import React, { useCallback, useMemo, useEffect } from 'react';
+import { debounce } from 'lodash-es';
 import Button from '@components/Button';
 import { showModal, showDrawer, hideAllModal } from '@components/showPopup';
 import Input from '@components/Input';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
-import isMobile from '@utils/isMobie';
+import useInTranscation from '@hooks/useInTranscation';
 import { domainTransfer as _domainTransfer } from '@service/domainTransfer';
 import { chainsEncoder, useDomainRegistrar, getDomainRegistrar } from '@service/domainRegistrar';
+import { useRefreshMyDomains } from '@service/myDomains';
 import { useRefreshDomainOwner } from '@service/domainInfo';
 import { useAccount } from '@service/account';
-import useInTranscation from '@hooks/useInTranscation';
-import { debounce } from 'lodash-es';
+import isMobile from '@utils/isMobie';
 
 interface Props {
   domain: string;
@@ -31,11 +32,17 @@ const validateFormat = (address: string) => {
 };
 
 const ModalContent: React.FC<Props> = ({ domain }) => {
+  const { inTranscation, execTranscation: domainTranster } = useInTranscation(_domainTransfer);
+
   const refreshDomainOwner = useRefreshDomainOwner(domain);
+  const refreshMyDomains = useRefreshMyDomains();
+  const refresh = useCallback(() => {
+    refreshDomainOwner();
+    refreshMyDomains();
+  }, [domain]);
+
   const selfAddress = useAccount();
   const validateSelf = useCallback((address: string) => address !== selfAddress, [selfAddress]);
-
-  const { inTranscation, execTranscation: domainTranster } = useInTranscation(_domainTransfer);
 
   const [validateStatus, setValidateStatus] = React.useState<'error-registrar-format' | 'error-registrar' | 'error-format' | 'error-self' | 'error-required' | null>(null);
   const [inputValue, setInputValue] = React.useState('');
@@ -93,7 +100,7 @@ const ModalContent: React.FC<Props> = ({ domain }) => {
       return;
     }
     if (!domain || !transferAddress) return;
-    domainTranster({ domain, transferAddress, refreshDomainOwner });
+    domainTranster({ domain, transferAddress, refresh });
   }, [domain, inputValue, transferAddress]);
 
   return (
@@ -107,17 +114,20 @@ const ModalContent: React.FC<Props> = ({ domain }) => {
           value={inputValue}
           onChange={handleChange}
           onBlur={(evt) => !evt.target.value && setValidateStatus(null)}
+          disabled={inTranscation}
         />
         {validateStatus && (
           <div className="absolute left-11px top-[calc(100%+.5em)] flex items-center h-20px text-12px text-error-normal">
             {validateStatus === 'error-format' && '地址格式错误'}
             {validateStatus === 'error-required' && '请输入转让地址'}
-            {validateStatus === 'error-registrar' && '该域名未设置解析地址'}
-            {validateStatus === 'error-registrar-format' && '该域名解析地址格式错误'}
+            {validateStatus === 'error-registrar' && '该域名未设置 Conflux Core 解析地址'}
+            {validateStatus === 'error-registrar-format' && '该域名 Conflux Core 解析地址 格式错误'}
             {validateStatus === 'error-self' && '不能转给自己'}
           </div>
         )}
-        {inputDomain && <DomainAddress domain={inputDomain} setValidateStatus={setValidateStatus} setTransferAddress={setTransferAddress} />}
+        {!validateStatus && inputDomain && (
+          <DomainAddress domain={inputDomain} setValidateStatus={setValidateStatus} setTransferAddress={setTransferAddress} validateSelf={validateSelf} />
+        )}
       </div>
       <div className="mt-130px mb-72px flex justify-center items-center gap-16px">
         <Button variant="outlined" className="min-w-152px" onClick={hideAllModal} type="button" disabled={inTranscation}>
@@ -131,7 +141,12 @@ const ModalContent: React.FC<Props> = ({ domain }) => {
   );
 };
 
-const DomainAddress: React.FC<Props & { setValidateStatus: Function; setTransferAddress: Function }> = ({ domain, setValidateStatus, setTransferAddress }) => {
+const DomainAddress: React.FC<Props & { setValidateStatus: Function; setTransferAddress: Function; validateSelf: Function }> = ({
+  domain,
+  setValidateStatus,
+  setTransferAddress,
+  validateSelf,
+}) => {
   const { status, domainRegistrars } = useDomainRegistrar(domain?.endsWith('.web3') ? domain.slice(0, domain.length - 5) : domain);
   const cfxRegistrar = useMemo(() => domainRegistrars?.find((registrar) => registrar.chain === 'Conflux Core'), [domainRegistrars]);
   useEffect(() => {
@@ -144,8 +159,13 @@ const DomainAddress: React.FC<Props & { setValidateStatus: Function; setTransfer
         setValidateStatus('error-registrar');
       } else {
         if (chainsEncoder['Conflux Core'].validate(cfxRegistrar.address)) {
-          setValidateStatus(null);
-          setTransferAddress(cfxRegistrar.address);
+          if (validateSelf(cfxRegistrar.address)) {
+            setValidateStatus(null);
+            setTransferAddress(cfxRegistrar.address);
+          } else {
+            setTransferAddress('');
+            setValidateStatus('error-self');
+          }
         } else {
           setTransferAddress('');
           setValidateStatus('error-registrar-format');
@@ -164,7 +184,7 @@ const DomainAddress: React.FC<Props & { setValidateStatus: Function; setTransfer
       )}
       {status === 'error' && (
         <span className="mr-6px text-error-normal cursor-pointer select-none group" onClick={() => getDomainRegistrar(domain)}>
-          域名解析失败，<span className='underline group-hover:underline-none'>点此重试</span>
+          域名解析失败，<span className="underline group-hover:underline-none">点此重试</span>
         </span>
       )}
       {(status === 'init' || status === 'update') && (

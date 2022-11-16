@@ -16,9 +16,16 @@ interface Props {
 }
 
 const ModalContent: React.FC<Props> = ({ setEditAddress, registrableChains }) => {
-  const { register, handleSubmit: withForm, setValue, formState: { errors: { address: error } } } = useForm();
+  const {
+    register,
+    handleSubmit: withForm,
+    setValue,
+    formState: {
+      errors: { address: error },
+    },
+  } = useForm();
   const [savedChains, setSavedChains] = useState<Array<Chain>>([]);
-  
+
   const [visible, setVisible] = useState(false);
   const hideDropdown = useCallback(() => setVisible(false), []);
   const triggerDropdown = useCallback(() => setVisible((pre) => !pre), []);
@@ -59,7 +66,7 @@ const ModalContent: React.FC<Props> = ({ setEditAddress, registrableChains }) =>
         <span className="text-14px text-grey-normal-hover text-opacity-50">填写地址</span>
 
         <Dropdown
-          className="w-200px border-2px border-purple-normal rounded-8px bg-purple-dark-active overflow-hidden dropdown-shadow"
+          className="border-2px border-purple-normal rounded-8px bg-purple-dark-active overflow-hidden dropdown-shadow"
           visible={visible}
           onClickOutside={hideDropdown}
           disabled={selectableChains?.length <= 0}
@@ -78,7 +85,13 @@ const ModalContent: React.FC<Props> = ({ setEditAddress, registrableChains }) =>
         </Dropdown>
 
         <div className="relative flex items-center h-full rounded-r-10px border-2px !border-l-none border-purple-normal text-14px text-grey-normal">
-          <Input id="register-address" size="small" placeholder="请输入地址" autoFocus {...register('address', { required: true, validate: chainsEncoder[selectedChain].validate })} />
+          <Input
+            id="register-address"
+            size="small"
+            placeholder="请输入地址"
+            autoFocus
+            {...register('address', { required: true, validate: chainsEncoder[selectedChain].validate })}
+          />
           {error?.type === 'validate' && <span className="absolute left-7px top-[calc(100%+.75em)] text-12px text-error-normal">地址格式错误</span>}
         </div>
       </div>

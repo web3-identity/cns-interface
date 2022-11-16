@@ -6,11 +6,12 @@ import homeBg from '@assets/images/home-bg.png';
 import homeBgWebp from '@assets/images/home-bg.webp';
 import homeBgMobile from '@assets/images/home-bg-mobile.png';
 import homeBgWebpMobile from '@assets/images/home-bg-mobile.webp';
+import './index.css';
 
 const Home: React.FC = () => {
   return (
-    <PageWrapper className="pt-230px">
-      <p className="mb-48px text-center text-32px leading-38px text-grey-normal font-bold lt-md:text-30px lt-md:mb-24px lt-md:leading-36px">SHUTU NAME Service</p>
+    <PageWrapper className="flex flex-col justify-center">
+      <p className="home-title mb-48px text-center text-32px leading-38px text-grey-normal font-bold lt-md:text-30px lt-md:mb-24px lt-md:leading-36px">SHUTU NAME Service</p>
       <StatusSearch where='home'/>
 
       <picture className="absolute top-0px left-1/2 -translate-x-1/2 w-1512px -z-1 pointer-events-none lt-md:w-full">

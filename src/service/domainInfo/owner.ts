@@ -34,6 +34,7 @@ export const usePrefetchDomainOwner = () => useRecoilCallback(({ snapshot }) => 
 export const useIsOwner = (domain: string) => {
   const account = useAccount();
   const { state, contents } = useRecoilValueLoadable(domainOwnerQuery(domain));
+
   if (state === 'hasValue' && contents) return account === contents;
   return null;
 };
