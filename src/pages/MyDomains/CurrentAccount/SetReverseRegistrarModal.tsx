@@ -124,7 +124,7 @@ const DomainSelect: React.FC<{ selectableDomains: Array<string>; selectDomain: F
           className="pl-8px h-48px leading-48px hover:bg-[#26233E] text-14px text-grey-normal cursor-pointer transition-colors"
           onClick={() => selectDomain(domain)}
         >
-          {domain || '不设置'}
+          {domain || '设置为空'}
         </div>
       ))}
     </CustomScrollbar>
