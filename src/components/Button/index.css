@@ -1,6 +1,6 @@
 /** common **/
 .button {
-  @apply relative inline-flex justify-center items-center whitespace-nowrap outline-none transition-colors font-bold no-underline cursor-pointer;
+  @apply relative inline-flex justify-center items-center whitespace-nowrap outline-none transition-colors transition-opacity font-bold no-underline cursor-pointer;
 }
 
 button.button {
@@ -44,7 +44,7 @@ button.absolute {
 
 button.button.is-disabled:not(.is-loading),
 a.button.is-disabled:not(.is-loading) {
-  @apply bg-#F0F1F1 text-#A9ABB2 border-transparent;
+  @apply bg-grey-normal-hover bg-opacity-50 text-grey-normal border-transparent;
 }
 
 a.button--text.is-disabled,

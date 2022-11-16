@@ -1,4 +1,4 @@
-import { selector, useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
+import { selector, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
 import { fetchChain } from '@utils/fetch';
 import { getAccount, sendTransaction } from '@service/account';
 import { ReverseRegistrar, PublicResolver } from '@contracts/index';
@@ -47,3 +47,4 @@ const domainReverseRegistrarQuery = selector({
 
 export const useDomainReverseRegistrar = () => useRecoilValue(domainReverseRegistrarQuery);
 export const useRefreshDomainReverseRegistrar = () => useRecoilRefresher_UNSTABLE(domainReverseRegistrarQuery);
+export const usePrefetchDomainReverseRegistrar = () => useRecoilCallback(({ snapshot }) => () => snapshot.getLoadable(domainReverseRegistrarQuery));

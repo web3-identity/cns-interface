@@ -7,8 +7,10 @@ import Delay from '@components/Delay';
 import Spin from '@components/Spin';
 import { useAccount } from '@service/account';
 import { useDomainReverseRegistrar, useRefreshDomainReverseRegistrar } from '@service/domainReverseRegistrar';
+import { useMyDomains } from '@service/myDomains';
 import { shortenAddress } from '@utils/addressUtils';
 import isMobile from '@utils/isMobie';
+import showSetReverseRegistrarModal from './SetReverseRegistrarModal';
 
 const CurrentAccount: React.FC = () => {
   const refreshDomainReverseRegistrar = useRefreshDomainReverseRegistrar();
@@ -28,7 +30,8 @@ export default CurrentAccount;
 
 
 const AccountContent: React.FC<{}> = ({}) => {
-  const account = useAccount();
+  const account = useAccount()!;
+  const myDomains = useMyDomains();
   const domainReverseRegistrar = useDomainReverseRegistrar();
 
   return (
@@ -45,7 +48,7 @@ const AccountContent: React.FC<{}> = ({}) => {
         )}
       </div>
       <div className="flex items-center lt-md:mt-16px">
-        <Button fullWidth={isMobile()}>设置.web3域名</Button>
+        <Button fullWidth={isMobile()} onClick={() => showSetReverseRegistrarModal({ account })} disabled={!myDomains?.length}>设置.web3域名</Button>
       </div>
     </>
   );

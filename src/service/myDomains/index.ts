@@ -1,4 +1,4 @@
-import { selector, useRecoilValue } from 'recoil';
+import { selector, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
 import { fetchChain } from '@utils/fetch';
 import { NameWrapper } from '@contracts/index';
 import { hexAccountState } from '@service/account';
@@ -22,3 +22,5 @@ const myDomainsQuery = selector<Array<string>>({
 });
 
 export const useMyDomains = () => useRecoilValue(myDomainsQuery);
+export const useRefreshMyDomains = () => useRecoilRefresher_UNSTABLE(myDomainsQuery);
+export const usePrefetchMyDomains = () => useRecoilCallback(({ snapshot }) => () => snapshot.getLoadable(myDomainsQuery));

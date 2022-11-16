@@ -1,15 +1,23 @@
-import React, { type HTMLAttributes } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useCallback, type ComponentProps } from 'react';
+import cx from 'clsx';
+import { useLocation, Link } from 'react-router-dom';
 import Dropdown from '@components/Dropdown';
 import Avatar from '@components/Avatar';
 import isMobile from '@utils/isMobie';
 import { disconnect, useAccountMethod } from '@service/account';
+import { usePrefetchMyDomains } from '@service/myDomains';
+import { usePrefetchDomainReverseRegistrar } from '@service/domainReverseRegistrar';
+import { throttle } from 'lodash-es';
 
-const AccountDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, onClick }) => {
+const AccountDropdownItem: React.FC<ComponentProps<'div'> & { isCurrent?: boolean }> = ({ children, isCurrent, onClick, ...props }) => {
   return (
     <div
       onClick={onClick}
-      className="w-160px h-48px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-colors cursor-pointer lt-md:w-120px lt-md:h-40px select-none"
+      className={cx(
+        'w-160px h-48px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-colors lt-md:w-120px lt-md:h-40px select-none',
+        isCurrent ? 'bg-purple-dark-active' : 'cursor-pointer'
+      )}
+      {...props}
     >
       {children}
     </div>
@@ -18,11 +26,19 @@ const AccountDropdownItem: React.FC<HTMLAttributes<HTMLDivElement>> = ({ childre
 
 const AccountDropdown: React.FC = () => {
   const accountMethod = useAccountMethod();
+  const { pathname } = useLocation();
+  
+  const prefetchMyDomains = usePrefetchMyDomains();
+  const prefetchDomainReverseRegistrar = usePrefetchDomainReverseRegistrar();
+  const prefetch = useCallback(throttle(() => {
+    prefetchMyDomains();
+    prefetchDomainReverseRegistrar();
+  }, 10000), []);
 
   return (
     <div className="mt-8px flex flex-col gap-16px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow lt-md:mt-16px lt-md:p-16px">
-      <Link to="/my-domains" className="text-white no-underline" draggable="false">
-        <AccountDropdownItem>域名管理</AccountDropdownItem>
+      <Link to="/my-domains" className="text-white no-underline cursor-default" draggable="false" onMouseEnter={prefetch}>
+        <AccountDropdownItem isCurrent={pathname?.startsWith('/my-domains')}>域名管理</AccountDropdownItem>
       </Link>
       <AccountDropdownItem onClick={() => disconnect(accountMethod!)}>退出登录</AccountDropdownItem>
     </div>

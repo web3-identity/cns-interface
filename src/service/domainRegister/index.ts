@@ -11,6 +11,7 @@ import waitAsyncResult, { getAsyncResult } from '@utils/waitAsyncResult';
 import { clearCommitInfo, useCommitInfo } from './commit';
 import { setWaitPayConfirm, getWaitPayConfirm, getOrderStatus, useRefreshMakeOrder } from './pay';
 import { useRefreshDomainOwner } from '@service/domainInfo/owner';
+import { useRefreshMyDomains } from '@service/myDomains';
 export * from './commit';
 export * from './pay';
 
@@ -40,6 +41,7 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
   const refreshDomainStatus = useRefreshDomainStatus(domain);
   const refreshMakeOrder = useRefreshMakeOrder(domain);
   const refreshDomainOwner = useRefreshDomainOwner(domain);
+  const refreshMyDomains = useRefreshMyDomains();
 
   useEffect(() => {
     let stop: VoidFunction;
@@ -52,6 +54,7 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
         clearCommitInfo(domain);
         if (getAccount() === owner) {
           setRegisterToStep(domain, RegisterStep.Success);
+          refreshMyDomains();
         } else {
           refreshDomainStatus();
         }

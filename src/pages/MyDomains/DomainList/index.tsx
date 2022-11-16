@@ -32,12 +32,13 @@ export default memo(DomainList);
 const MyDomains: React.FC<{ mainScroller: HTMLDivElement }> = ({ mainScroller }) => {
   const myDomains = useMyDomains();
   const renderRow = useCallback((props: ListRowProps) => DomainItem({ ...props, myDomains }), [myDomains]);
-
+  const hasDomain = !!myDomains?.length;
+  
   return (
     <div className="relative flex flex-col rounded-24px bg-purple-dark-active dropdown-shadow lt-md:rounded-none lt-md:bg-transparent">
-      {!myDomains?.length && (
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+16px)]">
-          <img className="w-112px h-88px mb-20px" src={NoDomains} alt="no domains" />
+      {!hasDomain && (
+        <div className="flex flex-col justify-center items-center h-340px">
+          <img className="w-112px h-88px -mt-16px mb-20px" src={NoDomains} alt="no domains" />
           <p className="text-grey-normal text-14px">
             暂无域名，去
             <Link className="text-purple-normal" to="/">
@@ -46,7 +47,7 @@ const MyDomains: React.FC<{ mainScroller: HTMLDivElement }> = ({ mainScroller })
           </p>
         </div>
       )}
-      {myDomains?.length && (
+      {hasDomain && (
         <WindowScroller scrollElement={mainScroller}>
           {({ height, onChildScroll, scrollTop }) => {
             if (height === undefined) {
@@ -123,7 +124,7 @@ const GotoDomainSettingButton = memo(({ domain }: { domain: string }) => {
 const ListLoading: React.FC = () => {
   return (
     <Delay>
-      <div className="relative rounded-24px min-h-340px bg-purple-dark-active dropdown-shadow lt-md:rounded-none lt-md:bg-transparent">
+      <div className="relative h-340px rounded-24px bg-purple-dark-active dropdown-shadow lt-md:rounded-none lt-md:bg-transparent">
         <Spin className="!absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+16px)] text-60px" />
       </div>
     </Delay>
