@@ -18,20 +18,22 @@ interface Props {
   myDomains: Array<string>;
 }
 
-const ModalContent: React.FC<Props> = ({ account, domainReverseRegistrar, myDomains }) => {
+const ModalContent: React.FC<Props> = ({ account, domainReverseRegistrar, myDomains = [] }) => {
   const { inTranscation, execTranscation: setDomainReverseRegistrar } = useInTranscation(_setDomainReverseRegistrar);
   const refreshDomainReverseRegistrar = useRefreshDomainReverseRegistrar();
 
   const [visible, setVisible] = useState(false);
+  const showDropdown = useCallback(() => !inTranscation && setVisible(true), [inTranscation]);
   const hideDropdown = useCallback(() => !inTranscation && setVisible(false), [inTranscation]);
-  const triggerDropdown = useCallback(() => !inTranscation && setVisible((pre) => !pre), [inTranscation]);
   usePressEsc(hideDropdown);
 
   const [_, startTransition] = useTransition();
   const [inputValue, setInputValue] = useState(() => '');
   const [filter, setFilter] = useState(() => inputValue);
+  const [choseEmpty, setChoseEmpty] = useState(false);
   const handleInputChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(evt.target.value);
+    setChoseEmpty(false);
     startTransition(() => {
       setFilter(evt.target.value);
     });
@@ -39,21 +41,28 @@ const ModalContent: React.FC<Props> = ({ account, domainReverseRegistrar, myDoma
 
   const selectableDomains = useMemo(
     () => [
-      '',
+      ...(!!domainReverseRegistrar ? [''] : []),
       ...myDomains.filter(
         (domain) =>
-          domain !== domainReverseRegistrar && (domain.search(new RegExp(escapeRegExp(filter), 'i')) !== -1 || filter.search(new RegExp(escapeRegExp(domain), 'i')) !== -1)
+          domain !== domainReverseRegistrar &&
+          domain !== inputValue &&
+          (domain.search(new RegExp(escapeRegExp(filter), 'i')) !== -1 || filter.search(new RegExp(escapeRegExp(domain), 'i')) !== -1)
       ),
     ],
-    [filter, domainReverseRegistrar]
+    [inputValue, filter, myDomains, domainReverseRegistrar]
   );
 
   const selectDomain = useCallback((domain: string) => {
     setVisible(false);
-    setTimeout(() => setInputValue(domain), 80);
+    setTimeout(() => {
+      setInputValue(domain);
+      setFilter('');
+      setChoseEmpty(domain === '');
+    }, 80);
   }, []);
 
   const isInputValueValid = useMemo(() => !inputValue || !!myDomains.find((domain) => domain === inputValue), [inputValue, myDomains]);
+  const canOnlySetEmpty = useMemo(() => !!domainReverseRegistrar && myDomains?.length === 1 && myDomains[0] === domainReverseRegistrar, [domainReverseRegistrar, myDomains]);
 
   return (
     <>
@@ -65,18 +74,27 @@ const ModalContent: React.FC<Props> = ({ account, domainReverseRegistrar, myDoma
         className="border-2px border-purple-normal rounded-8px bg-purple-dark-active overflow-hidden dropdown-shadow"
         visible={visible}
         onClickOutside={hideDropdown}
-        disabled={selectableDomains?.length <= 0 || inTranscation}
+        disabled={!selectableDomains?.length || canOnlySetEmpty || inTranscation}
         Content={<DomainSelect selectableDomains={selectableDomains} selectDomain={selectDomain} />}
       >
         <div
           className={cx(
             'relative flex items-center pr-16px rounded-6px border-2px border-purple-normal text-14px text-grey-normal',
-            selectableDomains?.length >= 2 && 'cursor-pointer'
+            !canOnlySetEmpty && !inTranscation && 'cursor-pointer'
           )}
-          onClick={triggerDropdown}
+          onClick={showDropdown}
         >
-          <Input value={inputValue} onChange={handleInputChange} className="!pl-16px" placeholder="请选择.web3域名" disabled={inTranscation} />
-          {selectableDomains?.length >= 2 && <span className={cx('ml-auto i-ant-design:caret-down-outlined text-16px transition-transform', visible && 'rotate-180')} />}
+          <Input
+            value={inputValue}
+            onChange={handleInputChange}
+            className="!pl-16px"
+            placeholder={(choseEmpty || canOnlySetEmpty) ? '设置为空' : '请选择.web3域名'}
+            disabled={canOnlySetEmpty || inTranscation}
+            onFocus={showDropdown}
+          />
+          {!canOnlySetEmpty && selectableDomains?.length >= 1 && (
+            <span className={cx('ml-auto i-ant-design:caret-down-outlined text-16px transition-transform', visible && 'rotate-180')} />
+          )}
           {!visible && !isInputValueValid && <span className="absolute left-7px top-[calc(100%+.75em)] text-12px text-error-normal">请选择一个域名</span>}
         </div>
       </Dropdown>
@@ -99,7 +117,7 @@ const ModalContent: React.FC<Props> = ({ account, domainReverseRegistrar, myDoma
 
 const DomainSelect: React.FC<{ selectableDomains: Array<string>; selectDomain: Function }> = ({ selectableDomains, selectDomain }) => {
   return (
-    <CustomScrollbar className="max-h-312px">
+    <CustomScrollbar className="max-h-264px">
       {selectableDomains.map((domain) => (
         <div
           key={domain}

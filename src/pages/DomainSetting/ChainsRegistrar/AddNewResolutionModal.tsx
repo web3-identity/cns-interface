@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import cx from 'clsx';
 import { useForm } from 'react-hook-form';
+import CustomScrollbar from 'custom-react-scrollbar';
 import Button from '@components/Button';
 import Dropdown from '@components/Dropdown';
 import { showModal, showDrawer, hideAllModal } from '@components/showPopup';
@@ -108,13 +109,13 @@ const ModalContent: React.FC<Props> = ({ setEditAddress, registrableChains }) =>
 
 const ChainSelect: React.FC<{ selectableChains: Array<string>; selectChain: Function }> = ({ selectableChains, selectChain }) => {
   return (
-    <>
+    <CustomScrollbar className="max-h-264px">
       {selectableChains.map((chain) => (
         <div key={chain} className="pl-8px h-48px leading-48px hover:bg-[#26233E] text-14px text-grey-normal cursor-pointer transition-colors" onClick={() => selectChain(chain)}>
           {chain}
         </div>
       ))}
-    </>
+    </CustomScrollbar>
   );
 };
 
