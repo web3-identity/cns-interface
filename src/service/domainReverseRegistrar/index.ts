@@ -1,7 +1,7 @@
-import { selector, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
+import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
 import { fetchChain } from '@utils/fetch';
 import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
-import { hexAccountState, accountState, getAccount, sendTransaction } from '@service/account';
+import { getAccount, sendTransaction, useHexAccount } from '@service/account';
 import { ReverseRegistrar, PublicResolver } from '@contracts/index';
 import { hideAllModal } from '@components/showPopup';
 
@@ -23,11 +23,9 @@ export const setDomainReverseRegistrar = async ({ domain, refreshDomainReverseRe
   }
 };
 
-const domainReverseRegistrarQuery = selector({
+const domainReverseRegistrarQuery = selectorFamily<string | null, string>({
   key: 'domainReverseRegistrar',
-  get: async ({ get }) => {
-    const account = get(accountState);
-    const hexAccount = get(hexAccountState);
+  get: (hexAccount: string) => async () => {
     try {
       const node = await fetchChain<string>({
         params: [{ data: ReverseRegistrar.func.encodeFunctionData('node', [hexAccount]), to: ReverseRegistrar.address }, 'latest_state'],
@@ -47,11 +45,22 @@ const domainReverseRegistrarQuery = selector({
   },
 });
 
-export const useDomainReverseRegistrar = () => useRecoilValue(domainReverseRegistrarQuery);
-export const useRefreshDomainReverseRegistrar = () => useRecoilRefresher_UNSTABLE(domainReverseRegistrarQuery);
-export const usePrefetchDomainReverseRegistrar = () =>
-  useRecoilCallback(
+export const useDomainReverseRegistrar = () => {
+  const hexAccount = useHexAccount()!;
+  return useRecoilValue(domainReverseRegistrarQuery(hexAccount));
+};
+
+export const useRefreshDomainReverseRegistrar = () => {
+  const hexAccount = useHexAccount()!;
+  return useRecoilRefresher_UNSTABLE(domainReverseRegistrarQuery(hexAccount));
+};
+
+export const usePrefetchDomainReverseRegistrar = () => {
+  const hexAccount = useHexAccount()!;
+  return useRecoilCallback(
     ({ snapshot }) =>
       () =>
-        snapshot.getLoadable(domainReverseRegistrarQuery)
+        snapshot.getLoadable(domainReverseRegistrarQuery(hexAccount)),
+    [hexAccount]
   );
+};

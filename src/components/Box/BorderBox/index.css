@@ -15,16 +15,16 @@
 }
 
 .border-box--gradient {
-  @apply border-transparent transition-all;
+  @apply border-transparent;
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
   background-image: linear-gradient(to right, #24203b, #24203b), linear-gradient(90.83deg, #6667ab 12.22%, #bbbbbb 59.3%, #96d8de 89.06%);
 }
 
-.border-box--linear.border-box--withInput {
+.border-box--gradient.border-box--withInput {
   background-image: linear-gradient(to right, #24203b, #24203b), linear-gradient(90.83deg, #6667abcc 12.22%, #bbbbbbcc 59.3%, #96d8decc 89.06%);
 }
 
-.border-box--linear.border-box--withInput:focus-within {
+.border-box--gradient.border-box--withInput:focus-within {
   background-image: linear-gradient(to right, #24203b, #24203b), linear-gradient(90.83deg, #6667ab 12.22%, #bbbbbb 59.3%, #96d8de 89.06%);
 }

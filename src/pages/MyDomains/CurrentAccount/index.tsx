@@ -28,7 +28,6 @@ const CurrentAccount: React.FC = () => {
 
 export default CurrentAccount;
 
-
 const AccountContent: React.FC<{}> = ({}) => {
   const account = useAccount()!;
   const myDomains = useMyDomains();
@@ -48,7 +47,9 @@ const AccountContent: React.FC<{}> = ({}) => {
         )}
       </div>
       <div className="flex items-center lt-md:mt-16px">
-        <Button fullWidth={isMobile()} onClick={() => showSetReverseRegistrarModal({ account, myDomains, domainReverseRegistrar })} disabled={!myDomains?.length}>设置.web3域名</Button>
+        <Button fullWidth={isMobile()} onClick={() => showSetReverseRegistrarModal({ account, myDomains, domainReverseRegistrar })} disabled={!myDomains?.length}>
+          设置.web3域名
+        </Button>
       </div>
     </>
   );
@@ -61,8 +62,8 @@ const AccountLoading: React.FC = () => (
 );
 
 const ErrorBoundaryFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => (
-  <div className='inline-block self-center mx-auto'>
-    <p className='mb-6px text-center text-error-normal text-14px'>网络错误</p>
+  <div className="inline-block self-center mx-auto">
+    <p className="mb-6px text-center text-error-normal text-14px">网络错误</p>
     <Button size="small" onClick={resetErrorBoundary}>
       重试
     </Button>

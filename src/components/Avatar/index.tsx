@@ -1,9 +1,11 @@
-import React, { memo, useRef, useLayoutEffect, type ComponentProps } from 'react';
+import { memo, useRef, useLayoutEffect, forwardRef, type ComponentProps } from 'react';
 import jazzIcon from '@utils/jazzIcon';
 import { addressToNumber, convertCfxToHex } from '@utils/addressUtils';
 import removeAllChild from '@utils/removeAllChild';
+import composeRef from '@utils/composeRef';
+import './index.css';
 
-const Avatar: React.FC<ComponentProps<'div'> & { address: string; size: number }> = ({ address, size, ...props }) => {
+const Avatar = forwardRef<HTMLDivElement, ComponentProps<'div'> & { address: string; size: number }>(({ address, size, ...props }, ref) => {
   const avatarContainerRef = useRef<HTMLDivElement>(null!);
 
   useLayoutEffect(() => {
@@ -14,7 +16,7 @@ const Avatar: React.FC<ComponentProps<'div'> & { address: string; size: number }
     avatarContainerRef.current.appendChild(avatarDom);
   }, [size, address]);
 
-  return <div {...props} style={{ width: size, height: size, ...props.style }} ref={avatarContainerRef} />;
-};
+  return <div className="avatar" {...props} style={{ width: size, height: size, ...props.style }} ref={composeRef(avatarContainerRef, ref)} />;
+});
 
 export default memo(Avatar);

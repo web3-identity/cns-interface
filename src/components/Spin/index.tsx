@@ -1,8 +1,8 @@
-import React, { type HTMLAttributes } from 'react';
+import React, { type ComponentProps } from 'react';
 import cx from 'clsx';
 import './index.css';
 
-const Spin: React.FC<HTMLAttributes<HTMLDivElement> & { theme?: string }> = ({ className, theme = 'dark' }) => {
+const Spin: React.FC<ComponentProps<'div'> & { theme?: string }> = ({ className, theme = 'dark' }) => {
   return (
     <span className={cx('relative block w-1em h-1em leading-1em', className)}>
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 200 200" xmlSpace="preserve">

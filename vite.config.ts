@@ -26,6 +26,16 @@ export default defineConfig({
         }),
       ],
       theme: {
+        breakpoints: {
+          tiny: '350px',
+          mini: '375px',
+          mobile: '460px',
+          sm: '640px',
+          md: '768px',
+          lg: '1024px',
+          xl : '1280px',
+          '2xl': '1536px',
+        },
         colors: {
           purple: {
             normal: '#6667ab', // className="bg-purple-primary"

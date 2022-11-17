@@ -1,7 +1,6 @@
 import React, { Suspense, type ComponentProps } from 'react';
 import { Link } from 'react-router-dom';
 import cx from 'clsx';
-import isMobile from '@utils/isMobie';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import Button from '@components/Button';
 import Delay from '@components/Delay';
@@ -13,26 +12,30 @@ import { ReactComponent as StatusRegistered } from '@assets/icons/status-registe
 import { ReactComponent as StatusReserved } from '@assets/icons/status-reserved.svg';
 import { ReactComponent as StatusValid } from '@assets/icons/status-valid.svg';
 import { ReactComponent as StatusInvalid } from '@assets/icons/status-invalid.svg';
+import { btnClassMap } from './index';
 
 interface Props {
   domain: string;
   where: 'home' | 'header';
+  isSmall: boolean;
 }
 
-const Status: React.FC<Props & ComponentProps<'div'>> = ({ domain, where, className, ...props }) => {
+const Status: React.FC<Props & ComponentProps<'div'>> = ({ domain, isSmall, where, className, ...props }) => {
   const refreshDomainStatus = useRefreshDomainStatus(domain);
 
   return (
     <div
-      className={cx('flex items-center pl-24px bg-purple-dark-active whitespace-nowrap', className, {
-        'h-92px pr-12px text-22px rounded-24px lt-md:h-56px lt-md:text-16px lt-md:leading-18px lt-md:rounded-12px lt-md:px-8px': where === 'home',
-        'h-48px text-16px rounded-10px': where === 'header',
+      className={cx('flex items-center bg-purple-dark-active whitespace-nowrap', className, {
+        'h-92px lt-md:h-56px rounded-24px lt-md:rounded-12px': where === 'home',
+        'h-48px rounded-10px': where === 'header',
+        'pl-24px pr-12px text-22px': !isSmall,
+        'pl-12px pr-8px text-16px': isSmall,
       })}
       {...props}
     >
-      <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} where={where} />} onReset={refreshDomainStatus}>
+      <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} isSmall={isSmall} where={where} />} onReset={refreshDomainStatus}>
         <Suspense fallback={<StatusLoading />}>
-          <StatusContent domain={domain} where={where} />
+          <StatusContent domain={domain} isSmall={isSmall} where={where} />
         </Suspense>
       </ErrorBoundary>
     </div>
@@ -79,28 +82,29 @@ const statusMap = {
   },
 } as const;
 
-const StatusContent: React.FC<{ domain: string } & Props> = ({ domain, where }) => {
+const StatusContent: React.FC<Props> = ({ domain, where, isSmall }) => {
   const status = useDomainStatus(domain);
   const Icon = statusMap[status].icon;
+  const ellipsisLength = where === 'header' ? 14 : isSmall ? 11 : 24;
 
   return (
     <>
-      <Icon className="mr-12px w-40px h-40px -translate-y-2px flex-shrink-0 lt-md:mr-0px lt-md:w-32px lt-md:h-32px" />
+      <Icon className={cx('-translate-y-2px flex-shrink-0', isSmall ? 'mr-4px w-28px h-28px' : 'mr-12px w-40px h-40px')} />
       <span className={cx('mr-auto', statusMap[status].color)}>
         {statusMap[status].text}
-        <Domain className={cx('font-bold lt-md:text-grey-normal', where === 'header' ? 'ml-16px' : 'ml-24px lt-md:ml-4px')} domain={domain} ellipsisLength={where === 'header' ? 12 : 20} />
+        <Domain className={cx('font-bold', isSmall ? 'ml-4px' : 'ml-8px ')} domain={domain} ellipsisLength={status === DomainStatus.IllegalChar ? ellipsisLength - 4 : ellipsisLength} />
       </span>
 
       {status === DomainStatus.Valid && (
         <Link to={`/register/${domain}`} className="no-underline">
-          <Button size={where === 'header' ? 'small' : isMobile() ? 'normal' : 'medium'} color={isMobile() ? 'purple' : 'gradient'}>
+          <Button color="gradient" className={btnClassMap[where]}>
             注册
           </Button>
         </Link>
       )}
       {status === DomainStatus.Registered && (
         <Link to={`/setting/${domain}`} className="no-underline">
-          <Button size={where === 'header' ? 'small' : 'medium'}>查看</Button>
+          <Button className={cx(isSmall ? 'w-64px h-40px text-16px rounded-8px' : 'w-200px h-60px text-28px rounded-16px')}>查看</Button>
         </Link>
       )}
     </>
@@ -113,12 +117,12 @@ const StatusLoading: React.FC = () => (
   </Delay>
 );
 
-const ErrorBoundaryFallback: React.FC<FallbackProps & Pick<Props, 'where'>> = ({ resetErrorBoundary, where }) => {
+const ErrorBoundaryFallback: React.FC<FallbackProps & Omit<Props, 'domain'>> = ({ resetErrorBoundary, where, isSmall }) => {
   return (
     <>
-      <StatusInvalid className="mr-12px w-40px h-40px -translate-y-2px" />
+      <StatusInvalid className={cx('-translate-y-2px flex-shrink-0', isSmall ? 'mr-4px w-28px h-28px' : 'mr-12px w-40px h-40px')} />
       <span className="mr-auto text-error-normal">网络错误</span>
-      <Button onClick={resetErrorBoundary} size={where === 'header' ? 'small' : isMobile() ? 'normal' : 'medium'}>
+      <Button onClick={resetErrorBoundary} className={btnClassMap[where]}>
         重试
       </Button>
     </>

@@ -100,4 +100,5 @@ export const sendTransaction = async (params: Parameters<typeof sendTransactionW
 
 export const useAccount = () => useRecoilValue(accountState);
 export const useAccountMethod = () => useRecoilValue(accountMethodFilter);
+export const useHexAccount = () => useRecoilValue(hexAccountState);
 export const useChainId = () => useRecoilValue(chainIdState);

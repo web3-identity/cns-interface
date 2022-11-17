@@ -1,8 +1,8 @@
-import { type HTMLAttributes } from 'react';
+import { type ComponentProps } from 'react';
 import cx from 'clsx';
 import './index.css';
 
-const BorderBox: React.FC<HTMLAttributes<HTMLDivElement> & { withInput?: boolean; variant: 'gradient' | 'purple' | 'transparent' | 'none' }> = ({
+const BorderBox: React.FC<ComponentProps<'div'> & { withInput?: boolean; variant: 'gradient' | 'purple' | 'transparent' | 'none' }> = ({
   children,
   className,
   variant = 'transparent',

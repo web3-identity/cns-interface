@@ -24,13 +24,22 @@ button.absolute {
 }
 
 .button--normal {
-  @apply text-[16px] h-[48px] lt-md:h-[40px] px-[32px] lt-md:px-[16px] rounded-10px leading-48px lt-md:leading-40px;
+  @apply text-[16px] h-[48px] px-[32px] rounded-10px leading-48px;
 }
 
 .button--medium {
   @apply text-[28px] h-[60px] px-[72px] rounded-16px leading-60px;
 }
 
+@media screen and (max-width: 767px) {
+  .button--normal {
+    @apply px-18px text-16px h-40px leading-40px rounded-8px;
+  }
+
+  .button--medium {
+    @apply px-18px text-16px h-40px leading-40px rounded-8px;
+  }
+}
 
 /** disabled & loading **/
 .button.is-disabled,
@@ -68,14 +77,13 @@ button.button--text.is-disabled {
 
 .button--contained.button--gradient {
   @apply text-#110F1B;
-  background: linear-gradient(94.26deg, #6667AB 0%, #F0EEE9 51.35%, #96D8DE 100%);
+  background: linear-gradient(94.26deg, #6667ab 0%, #f0eee9 51.35%, #96d8de 100%);
 }
 
 .button--contained.button--gradient:hover,
 .button--contained.button--gradient:focus-visible {
-  background: linear-gradient(94.26deg, #6667AB 0%, #F0EEE9 51.35%, #96D8DE 100%);
+  background: linear-gradient(94.26deg, #6667ab 0%, #f0eee9 51.35%, #96d8de 100%);
 }
-
 
 /* text button */
 .button--text {
@@ -100,7 +108,6 @@ button.button--text.is-disabled {
   @apply bg-grey-normal bg-opacity-10 text-grey-normal-hover;
 }
 
-
 /* outlined button */
 .button--outlined {
   @apply bg-transparent;
@@ -114,8 +121,6 @@ button.button--text.is-disabled {
 .button--outlined.button--purple:focus-visible {
   @apply border-purple-normal-hover text-grey-normal-hover;
 }
-
-
 
 .button__content {
   @apply inline-flex items-center h-full;

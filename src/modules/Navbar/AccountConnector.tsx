@@ -1,11 +1,11 @@
-import React, { type HTMLAttributes } from 'react';
+import React, { type ComponentProps } from 'react';
 import { showModal, showDrawer } from '@components/showPopup';
 import fluentImg from '@assets/icons/fluent.svg';
 import anywebImg from '@assets/icons/anyweb.svg';
 import { connect } from '@service/account';
 import isMobile from '@utils/isMobie';
 
-const ConnectWallet: React.FC<HTMLAttributes<HTMLDivElement> & { icon: string; name: string }> = ({ children, onClick, icon, name }) => {
+const ConnectWallet: React.FC<ComponentProps<'div'> & { icon: string; name: string }> = ({ children, onClick, icon, name }) => {
   return (
     <div onClick={onClick} className="flex flex-col items-center justify-center w-100px h-100px rounded-8px hover:bg-#26233E transition-colors cursor-pointer">
       {children}
@@ -26,9 +26,9 @@ const ConnectModalContent: React.FC = () => {
 
 const showAccountConnector = () => {
   if (isMobile()) {
-    showDrawer({ Content: <ConnectModalContent />, title: '连接钱包' })
+    showDrawer({ Content: <ConnectModalContent />, title: '连接钱包' });
   } else {
-    showModal({ Content: <ConnectModalContent />, className: '!max-w-370px', title: '连接钱包' })
+    showModal({ Content: <ConnectModalContent />, className: '!max-w-370px', title: '连接钱包' });
   }
 };
 

@@ -1,12 +1,12 @@
-import React, { useCallback, type ComponentProps } from 'react';
+import React, { useState, useCallback, type ComponentProps } from 'react';
 import cx from 'clsx';
 import { useLocation, Link } from 'react-router-dom';
 import Dropdown from '@components/Dropdown';
 import Avatar from '@components/Avatar';
-import isMobile from '@utils/isMobie';
 import { disconnect, useAccountMethod } from '@service/account';
 import { usePrefetchMyDomains } from '@service/myDomains';
 import { usePrefetchDomainReverseRegistrar } from '@service/domainReverseRegistrar';
+import useIsLtMd from '@hooks/useIsLtMd';
 import { throttle } from 'lodash-es';
 
 const AccountDropdownItem: React.FC<ComponentProps<'div'> & { isCurrent?: boolean }> = ({ children, isCurrent, onClick, ...props }) => {
@@ -14,7 +14,7 @@ const AccountDropdownItem: React.FC<ComponentProps<'div'> & { isCurrent?: boolea
     <div
       onClick={onClick}
       className={cx(
-        'w-160px h-48px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-colors lt-md:w-120px lt-md:h-40px select-none',
+        'w-160px h-48px leading-48px rounded-8px text-center hover:bg-purple-dark-active transition-colors lt-md:w-120px lt-md:h-40px lt-md:leading-40px select-none',
         isCurrent ? 'bg-purple-dark-active' : 'cursor-pointer'
       )}
       {...props}
@@ -24,34 +24,46 @@ const AccountDropdownItem: React.FC<ComponentProps<'div'> & { isCurrent?: boolea
   );
 };
 
-const AccountDropdown: React.FC = () => {
+const AccountDropdown: React.FC<{ hideDropdown: VoidFunction }> = ({ hideDropdown }) => {
   const accountMethod = useAccountMethod();
   const { pathname } = useLocation();
-  
+
   const prefetchMyDomains = usePrefetchMyDomains();
   const prefetchDomainReverseRegistrar = usePrefetchDomainReverseRegistrar();
-  const prefetchData = useCallback(throttle(() => {
-    prefetchMyDomains();
-    prefetchDomainReverseRegistrar();
-  }, 10000), []);
+  const prefetchData = useCallback(
+    throttle(() => {
+      prefetchMyDomains();
+      prefetchDomainReverseRegistrar();
+    }, 10000),
+    []
+  );
 
   return (
-    <div className="mt-8px flex flex-col gap-16px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow lt-md:mt-16px lt-md:p-16px">
-      <Link to="/my-domains" className="text-white no-underline cursor-default" draggable="false" onMouseEnter={prefetchData}>
+    <div className="mt-8px flex flex-col gap-16px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow lt-md:mt-4px lt-md:p-16px">
+      <Link to="/my-domains" className="text-white no-underline cursor-default" draggable="false" onMouseEnter={prefetchData} onClick={hideDropdown}>
         <AccountDropdownItem isCurrent={pathname?.startsWith('/my-domains')}>域名管理</AccountDropdownItem>
       </Link>
-      <AccountDropdownItem onClick={() => disconnect(accountMethod!)}>退出登录</AccountDropdownItem>
+      <AccountDropdownItem
+        onClick={() => {
+          disconnect(accountMethod!);
+          hideDropdown();
+        }}
+      >
+        退出登录
+      </AccountDropdownItem>
     </div>
   );
 };
 
-const size = !isMobile() ? 48 : 32;
 const Account: React.FC<{ account: string }> = ({ account }) => {
+  const isLtMd = useIsLtMd();
+  const [visible, setVisible] = useState(false);
+  const showDropdown = useCallback(() => setVisible(true), []);
+  const hideDropdown = useCallback(() => setVisible(false), []);
+
   return (
-    <Dropdown placement="bottom" trigger="mouseenter" interactiveDebounce={50} delay={[100, 0]} Content={<AccountDropdown />} hideOnClick={false} sameWidth={false}>
-      <span className="flex-shrink-0 cursor-s-resize">
-        <Avatar address={account} size={size} />
-      </span>
+    <Dropdown placement="bottom" visible={visible} Content={<AccountDropdown hideDropdown={hideDropdown} />} sameWidth={false} onClickOutside={hideDropdown}>
+      <Avatar className="flex-shrink-0 cursor-pointer" onClick={showDropdown} address={account} size={isLtMd ? 32 : 48} />
     </Dropdown>
   );
 };

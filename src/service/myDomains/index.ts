@@ -1,14 +1,13 @@
-import { selector, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
+import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
 import { fetchChain } from '@utils/fetch';
 import { NameWrapper } from '@contracts/index';
-import { hexAccountState } from '@service/account';
+import { useHexAccount } from '@service/account';
 import { dnsNameNotationDecode, getDomainLabel } from '@utils/domainHelper';
 
-const myDomainsQuery = selector<Array<string>>({
+const myDomainsQuery = selectorFamily<Array<string>, string>({
   key: 'myDomains',
-  get: async ({ get }) => {
+  get: (hexAccount: string) => async () => {
     try {
-      const hexAccount = get(hexAccountState);
       return await fetchChain<string>({
         params: [{ data: NameWrapper.func.encodeFunctionData('userDomains', [hexAccount]), to: NameWrapper.address }, 'latest_state'],
       }).then((response) => {
@@ -21,6 +20,22 @@ const myDomainsQuery = selector<Array<string>>({
   },
 });
 
-export const useMyDomains = () => useRecoilValue(myDomainsQuery);
-export const useRefreshMyDomains = () => useRecoilRefresher_UNSTABLE(myDomainsQuery);
-export const usePrefetchMyDomains = () => useRecoilCallback(({ snapshot }) => () => snapshot.getLoadable(myDomainsQuery));
+export const useMyDomains = () => {
+  const hexAccount = useHexAccount()!;
+  return useRecoilValue(myDomainsQuery(hexAccount));
+};
+
+export const useRefreshMyDomains = () => {
+  const hexAccount = useHexAccount()!;
+  return useRecoilRefresher_UNSTABLE(myDomainsQuery(hexAccount));
+};
+
+export const usePrefetchMyDomains = () => {
+  const hexAccount = useHexAccount()!;
+  return useRecoilCallback(
+    ({ snapshot }) =>
+      () =>
+        snapshot.getLoadable(myDomainsQuery(hexAccount)),
+    [hexAccount]
+  );
+};

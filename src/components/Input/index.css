@@ -13,11 +13,21 @@
 }
 
 .input-wrapper.input--normal {
-  @apply text-18px;
+  @apply text-16px;
 }
 
 .input-wrapper.input--medium {
   @apply text-22px;
+}
+
+@media screen and (max-width: 767px) {
+  .input-wrapper.input--medium {
+    @apply text-16px;
+  }
+
+  .input-wrapper.input--medium {
+    @apply text-16px;
+  }
 }
 
 .input-wrapper.input--small > input {

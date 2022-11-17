@@ -12,7 +12,7 @@ import 'custom-react-scrollbar/dist/style.css';
 import './index.css';
 
 if (isMobile()) {
-  document.styleSheets[0].insertRule('.scrollbar__thumbPlaceholder--vertical { display:none; }', 0);
+  document.styleSheets[0].insertRule('.scrollbar__thumbPlaceholder--vertical { display:none !important; }', 0);
 }
 completeDetect().then(() => {
   ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

@@ -1,5 +1,5 @@
-import React, { type HTMLAttributes } from 'react';
+import React, { type ComponentProps } from 'react';
 
-const DivBox: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, ...props }) => <div {...props}>{children}</div>;
+const DivBox: React.FC<ComponentProps<'div'>> = ({ children, ...props }) => <div {...props}>{children}</div>;
 
 export default DivBox;

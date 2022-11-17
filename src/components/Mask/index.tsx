@@ -1,4 +1,4 @@
-import { useEffect, type HTMLAttributes } from 'react';
+import { useEffect, type ComponentProps } from 'react';
 import { a, useTransition } from '@react-spring/web';
 import classNames from 'clsx';
 import { lock, clearBodyLocks } from '@utils/body-scroll-lock';
@@ -6,7 +6,7 @@ import { lock, clearBodyLocks } from '@utils/body-scroll-lock';
 type OverWrite<T, U> = Omit<T, keyof U> & U;
 
 export type Props = OverWrite<
-  HTMLAttributes<HTMLDivElement>,
+  ComponentProps<'div'>,
   {
     open: boolean;
   }

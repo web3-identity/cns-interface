@@ -1,4 +1,4 @@
-import { useRef, forwardRef, useCallback, type ReactElement } from 'react';
+import { useRef, forwardRef, useCallback, type ReactElement, type ComponentProps } from 'react';
 import composeRef from '@utils/composeRef';
 import cx from 'clsx';
 import './index.css';
@@ -6,7 +6,7 @@ import './index.css';
 const setValue = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')!?.set!;
 
 export type Props = OverWrite<
-  React.InputHTMLAttributes<HTMLInputElement>,
+  ComponentProps<'input'>,
   {
     error?: string;
     wrapperClassName?: string;

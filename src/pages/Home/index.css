@@ -9,3 +9,10 @@
     @apply pt-232px;
   }
 }
+
+
+@media screen and (max-width: 460px) {
+  .home-page-wrapper {
+    @apply justify-start pt-120px;
+  }
+}
