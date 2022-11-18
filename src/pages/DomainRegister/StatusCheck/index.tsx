@@ -16,7 +16,7 @@ const StatusCheck = ({ domain, isPending, children }: PropsWithChildren<Props & 
   const handleRefresh = useRefreshDomainStatus(domain);
 
   return (
-    <div className='relative overflow-hidden'>
+    <div className='relative'>
       <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} />} onReset={handleRefresh}>
         <Suspense fallback={<StatusLoading />}>
           <StatusContent domain={domain} children={children} />
