@@ -9,7 +9,8 @@ export const useParamsDomain = () => {
 
 export const useParamsDomainWithTransition = () => {
   const { domain: _domain } = useParams();
-  const [domain, setDomain] = useState<string>('');
+  const [domain, setDomain] = useState<string>(() => _domain ?? '');
+
   const [isPending, startTransition] = useTransition();
   useEffect(() => startTransition(() => setDomain(_domain?.toLocaleLowerCase().trim() ?? '')), [_domain]);
   return {

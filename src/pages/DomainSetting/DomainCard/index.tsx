@@ -91,11 +91,7 @@ const SplitDomain: React.FC<ComponentProps<'span'> & { domain: string }> = memo(
     let _domain = Array.from(domain + '.web3').reverse();
     const res: Array<string> = [];
     while (_domain.length && res.length < 4) {
-      if (_domain.length === 1) {
-        res[res.length - 1] = _domain[0] + res[res.length - 1];
-      } else {
-        res.push(_domain.slice(0, 14).reverse().join(''));
-      }
+      res.push(_domain.slice(0, 14).reverse().join(''));
       _domain = _domain.slice(14);
     }
     if (_domain.length) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import PageWrapper from '@components/Layout/PageWrapper';
 import Button from '@components/Button';
 import { useParamsDomainWithTransition } from '@hooks/useParamsDomain';
@@ -8,15 +8,15 @@ import ChainsRegistrar from './ChainsRegistrar';
 
 const DomainSetting: React.FC = () => {
   const { domain } = useParamsDomainWithTransition();
+  const navigate = useNavigate();
+  const isBack = history?.length > 2;
 
   return (
     <PageWrapper className="pt-36px">
-      <Link to="/my-domains" className="inline-flex no-underline mb-16px">
-        <Button variant="text" color="white" className="relative text-22px pl-36px pr-14px">
-          <span className="i-charm:chevron-left text-30px absolute left-0px" />
-          域名管理
-        </Button>
-      </Link>
+      <Button variant="text" color="white" className="!inline-flex mb-16px relative text-22px pl-36px pr-14px" onClick={() => navigate(isBack ? '-1' : '/my-domains')}>
+        <span className="i-charm:chevron-left text-30px absolute left-0px" />
+        {isBack ? '返回' : '我的域名'}
+      </Button>
 
       {domain && (
         <>

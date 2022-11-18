@@ -8,24 +8,37 @@ const ProgressBar: React.FC<{ domain: string }> = ({ domain }) => {
   const registerStep = useRegisterStep(domain);
 
   return (
-    <div className="mt-32px relative flex justify-between items-center px-32px text-18px text-grey-normal">
+    <div className="mt-24px relative flex justify-between items-center px-32px text-18px text-grey-normal">
       <div
         className={cx(
-          'w-32px h-32px leading-24px border-4px rounded-full text-center bg-#1B192C transition-colors duration-400ms',
-          registerStep > RegisterStep.WaitCommit ? 'text-#7F7D88 border-#25233e' : 'text-grey-normal border-grey-normal'
+          'relative w-32px h-32px leading-24px border-4px rounded-full text-center bg-#1B192C transition-colors duration-400ms',
+          registerStep > RegisterStep.WaitCommit ? 'text-#7F7D88 border-#25233e bg-#25233e' : 'text-grey-normal border-grey-normal'
         )}
       >
         1
+        <p className="absolute left-1/2 -translate-x-1/2 translate-y-80% text-14px lt-md:text-12px whitespace-nowrap">
+          <span className="lt-md:display-none">第一步：</span>申请注册
+        </p>
       </div>
+
       <div
         className={cx(
-          'w-32px h-32px leading-24px border-4px rounded-full text-center bg-#1B192C transition-colors duration-400ms',
-          registerStep > RegisterStep.WaitPay ? 'text-#7F7D88 border-#25233e' : 'text-grey-normal border-grey-normal'
+          'relative w-32px h-32px leading-24px border-4px rounded-full text-center bg-#1B192C transition-colors duration-400ms',
+          registerStep > RegisterStep.WaitPay ? 'text-#7F7D88 border-#25233e bg-#25233e' : 'text-grey-normal border-grey-normal'
         )}
       >
         2
+        <p className="absolute left-1/2 -translate-x-1/2 translate-y-80% text-14px lt-md:text-12px whitespace-nowrap">
+          <span className="lt-md:display-none">第二步：</span>支付
+        </p>
       </div>
-      <div className="w-32px h-32px leading-24px border-4px rounded-full text-center border-grey-normal bg-#1B192C">3</div>
+
+      <div className="relative w-32px h-32px leading-24px border-4px rounded-full text-center border-grey-normal bg-#1B192C">
+        3
+        <p className="absolute left-1/2 -translate-x-1/2 translate-y-80% text-14px lt-md:text-12px whitespace-nowrap">
+          完成
+        </p>
+      </div>
 
       <Rocket
         className={cx('absolute left-1/2 top-1/2 -translate-y-[calc(50%-4px)] w-86px h-57px transition-all duration-400ms', {

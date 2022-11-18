@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const btnClassMap = {
-  header: 'px-0 w-56px h-32px text-14px rounded-6px',
+  header: 'px-0 w-54px h-32px text-14px rounded-6px',
   home: 'w-200px h-60px text-28px rounded-16px lt-md:w-68px lt-md:h-40px lt-md:text-16px lt-md:rounded-8px',
 } as const;
 

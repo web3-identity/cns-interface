@@ -5,7 +5,6 @@ import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
-import { useAccount } from '@service/account';
 import { useDomainStatus, useRefreshDomainStatus, useIsOwner, DomainStatus } from '@service/domainInfo';
 import { RegisterBox } from '@pages/DomainRegister';
 
@@ -13,11 +12,11 @@ interface Props {
   domain: string;
 }
 
-const Status = ({ domain, isPending, children }: PropsWithChildren<Props & { isPending: boolean }>) => {
+const StatusCheck = ({ domain, isPending, children }: PropsWithChildren<Props & { isPending: boolean }>) => {
   const handleRefresh = useRefreshDomainStatus(domain);
 
   return (
-    <>
+    <div className='relative overflow-hidden'>
       <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} />} onReset={handleRefresh}>
         <Suspense fallback={<StatusLoading />}>
           <StatusContent domain={domain} children={children} />
@@ -26,14 +25,14 @@ const Status = ({ domain, isPending, children }: PropsWithChildren<Props & { isP
       
       {isPending && (
         <Delay>
-          <StatusLoading className="absolute top-172px w-full lt-lg:w-[calc(100%-48px)]" />
+          <StatusLoading className="absolute top-0 left-0 w-full h-full" />
         </Delay>
       )}
-    </>
+    </div>
   );
 };
 
-export default memo(Status);
+export default memo(StatusCheck);
 
 const statusMap = {
   [DomainStatus.Valid]: {
@@ -68,25 +67,24 @@ const Warning = () => (
 const StatusContent = ({ domain, children }: PropsWithChildren<Props>) => {
   const status = useDomainStatus(domain);
   const isOwner = useIsOwner(domain);
-  const account = useAccount();
 
   return (
     <>
       {status === DomainStatus.Valid || isOwner ? (
         children
       ) : (
-        <RegisterBox className="relative flex flex-col items-center pt-66px">
+        <RegisterBox className="relative flex flex-col justify-center items-center">
           <Warning />
           <p className="mt-16px mb-20px text-14px text-grey-normal">{statusMap[status].text}</p>
 
           {status === DomainStatus.Registered && (
             <Link to={`/setting/${domain}`} className="no-underline">
-              <Button>查看</Button>
+              <Button className='w-152px lt-md:w-132px'>查看</Button>
             </Link>
           )}
           {status !== DomainStatus.Registered && (
             <Link to="/" className="no-underline">
-              <Button>重新搜索</Button>
+              <Button className='w-152px lt-md:w-132px'>重新搜索</Button>
             </Link>
           )}
         </RegisterBox>
@@ -96,7 +94,7 @@ const StatusContent = ({ domain, children }: PropsWithChildren<Props>) => {
 };
 
 const StatusLoading: React.FC<ComponentProps<'div'>> = ({ className, ...props }) => (
-  <RegisterBox className={cx('flex flex-col items-center pt-66px', className)} {...props}>
+  <RegisterBox className={cx('flex flex-col justify-center items-center', className)} {...props}>
     <Delay>
       <Spin className="text-80px" />
       <p className="mt-16px text-14px text-grey-normal">查询中...</p>
@@ -106,10 +104,10 @@ const StatusLoading: React.FC<ComponentProps<'div'>> = ({ className, ...props })
 
 const ErrorBoundaryFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => {
   return (
-    <RegisterBox className="flex flex-col items-center pt-66px">
+    <RegisterBox className="flex flex-col justify-center items-center">
       <Warning />
       <p className="mt-16px mb-20px text-14px text-grey-normal">网络错误，请稍后再试</p>
-      <Button onClick={resetErrorBoundary}>重试</Button>
+      <Button onClick={resetErrorBoundary} className='w-152px lt-md:w-132px'>重试</Button>
     </RegisterBox>
   );
 };

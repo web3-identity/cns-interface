@@ -1,17 +1,20 @@
-import { useState, useEffect } from 'react';
-import { debounce } from 'lodash-es';
+import { atom, useRecoilValue } from 'recoil';
+import { setRecoil } from 'recoil-nexus';
 
-const useIsLtMd = () => {
-  const [isMdScreen, setIsMdScreen] = useState(() => window.innerWidth < 768);
+const isLtMdState = atom({
+  key: 'isLtMd',
+  default: window.innerWidth < 768
+});
 
-  useEffect(() => {
-    const handleResize = () => setIsMdScreen(window.innerWidth < 768);
+const handleResize = () => {
+  try {
+    setRecoil(isLtMdState, window.innerWidth < 768)
+  } catch (_) {
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return isMdScreen;
+  }
 };
 
+window.addEventListener('resize', handleResize);
+
+const useIsLtMd = () => useRecoilValue(isLtMdState);
 export default useIsLtMd;

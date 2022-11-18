@@ -58,7 +58,7 @@ export const commitRegistration = async ({ domain, durationYears }: Params) => {
     }
 
     setCommitInfo(domain, { commitmentHash, commitTime, secret, wrapperExpiry, durationYears });
-  } catch (err) {
-    console.error('err', err);
+  } catch (_) {
+    console.error('commitRegistration error: ', _);
   }
 };

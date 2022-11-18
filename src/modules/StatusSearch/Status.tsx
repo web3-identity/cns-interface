@@ -92,7 +92,11 @@ const StatusContent: React.FC<Props> = ({ domain, where, isSmall }) => {
       <Icon className={cx('-translate-y-2px flex-shrink-0', isSmall ? 'mr-4px w-28px h-28px' : 'mr-12px w-40px h-40px')} />
       <span className={cx('mr-auto', statusMap[status].color)}>
         {statusMap[status].text}
-        <Domain className={cx('font-bold', isSmall ? 'ml-4px' : 'ml-8px ')} domain={domain} ellipsisLength={status === DomainStatus.IllegalChar ? ellipsisLength - 4 : ellipsisLength} />
+        <Domain
+          className={cx('font-bold', isSmall ? 'ml-4px' : 'ml-8px ')}
+          domain={domain}
+          ellipsisLength={status === DomainStatus.IllegalChar ? ellipsisLength - 4 : ellipsisLength}
+        />
       </span>
 
       {status === DomainStatus.Valid && (
@@ -104,7 +108,7 @@ const StatusContent: React.FC<Props> = ({ domain, where, isSmall }) => {
       )}
       {status === DomainStatus.Registered && (
         <Link to={`/setting/${domain}`} className="no-underline">
-          <Button className={cx(isSmall ? 'w-64px h-40px text-16px rounded-8px' : 'w-200px h-60px text-28px rounded-16px')}>查看</Button>
+          <Button className={btnClassMap[where]}>查看</Button>
         </Link>
       )}
     </>
