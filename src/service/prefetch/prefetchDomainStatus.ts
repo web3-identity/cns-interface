@@ -8,7 +8,7 @@ export const useDoPrefetchDomainStatusModule = (domain: string) => {
     debounce((domain: string) => {
       if (!domain) return;
       prefetchDomainStatus(domain);
-    }, 500),
+    }, 400),
     []
   );
 

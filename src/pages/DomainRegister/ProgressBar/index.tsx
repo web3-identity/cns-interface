@@ -1,12 +1,10 @@
 import React from 'react';
 import cx from 'clsx';
-import { useRegisterStep, RegisterStep } from '@service/domainRegister';
+import { RegisterStep } from '@service/domainRegister';
 import { ReactComponent as Rocket } from '@assets/images/Rocket.svg';
 import './index.css';
 
-const ProgressBar: React.FC<{ domain: string }> = ({ domain }) => {
-  const registerStep = useRegisterStep(domain);
-
+const ProgressBar: React.FC<{ domain: string; registerStep: RegisterStep; }> = ({ domain, registerStep }) => {
   return (
     <div className="mt-24px relative flex justify-between items-center px-32px text-18px text-grey-normal">
       <div

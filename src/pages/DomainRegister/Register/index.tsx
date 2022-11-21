@@ -1,17 +1,15 @@
 import React from 'react';
-import { RegisterStep, useRegisterStep, useCommitInfo, useMonitorDomainState, useWaitPayConfirmState } from '@service/domainRegister';
+import { useCommitInfo, useWaitPayConfirmState, RegisterStep } from '@service/domainRegister';
 import { useAccount } from '@service/account';
 import Step1 from './Step1';
 import WaitConfirm from './WaitConfirm';
 import Step2 from './Step2';
 import Step3 from './Step3';
 
-const Register: React.FC<{ domain: string }> = ({ domain }) => {
+const Register: React.FC<{ domain: string; registerStep: RegisterStep }> = ({ domain, registerStep }) => {
   const account = useAccount();
-  const registerStep = useRegisterStep(domain);
   const commitInfo = useCommitInfo(domain);
   const isWaitPayConfirm = useWaitPayConfirmState(domain);
-  useMonitorDomainState(domain, registerStep);
 
   if (!account) return <Step1 domain={domain} />;
   if (registerStep === RegisterStep.WaitCommit) {

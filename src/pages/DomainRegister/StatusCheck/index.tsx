@@ -5,7 +5,7 @@ import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
-import { useDomainStatus, useRefreshDomainStatus, useIsOwner, DomainStatus } from '@service/domainInfo';
+import { useDomainStatus, useRefreshDomainStatus, useIsOwnerSuspense, DomainStatus } from '@service/domainInfo';
 import { RegisterBox } from '@pages/DomainRegister';
 
 interface Props {
@@ -13,16 +13,16 @@ interface Props {
 }
 
 const StatusCheck = ({ domain, isPending, children }: PropsWithChildren<Props & { isPending: boolean }>) => {
-  const handleRefresh = useRefreshDomainStatus(domain);
+  const refreshDomainStatus = useRefreshDomainStatus(domain);
 
   return (
-    <div className='relative'>
-      <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} />} onReset={handleRefresh}>
+    <div className="relative">
+      <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} />} onReset={refreshDomainStatus}>
         <Suspense fallback={<StatusLoading />}>
           <StatusContent domain={domain} children={children} />
         </Suspense>
       </ErrorBoundary>
-      
+
       {isPending && (
         <Delay>
           <StatusLoading className="absolute top-0 left-0 w-full h-full" />
@@ -66,7 +66,7 @@ const Warning = () => (
 
 const StatusContent = ({ domain, children }: PropsWithChildren<Props>) => {
   const status = useDomainStatus(domain);
-  const isOwner = useIsOwner(domain);
+  const isOwner = useIsOwnerSuspense(domain);
 
   return (
     <>
@@ -79,12 +79,12 @@ const StatusContent = ({ domain, children }: PropsWithChildren<Props>) => {
 
           {status === DomainStatus.Registered && (
             <Link to={`/setting/${domain}`} className="no-underline">
-              <Button className='w-152px lt-md:w-132px'>查看</Button>
+              <Button className="w-152px lt-md:w-132px">查看</Button>
             </Link>
           )}
           {status !== DomainStatus.Registered && (
             <Link to="/" className="no-underline">
-              <Button className='w-152px lt-md:w-132px'>重新搜索</Button>
+              <Button className="w-152px lt-md:w-132px">重新搜索</Button>
             </Link>
           )}
         </RegisterBox>
@@ -107,7 +107,9 @@ const ErrorBoundaryFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) 
     <RegisterBox className="flex flex-col justify-center items-center">
       <Warning />
       <p className="mt-16px mb-20px text-14px text-grey-normal">网络错误，请稍后再试</p>
-      <Button onClick={resetErrorBoundary} className='w-152px lt-md:w-132px'>重试</Button>
+      <Button onClick={resetErrorBoundary} className="w-152px lt-md:w-132px">
+        重试
+      </Button>
     </RegisterBox>
   );
 };

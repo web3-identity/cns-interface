@@ -8,14 +8,16 @@ import DomainRegister from '@pages/DomainRegister';
 import DomainSetting from '@pages/DomainSetting';
 import MyDomains from '@pages/MyDomains';
 import useMainScroller from '@hooks/useMainScroller';
+import { useWatchPathChange } from '@hooks/useLasPath';
 
 const AppRouter: React.FC = () => {
   useMainScroller();
-  
+
   return (
     <Router>
       <ErrorBoundary>
         <Navbar />
+        <LastPageWatcher />
         <CustomScrollbar className="main-scroller" contentClassName="min-h-full !flex flex-col pb-40px">
           <Routes>
             <Route index element={<HomePage />} />
@@ -28,6 +30,11 @@ const AppRouter: React.FC = () => {
       </ErrorBoundary>
     </Router>
   );
+};
+
+const LastPageWatcher = () => {
+  useWatchPathChange();
+  return null;
 };
 
 export default AppRouter;

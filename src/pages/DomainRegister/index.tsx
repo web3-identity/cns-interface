@@ -4,6 +4,7 @@ import PageWrapper from '@components/Layout/PageWrapper';
 import BorderBox from '@components/Box/BorderBox';
 import Domain from '@modules/Domain';
 import { useParamsDomainWithTransition } from '@hooks/useParamsDomain';
+import { useRegisterStep, useMonitorDomainState } from '@service/domainRegister';
 import Register from './Register';
 import ProgressBar from './ProgressBar';
 import StatusCheck from './StatusCheck';
@@ -28,6 +29,8 @@ export const RegisterBox: React.FC<ComponentProps<'div'> & { title?: string }> =
 
 const DomainRegister: React.FC = () => {
   const { domain, isPending } = useParamsDomainWithTransition();
+  const registerStep = useRegisterStep(domain);
+  useMonitorDomainState(domain, registerStep);
 
   return (
     <PageWrapper className="relative pt-72px lt-md:pt-20px">
@@ -38,8 +41,8 @@ const DomainRegister: React.FC = () => {
         <Domain domain={domain} />
       </BorderBox>
       <StatusCheck domain={domain} isPending={isPending}>
-        <Register domain={domain} />
-        <ProgressBar domain={domain} />
+        <Register domain={domain} registerStep={registerStep} />
+        <ProgressBar domain={domain} registerStep={registerStep} />
       </StatusCheck>
     </PageWrapper>
   );

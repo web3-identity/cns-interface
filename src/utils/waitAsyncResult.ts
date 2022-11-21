@@ -36,7 +36,6 @@ const waitAsyncResult = <T extends () => Promise<any>>(fetcher: T, maxWaitTime: 
         return;
       }
       const res = await fetcher();
-      interval === 1 && console.log(res)
       if (res) {
         resolve(res);
         return;

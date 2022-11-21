@@ -31,6 +31,12 @@ export const useDomainOwner = (domain: string) => useRecoilValue(domainOwnerQuer
 export const useRefreshDomainOwner = (domain: string) => useRecoilRefresher_UNSTABLE(domainOwnerQuery(domain));
 export const usePrefetchDomainOwner = () => useRecoilCallback(({ snapshot }) => (domain: string) => snapshot.getPromise(domainOwnerQuery(domain)));
 
+export const useIsOwnerSuspense = (domain: string) => {
+  const account = useAccount();
+  const owner = useDomainOwner(domain);
+  return account === owner;
+};
+
 export const useIsOwner = (domain: string) => {
   const account = useAccount();
   const { state, contents } = useRecoilValueLoadable(domainOwnerQuery(domain));

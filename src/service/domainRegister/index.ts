@@ -45,6 +45,7 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
 
   useEffect(() => {
     let stop: VoidFunction;
+
     const startFetch = async () => {
       try {
         const [ownerPromise, _stop] = waitAsyncResult(() => fetchDomainOwner(domain), 0);
