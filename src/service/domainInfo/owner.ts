@@ -29,7 +29,7 @@ const domainOwnerQuery = selectorFamily<string | null, string>({
 
 export const useDomainOwner = (domain: string) => useRecoilValue(domainOwnerQuery(domain));
 export const useRefreshDomainOwner = (domain: string) => useRecoilRefresher_UNSTABLE(domainOwnerQuery(domain));
-export const usePrefetchDomainOwner = () => useRecoilCallback(({ snapshot }) => (domain: string) => snapshot.getLoadable(domainOwnerQuery(domain)));
+export const usePrefetchDomainOwner = () => useRecoilCallback(({ snapshot }) => (domain: string) => snapshot.getPromise(domainOwnerQuery(domain)));
 
 export const useIsOwner = (domain: string) => {
   const account = useAccount();

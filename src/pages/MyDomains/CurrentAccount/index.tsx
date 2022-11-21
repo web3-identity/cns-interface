@@ -55,11 +55,13 @@ const AccountContent: React.FC<{}> = ({}) => {
   );
 };
 
-const AccountLoading: React.FC = () => (
-  <Delay>
-    <Spin className="text-36px self-center mx-auto" />
-  </Delay>
-);
+const AccountLoading: React.FC = () => {
+  return  (
+    <Delay>
+      <Spin className="text-36px self-center mx-auto" />
+    </Delay>
+  );
+}
 
 const ErrorBoundaryFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => (
   <div className="inline-block self-center mx-auto">

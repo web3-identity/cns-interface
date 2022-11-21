@@ -11,11 +11,10 @@ import Delay from '@components/Delay';
 import Spin from '@components/Spin';
 import Domain from '@modules/Domain';
 import { useMyDomains } from '@service/myDomains';
-import { useDomainExpire, useRefreshDomainExpire, usePrefetchDomainOwner } from '@service/domainInfo';
-import { getDomainRegistrar as prefetchDomainRegistrar } from '@service/domainRegistrar';
+import { useDomainExpire, useRefreshDomainExpire } from '@service/domainInfo';
+import { usePrefetchSettingPage } from '@service/prefetch';
 import useMainScroller from '@hooks/useMainScroller';
 import NoDomains from '@assets/images/NoDomains.png';
-import { throttle } from 'lodash-es';
 
 const DomainList: React.FC<{}> = ({}) => {
   const mainScroller = useMainScroller();
@@ -104,17 +103,13 @@ const DomainItem = ({ index, style, key, myDomains }: ListRowProps & { myDomains
 };
 
 const GotoDomainSettingButton = memo(({ domain }: { domain: string }) => {
-  const prefetchDomainOwner = usePrefetchDomainOwner();
-  const prefetchData = useCallback(throttle(() => {
-    prefetchDomainOwner(domain);
-    prefetchDomainRegistrar(domain);
-  }, 10000), [domain]);
+  const prefetchSettingPage = usePrefetchSettingPage(domain);
 
   return (
     <Link
       to={`/setting/${domain}`}
       className="no-underline lt-md:display-none"
-      onMouseEnter={prefetchData}
+      onMouseEnter={prefetchSettingPage}
       draggable="false"
     >
       <Button>域名管理</Button>

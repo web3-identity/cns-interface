@@ -1,4 +1,4 @@
-import { atom, selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
+import { atom, selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
 import { getRecoil, setRecoil } from 'recoil-nexus';
 import { persistAtom, handleRecoilInit } from '@utils/recoilUtils';
 import dayjs from 'dayjs';
@@ -87,5 +87,6 @@ const domainExpireQuery = selectorFamily<DomainExpire, string>({
 
 export const useDomainExpire = (domain: string) => useRecoilValue(domainExpireQuery(domain));
 export const useRefreshDomainExpire = (domain: string) => useRecoilRefresher_UNSTABLE(domainExpireQuery(domain));
+export const usePrefetchDomainExpire = () => useRecoilCallback(({ snapshot }) => (domain: string) => snapshot.getPromise(domainExpireQuery(domain)));
 export const useGracePeriod = () => useRecoilValue(gracePeriodState);
 export const getGracePeriod = () => getRecoil(gracePeriodState);

@@ -14,7 +14,7 @@ import isMobile from '@utils/isMobie';
 
 interface Props {
   account: string;
-  domainReverseRegistrar: string;
+  domainReverseRegistrar: string | null;
   myDomains: Array<string>;
 }
 

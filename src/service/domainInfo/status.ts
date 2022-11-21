@@ -1,4 +1,4 @@
-import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
+import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
 import { fetchChain } from '@utils/fetch';
 import { Web3Controller } from '@contracts/index';
 
@@ -29,3 +29,4 @@ const domainStatusQuery = selectorFamily<DomainStatus, string>({
 
 export const useDomainStatus = (domain: string) => useRecoilValue(domainStatusQuery(domain));
 export const useRefreshDomainStatus = (domain: string) => useRecoilRefresher_UNSTABLE(domainStatusQuery(domain));
+export const usePrefetchDomainStatus = () => useRecoilCallback(({ snapshot }) => (domain: string) => snapshot.getPromise(domainStatusQuery(domain)));

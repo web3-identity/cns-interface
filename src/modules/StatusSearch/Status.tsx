@@ -7,6 +7,7 @@ import Delay from '@components/Delay';
 import Spin from '@components/Spin';
 import Domain from '@modules/Domain';
 import { useDomainStatus, useRefreshDomainStatus, DomainStatus } from '@service/domainInfo';
+import { usePrefetchSettingPage } from '@service/prefetch';
 import { ReactComponent as StatusLocked } from '@assets/icons/status-locked.svg';
 import { ReactComponent as StatusRegistered } from '@assets/icons/status-registered.svg';
 import { ReactComponent as StatusReserved } from '@assets/icons/status-reserved.svg';
@@ -86,6 +87,8 @@ const StatusContent: React.FC<Props> = ({ domain, where, isSmall }) => {
   const status = useDomainStatus(domain);
   const Icon = statusMap[status].icon;
   const ellipsisLength = where === 'header' ? 14 : isSmall ? 11 : 24;
+  
+  const prefetchSettingPage = usePrefetchSettingPage(domain);
 
   return (
     <>
@@ -107,7 +110,7 @@ const StatusContent: React.FC<Props> = ({ domain, where, isSmall }) => {
         </Link>
       )}
       {status === DomainStatus.Registered && (
-        <Link to={`/setting/${domain}`} className="no-underline">
+        <Link to={`/setting/${domain}`} className="no-underline" onMouseEnter={prefetchSettingPage}>
           <Button className={btnClassMap[where]}>查看</Button>
         </Link>
       )}

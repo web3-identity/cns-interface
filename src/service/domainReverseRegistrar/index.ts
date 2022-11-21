@@ -60,7 +60,7 @@ export const usePrefetchDomainReverseRegistrar = () => {
   return useRecoilCallback(
     ({ snapshot }) =>
       () =>
-        snapshot.getLoadable(domainReverseRegistrarQuery(hexAccount)),
+        snapshot.getPromise(domainReverseRegistrarQuery(hexAccount)),
     [hexAccount]
   );
 };

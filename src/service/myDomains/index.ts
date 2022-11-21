@@ -35,7 +35,7 @@ export const usePrefetchMyDomains = () => {
   return useRecoilCallback(
     ({ snapshot }) =>
       () =>
-        snapshot.getLoadable(myDomainsQuery(hexAccount)),
+        snapshot.getPromise(myDomainsQuery(hexAccount)),
     [hexAccount]
   );
 };

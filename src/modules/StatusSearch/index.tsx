@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useLayoutEffect, memo, type ComponentProps } from 'react';
+import React, { useState, useCallback, useLayoutEffect, memo, type ComponentProps, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import cx from 'clsx';
@@ -8,6 +8,7 @@ import Input from '@components/Input';
 import Button from '@components/Button';
 import Status from '@modules/StatusSearch/Status';
 import useIsLtMd from '@hooks/useIsLtMd';
+import { useDoPrefetchDomainStatusModule } from '@service/prefetch';
 import './index.css';
 
 interface Props {
@@ -29,6 +30,7 @@ const StatusSearch: React.FC<Props & ComponentProps<'div'>> = ({ where, classNam
   const currentInput = watch('domain');
   useLayoutEffect(() => setDomain(''), [currentInput, pathname]);
   useLayoutEffect(() => setValue('domain', ''), [pathname]);
+  useDoPrefetchDomainStatusModule(currentInput);
 
   const handleSearch = useCallback(
     withForm(({ domain }) => setDomain((domain as string).toLowerCase().trim())),
@@ -51,7 +53,7 @@ const StatusSearch: React.FC<Props & ComponentProps<'div'>> = ({ where, classNam
       >
         <Input
           id="status-search"
-          className={cx("lowercase", isSmall && "font-normal !pl-0")}
+          className={cx('lowercase', isSmall && 'font-normal !pl-0')}
           size={isSmall ? 'normal' : 'medium'}
           prefixIcon={!isSmall ? 'i-charm:search' : ''}
           placeholder="获取您的.web3"

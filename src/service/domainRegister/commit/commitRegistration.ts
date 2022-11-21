@@ -53,8 +53,8 @@ export const commitRegistration = async ({ domain, durationYears }: Params) => {
     const [receiptCommit] = waitAsyncResult(() => isCommitReceipt(commitmentHash));
     const commitTime = await receiptCommit;
 
-    if (payMethod === 'web2' && !isMobile()) {
-      const _ = await postCommitmentToBackend(commitmentHash, commitParams);
+    if (payMethod === 'web2') {
+      await postCommitmentToBackend(commitmentHash, commitParams);
     }
 
     setCommitInfo(domain, { commitmentHash, commitTime, secret, wrapperExpiry, durationYears });
