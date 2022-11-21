@@ -1,4 +1,4 @@
-import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
+import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
 import { fetchApi } from '@utils/fetch';
 import { commitInfoState, getCommitInfo } from '@service/domainRegister/commit';
 
@@ -85,4 +85,5 @@ const makeOrderQuery = selectorFamily<Response, string>({
 });
 
 export const useMakeOrder = (domain: string) => useRecoilValue(makeOrderQuery(domain));
+export const usePrefetchMakeOrder = () => useRecoilCallback(({ snapshot }) => (domain: string) => snapshot.getPromise(makeOrderQuery(domain)));
 export const useRefreshMakeOrder = (domain: string) => useRecoilRefresher_UNSTABLE(makeOrderQuery(domain));

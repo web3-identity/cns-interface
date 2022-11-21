@@ -56,7 +56,7 @@ const Drawer = forwardRef<DrawerMethod>((_, ref) => {
     <>
       <Mask open={maskOpen} onClick={() => hide()} />
       <a.div
-        className="fixed left-0 w-100vw h-[calc(100vh+100px)] rounded-t-24px bg-purple-dark-active touch-none z-10000 dropdown-shadow"
+        className="fixed left-0 w-100vw h-[calc(100vh+100px)] rounded-t-24px bg-purple-dark-active touch-none z-8888 dropdown-shadow"
         {...bind()}
         style={{ display, bottom: `calc(-100vh + ${height - 100}px)`, y }}
       >

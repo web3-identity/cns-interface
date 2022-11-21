@@ -1,4 +1,5 @@
 import { selectorFamily, useRecoilValue, useRecoilCallback, useRecoilValueLoadable, useRecoilRefresher_UNSTABLE } from 'recoil';
+import { getRecoil } from 'recoil-nexus';
 import { fetchChain } from '@utils/fetch';
 import { getNameHash } from '@utils/domainHelper';
 import { convertHexToCfx } from '@utils/addressUtils/convertAddress';
@@ -27,6 +28,7 @@ const domainOwnerQuery = selectorFamily<string | null, string>({
   },
 });
 
+export const getDomainOwner = (domain: string): string | null | Promise<string | null> => getRecoil(domainOwnerQuery(domain));
 export const useDomainOwner = (domain: string) => useRecoilValue(domainOwnerQuery(domain));
 export const useRefreshDomainOwner = (domain: string) => useRecoilRefresher_UNSTABLE(domainOwnerQuery(domain));
 export const usePrefetchDomainOwner = () => useRecoilCallback(({ snapshot }) => (domain: string) => snapshot.getPromise(domainOwnerQuery(domain)));

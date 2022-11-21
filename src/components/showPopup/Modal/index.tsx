@@ -3,6 +3,7 @@ import cx from 'clsx';
 import { useAccount } from '@service/account';
 import { PopupClass } from '@components/Popup';
 import renderReactNode from '@utils/renderReactNode';
+import useCloseOnRouterBack from '../useCloseOnRouterBack';
 import './index.css';
 
 export const ModalPopup = new PopupClass(true);
@@ -15,7 +16,7 @@ ModalPopup.initPromise.then(() => {
 const Modal: React.FC<{ Content: ReactNode | Function; title: string; className?: string }> = memo(({ Content, title, className }) => {
   const hasInit = useRef(false);
   const account = useAccount();
-
+  useCloseOnRouterBack(ModalPopup.hideAll);
   useEffect(() => {
     if (!hasInit.current) {
       hasInit.current = true;
@@ -23,6 +24,7 @@ const Modal: React.FC<{ Content: ReactNode | Function; title: string; className?
     }
     ModalPopup.hideAll();
   }, [account]);
+  
 
   return (
     <div className={cx('relative w-90vw max-w-568px p-24px rounded-24px bg-purple-dark-active overflow-hidden dropdown-shadow', className)}>

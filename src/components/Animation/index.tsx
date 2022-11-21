@@ -83,12 +83,12 @@ export const door = {
   enter: {
     transform: 'scale3d(1, 1, 1)',
     opacity: 1,
-    config: { mass: 1, tension: 210, friction: 26 },
+    config: { mass: 1, tension: 420, friction: 26 },
   },
   leave: {
     transform: 'scale3d(0.3, 1, 1)',
     opacity: 0,
-    config: { mass: 1, tension: 220, friction: 26, clamp: true },
+    config: { mass: 1, tension: 440, friction: 26, clamp: true },
   },
 };
 
@@ -97,12 +97,12 @@ export const doorY = {
   enter: {
     transform: 'scale3d(1, 1, 1)',
     opacity: 1,
-    config: { mass: 1, tension: 210, friction: 26 },
+    config: { mass: 1, tension: 420, friction: 26 },
   },
   leave: {
     transform: 'scale3d(1, 0, 0.1)',
     opacity: 0,
-    config: { mass: 1, tension: 240, friction: 26, clamp: true },
+    config: { mass: 1, tension: 480, friction: 26, clamp: true },
   },
 };
 

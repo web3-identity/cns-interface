@@ -32,6 +32,10 @@ button.absolute {
 }
 
 @media screen and (max-width: 767px) {
+  .button--mini {
+    @apply h-[32px];
+  }
+
   .button--normal {
     @apply px-18px text-16px h-40px leading-40px rounded-8px;
   }

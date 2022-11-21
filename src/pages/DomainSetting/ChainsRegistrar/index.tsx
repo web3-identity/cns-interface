@@ -54,7 +54,7 @@ const ErrorBoundary: React.FC<{ domain: string }> = ({ domain }) => {
   return (
     <div className="relative mt-16px gap-16px p-16px h-100px rounded-16px bg-purple-dark-active dropdown-shadow">
       <div className="flex items-center w-full mb-4px h-28px">
-        <span className="mr-auto text-14px text-purple-normal">地址解析</span>
+        <span className="mr-auto text-14px text-grey-normal">地址解析</span>
       </div>
       <div className='flex justify-center items-center gap-12px'>
         <span className="text-center text-14px text-grey-normal">数据拉取失败</span>
@@ -71,7 +71,7 @@ const ChainsLoading: React.FC = () => {
     <Delay>
       <div className="relative mt-16px gap-16px p-16px h-100px rounded-16px bg-purple-dark-active dropdown-shadow">
         <div className="flex items-center w-full mb-4px h-28px">
-          <span className="mr-auto text-14px text-purple-normal">地址解析</span>
+          <span className="mr-auto text-14px text-grey-normal">地址解析</span>
         </div>
         <Spin className="mx-auto text-32px" />
       </div>
@@ -98,7 +98,7 @@ const Operation: React.FC<{
 
   return (
     <div className="flex items-center w-full mb-6px h-28px">
-      <span className="mr-auto text-14px text-purple-normal">地址解析</span>
+      <span className="mr-auto text-14px text-grey-normal">地址解析</span>
 
       {isOwner && inEdit && (
         <>
@@ -115,6 +115,7 @@ const Operation: React.FC<{
       {isOwner && registrableChains?.length > 0 && (
         <Button
           size="mini"
+          className=''
           onClick={() =>
             showAddNewResolutionModal({
               domain,

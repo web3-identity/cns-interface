@@ -5,18 +5,21 @@ import Button from '@components/Button';
 import Avatar from '@components/Avatar';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
+import CfxAddress from '@modules/CfxAddress';
 import { useAccount } from '@service/account';
 import { useDomainReverseRegistrar, useRefreshDomainReverseRegistrar } from '@service/domainReverseRegistrar';
 import { useMyDomains } from '@service/myDomains';
-import { shortenAddress } from '@utils/addressUtils';
-import isMobile from '@utils/isMobie';
+import useIsLtMd from '@hooks/useIsLtMd';
 import showSetReverseRegistrarModal from './SetReverseRegistrarModal';
 
 const CurrentAccount: React.FC = () => {
   const refreshDomainReverseRegistrar = useRefreshDomainReverseRegistrar();
 
   return (
-    <BorderBox variant="gradient" className="mb-16px flex justify-between h-100px px-24px rounded-18px lt-md:p-16px lt-md:flex-col lt-md:h-auto">
+    <BorderBox
+      variant="gradient"
+      className="relative mb-16px flex lt-md:flex-col justify-between md:items-center h-100px lt-md:h-126px px-24px lt-md:p-16px rounded-18px lt-md:rounded-12px"
+    >
       <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} />} onReset={refreshDomainReverseRegistrar}>
         <Suspense fallback={<AccountLoading />}>
           <AccountContent />
@@ -29,42 +32,41 @@ const CurrentAccount: React.FC = () => {
 export default CurrentAccount;
 
 const AccountContent: React.FC<{}> = ({}) => {
+  const isLtMd = useIsLtMd();
   const account = useAccount()!;
   const myDomains = useMyDomains();
   const domainReverseRegistrar = useDomainReverseRegistrar();
 
   return (
     <>
-      <div className="flex flex-col justify-between pt-14px pb-22px text-22px font-bold text-grey-normal lt-md:py-0px lt-md:text-16px lt-md:leading-18px">
-        <span className="text-grey-normal-hover text-opacity-50 text-14px leading-18px lt-md:text-12px lt-md:leading-14px">当前账户</span>
+      <div className="text-22px lt-md:text-16px text-grey-normal font-bold">
+        <div className="mb-12px lt-md:mb-2px text-grey-normal-hover text-opacity-50 text-14px lt-md:text-12px font-normal">当前账户</div>
         {!domainReverseRegistrar ? (
-          <div className="flex gap-16px items-center lt-md:gap-4px lt-md:mt-2px">
-            {account && <Avatar address={account} size={30} />}
-            <span>{shortenAddress(account)}</span>
+          <div className="flex items-center gap-16px lt-md:gap-4px lt-md:mt-2px">
+            {account && <Avatar address={account} size={isLtMd ? 24 : 32} />}
+            <CfxAddress address={account} />
           </div>
         ) : (
-          <span className="lt-md:inline-block lt-md:mt-4px">{`${domainReverseRegistrar}.web3`}</span>
+          <div className="lt-md:inline-block lt-md:mt-4px">{`${domainReverseRegistrar}.web3`}</div>
         )}
       </div>
-      <div className="flex items-center lt-md:mt-16px">
-        <Button fullWidth={isMobile()} onClick={() => showSetReverseRegistrarModal({ account, myDomains, domainReverseRegistrar })} disabled={!myDomains?.length}>
-          设置.web3域名
-        </Button>
-      </div>
+      <Button className="lt-md:w-full" onClick={() => showSetReverseRegistrarModal({ account, myDomains, domainReverseRegistrar })} disabled={!myDomains?.length}>
+        设置.web3域名
+      </Button>
     </>
   );
 };
 
 const AccountLoading: React.FC = () => {
-  return  (
+  return (
     <Delay>
-      <Spin className="text-36px self-center mx-auto" />
+      <Spin className="!absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-36px" />
     </Delay>
   );
-}
+};
 
 const ErrorBoundaryFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => (
-  <div className="inline-block self-center mx-auto">
+  <div className="inline-block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ">
     <p className="mb-6px text-center text-error-normal text-14px">网络错误</p>
     <Button size="small" onClick={resetErrorBoundary}>
       重试

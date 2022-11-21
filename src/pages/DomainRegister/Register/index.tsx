@@ -13,10 +13,10 @@ const Register: React.FC<{ domain: string; registerStep: RegisterStep }> = ({ do
 
   if (!account) return <Step1 domain={domain} />;
   if (registerStep === RegisterStep.WaitCommit) {
-    if (commitInfo) return <WaitConfirm type="waitCommitConfirm" />;
+    if (commitInfo) return <WaitConfirm type="waitCommitConfirm" domain={domain} />;
     else return <Step1 domain={domain} />;
   } else if (registerStep === RegisterStep.WaitPay) {
-    if (isWaitPayConfirm) return <WaitConfirm type="waitPayConfirm" />;
+    if (isWaitPayConfirm) return <WaitConfirm type="waitPayConfirm" domain={domain} />;
     else return <Step2 domain={domain} commitInfo={commitInfo} />;
   } else {
     return <Step3 domain={domain} />;

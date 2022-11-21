@@ -4,12 +4,12 @@ import CustomScrollbar from 'custom-react-scrollbar';
 import { escapeRegExp } from 'lodash-es';
 import Button from '@components/Button';
 import Dropdown from '@components/Dropdown';
-import { showModal, showDrawer, hideAllModal } from '@components/showPopup';
+import CfxAddress from '@modules/CfxAddress';
+import { showModal, showDrawer, hideAll } from '@components/showPopup';
 import Input from '@components/Input';
 import usePressEsc from '@hooks/usePressEsc';
 import useInTranscation from '@hooks/useInTranscation';
 import { setDomainReverseRegistrar as _setDomainReverseRegistrar, useRefreshDomainReverseRegistrar } from '@service/domainReverseRegistrar';
-import { shortenAddress } from '@utils/addressUtils';
 import isMobile from '@utils/isMobie';
 
 interface Props {
@@ -66,10 +66,15 @@ const ModalContent: React.FC<Props> = ({ account, domainReverseRegistrar, myDoma
 
   return (
     <>
-      <p className="mt-24px mb-8px leading-18px text-14px text-grey-normal-hover text-opacity-50">当前账户地址</p>
-      <p className="leading-18px text-14px text-grey-normal">{!isMobile() ? account : shortenAddress(account)}</p>
+      <p className="mt-24px lt-md:mt-16px mb-8px leading-18px lt-md:leading-14px text-14px lt-md:text-12px text-grey-normal-hover text-opacity-50">当前账户地址</p>
+      <CfxAddress
+        className={cx('leading-18px text-grey-normal whitespace-normal break-words', isMobile() ? 'text-16px' : 'text-14px')}
+        address={account}
+        ellipsis={isMobile()}
+        useTooltip={false}
+      />
 
-      <p className="mt-24px mb-8px leading-18px text-14px text-grey-normal-hover text-opacity-50">选择.Web3域名</p>
+      <p className="mt-24px lt-md:mt-16px mb-8px leading-18px lt-md:leading-14px text-14px lt-md:text-12px text-grey-normal-hover text-opacity-50">选择.Web3域名</p>
       <Dropdown
         className="border-2px border-purple-normal rounded-8px bg-purple-dark-active overflow-hidden dropdown-shadow"
         visible={visible}
@@ -86,9 +91,10 @@ const ModalContent: React.FC<Props> = ({ account, domainReverseRegistrar, myDoma
         >
           <Input
             value={inputValue}
+            size={isMobile() ? 'small' : 'normal'}
             onChange={handleInputChange}
-            className="!pl-16px"
-            placeholder={(choseEmpty || canOnlySetEmpty) ? '设置为空' : '请选择.web3域名'}
+            className={cx(isMobile() ? '!pl-12px' : '!pl-16px')}
+            placeholder={choseEmpty || canOnlySetEmpty ? '设置为空' : '请选择.web3域名'}
             disabled={canOnlySetEmpty || inTranscation}
             onFocus={showDropdown}
           />
@@ -99,8 +105,8 @@ const ModalContent: React.FC<Props> = ({ account, domainReverseRegistrar, myDoma
         </div>
       </Dropdown>
 
-      <div className="mt-132px flex justify-center items-center gap-16px">
-        <Button variant="outlined" className="min-w-152px" onClick={hideAllModal} type="button" disabled={inTranscation}>
+      <div className="mt-132px lt-md:mt-118px flex justify-center items-center gap-16px">
+        <Button variant="outlined" className="min-w-152px" onClick={hideAll} type="button" disabled={inTranscation}>
           取消
         </Button>
         <Button

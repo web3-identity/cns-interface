@@ -3,7 +3,7 @@ import { fetchChain } from '@utils/fetch';
 import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
 import { getAccount, sendTransaction, useHexAccount } from '@service/account';
 import { ReverseRegistrar, PublicResolver } from '@contracts/index';
-import { hideAllModal } from '@components/showPopup';
+import { hideAll } from '@components/showPopup';
 
 export const setDomainReverseRegistrar = async ({ domain, refreshDomainReverseRegistrar }: { domain: string; refreshDomainReverseRegistrar: VoidFunction }) => {
   try {
@@ -17,7 +17,7 @@ export const setDomainReverseRegistrar = async ({ domain, refreshDomainReverseRe
     const [receiptPromise] = waitAsyncResult(() => isTransactionReceipt(txHash));
     await receiptPromise;
     refreshDomainReverseRegistrar?.();
-    hideAllModal();
+    hideAll();
   } catch (err) {
     console.error('err', err);
   }

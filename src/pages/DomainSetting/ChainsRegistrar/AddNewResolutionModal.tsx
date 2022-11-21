@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import CustomScrollbar from 'custom-react-scrollbar';
 import Button from '@components/Button';
 import Dropdown from '@components/Dropdown';
-import { showModal, showDrawer, hideAllModal } from '@components/showPopup';
+import { showModal, showDrawer, hideAll } from '@components/showPopup';
 import Input from '@components/Input';
 import usePressEsc from '@hooks/usePressEsc';
 import isMobile from '@utils/isMobie';
@@ -52,7 +52,7 @@ const ModalContent: React.FC<Props> = ({ setEditAddress, registrableChains }) =>
       });
       setValue('address', '');
       if (selectableChains.length === 0) {
-        hideAllModal();
+        hideAll();
       } else {
         setSelectedChain(selectableChains[0]);
       }
@@ -98,7 +98,7 @@ const ModalContent: React.FC<Props> = ({ setEditAddress, registrableChains }) =>
       </div>
 
       <div className="mt-140px flex justify-center items-center gap-16px">
-        <Button variant="outlined" className="min-w-152px" onClick={hideAllModal} type="button">
+        <Button variant="outlined" className="min-w-152px" onClick={hideAll} type="button">
           返回
         </Button>
         <Button className="min-w-152px">暂存</Button>

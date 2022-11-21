@@ -10,8 +10,9 @@ import LocalStorage from 'localstorage-enhance';
 import waitAsyncResult, { getAsyncResult } from '@utils/waitAsyncResult';
 import { clearCommitInfo, useCommitInfo } from './commit';
 import { setWaitPayConfirm, getWaitPayConfirm, getOrderStatus, useRefreshMakeOrder } from './pay';
-import { useRefreshDomainOwner } from '@service/domainInfo/owner';
+import { useRefreshDomainOwner, getDomainOwner } from '@service/domainInfo/owner';
 import { useRefreshMyDomains } from '@service/myDomains';
+import { isPromise } from '@utils/is';
 export * from './commit';
 export * from './pay';
 
@@ -48,6 +49,9 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
 
     const startFetch = async () => {
       try {
+        const pendingGetOwner = getDomainOwner(domain);
+        const hasOwner = await (isPromise<string | null>(pendingGetOwner) ? pendingGetOwner : fetchDomainOwner(domain));
+        if (hasOwner) return;
         const [ownerPromise, _stop] = waitAsyncResult(() => fetchDomainOwner(domain), 0);
         stop = _stop;
         const owner = await ownerPromise;
@@ -68,7 +72,6 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
     };
   }, [domain]);
 
-
   const payMethod = usePayMethod();
   const commitInfo = useCommitInfo(domain);
   useEffect(() => {
@@ -80,7 +83,7 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
       (orderStatus: string) => {
         const isWaitPayConfirm = getWaitPayConfirm(domain);
         if (preOrderStatus === orderStatus) {
-          return ;
+          return;
         }
         preOrderStatus = orderStatus;
         if (orderStatus === 'Paid') {

@@ -21,7 +21,7 @@
 }
 
 @media screen and (max-width: 767px) {
-  .input-wrapper.input--medium {
+  .input-wrapper.input--normal {
     @apply text-16px;
   }
 

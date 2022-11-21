@@ -7,10 +7,12 @@ import Delay from '@components/Delay';
 import Spin from '@components/Spin';
 import { ReactComponent as SuccessIcon } from '@assets/icons/Success.svg';
 import { useDomainExpire, useRefreshDomainExpire } from '@service/domainInfo';
+import { usePrefetchSettingPage } from '@service/prefetch';
 import { RegisterBox } from '@pages/DomainRegister';
 
 const Step3: React.FC<{ domain: string }> = ({ domain }) => {
   const refreshDomainExpire = useRefreshDomainExpire(domain);
+  const prefetchSettingPage = usePrefetchSettingPage(domain);
 
   return (
     <RegisterBox title="注册完成" className="flex flex-col text-14px text-grey-normal-hover text-opacity-50 lt-md:text-12px lt-md:leading-14px">
@@ -21,16 +23,16 @@ const Step3: React.FC<{ domain: string }> = ({ domain }) => {
             <Domain className="ml-24px text-28px text-grey-normal font-bold lt-md:text-16px lt-md:ml-8px md:translate-y-1px" domain={domain} />
           </p>
 
-          <p className="mt-20px flex items-baseline h-32px lt-md:h-16px">
+          <div className="mt-20px flex items-baseline h-32px lt-md:h-16px">
             <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} />} onReset={refreshDomainExpire}>
               有效期至
-              <span className="relative inline-flex items-baseline gap-3px ml-24px text-28px text-grey-normal font-bold lt-md:text-16px lt-md:ml-8px md:translate-y-1px">
+              <div className="relative inline-flex items-baseline gap-3px ml-24px text-28px text-grey-normal font-bold lt-md:text-16px lt-md:ml-8px md:translate-y-1px">
                 <Suspense fallback={<ExpireTimeLoading />}>
                   <ExpireTime domain={domain} />
                 </Suspense>
-              </span>
+              </div>
             </ErrorBoundary>
-          </p>
+          </div>
         </div>
 
         <div className="text-right text-grey-normal lt-md:self-center">
@@ -39,7 +41,7 @@ const Step3: React.FC<{ domain: string }> = ({ domain }) => {
         </div>
       </div>
 
-      <Link to={`/setting/${domain}`} className="mx-auto no-underline md:-translate-x-13px lt-md:mt-auto lt-md:w-full">
+      <Link to={`/setting/${domain}`} className="mx-auto no-underline md:-translate-x-13px lt-md:mt-auto lt-md:w-full" onMouseEnter={prefetchSettingPage}>
         <Button className="w-152px lt-md:w-full">管理域名</Button>
       </Link>
     </RegisterBox>

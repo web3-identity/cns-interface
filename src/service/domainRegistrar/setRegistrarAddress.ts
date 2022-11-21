@@ -2,7 +2,7 @@ import { getAccount, sendTransaction } from '@service/account';
 import { getNameHash } from '@utils/domainHelper';
 import { PublicResolver } from '@contracts/index';
 import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
-import { hideAllModal } from '@components/showPopup';
+import { hideAll } from '@components/showPopup';
 import { chainsType, chainsEncoder, setDomainRegistrarStatusUpdate, getDomainRegistrar, type Chain } from './';
 
 const createZeroAddress = (chain: Chain) => chain === 'Ethereum/Conflux eSpace' ? '0x0000000000000000000000000000000000000000' : '0x';
@@ -21,7 +21,7 @@ export const setMultiRegistrarAddress = async ({ domain, data }: { domain: strin
 
     const [receiptPromise] = waitAsyncResult(() => isTransactionReceipt(txHash));
     await receiptPromise;
-    hideAllModal();
+    hideAll();
     getDomainRegistrar(domain, true);
   } catch (_) {
   }

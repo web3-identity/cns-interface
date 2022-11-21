@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo, useEffect } from 'react';
+import cx from 'clsx';
 import { debounce } from 'lodash-es';
 import Button from '@components/Button';
-import { showModal, showDrawer, hideAllModal } from '@components/showPopup';
+import { showModal, showDrawer, hideAll } from '@components/showPopup';
 import Input from '@components/Input';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
@@ -105,10 +106,12 @@ const ModalContent: React.FC<Props> = ({ domain }) => {
 
   return (
     <>
-      <p className="mt-24px mb-16px text-grey-normal-hover text-opacity-50">转让地址</p>
+      <p className="mt-24px lt-md:mt-16px mb-16px text-grey-normal-hover text-opacity-50">转让地址</p>
       <div className="relative">
         <Input
           id="new-domain-owner"
+          size={isMobile() ? 'small' : 'normal'}
+          className={cx(isMobile() ? '!pl-12px' : '!pl-16px')}
           wrapperClassName="border-2px border-purple-normal rounded-8px"
           placeholder="输入 .Web3 名称 或者 Conflux Core 地址"
           value={inputValue}
@@ -117,7 +120,7 @@ const ModalContent: React.FC<Props> = ({ domain }) => {
           disabled={inTranscation}
         />
         {validateStatus && (
-          <div className="absolute left-11px top-[calc(100%+.5em)] flex items-center h-20px text-12px text-error-normal">
+          <div className="absolute left-7px top-[calc(100%+.5em)] flex items-center h-20px text-12px text-error-normal">
             {validateStatus === 'error-format' && '地址格式错误'}
             {validateStatus === 'error-required' && '请输入转让地址'}
             {validateStatus === 'error-registrar' && '该域名未设置 Conflux Core 解析地址'}
@@ -129,8 +132,8 @@ const ModalContent: React.FC<Props> = ({ domain }) => {
           <DomainAddress domain={inputDomain} setValidateStatus={setValidateStatus} setTransferAddress={setTransferAddress} validateSelf={validateSelf} />
         )}
       </div>
-      <div className="mt-130px mb-72px flex justify-center items-center gap-16px">
-        <Button variant="outlined" className="min-w-152px" onClick={hideAllModal} type="button" disabled={inTranscation}>
+      <div className="mt-130px lt-md:mt-162px md:mb-72px flex justify-center items-center gap-16px">
+        <Button variant="outlined" className="min-w-152px" onClick={hideAll} type="button" disabled={inTranscation}>
           取消
         </Button>
         <Button className="min-w-152px" loading={inTranscation} onClick={handleClickTransfer}>
@@ -175,10 +178,10 @@ const DomainAddress: React.FC<Props & { setValidateStatus: Function; setTransfer
   }, [status, cfxRegistrar]);
 
   return (
-    <div className="absolute left-11px top-[calc(100%+.5em)] h-20px flex items-center text-12px text-grey-normal">
+    <div className="absolute left-7px top-[calc(100%+.5em)] h-20px flex items-center text-12px text-grey-normal">
       {status === 'done' && cfxRegistrar?.address && (
         <>
-          <span className="mr-6px">域名解析:</span>
+          <span className="mr-6px whitespace-nowrap">域名解析:</span>
           {cfxRegistrar.address}
         </>
       )}
@@ -190,7 +193,7 @@ const DomainAddress: React.FC<Props & { setValidateStatus: Function; setTransfer
       {(status === 'init' || status === 'update') && (
         <Delay delay={100}>
           <span className="mr-6px">域名解析:</span>
-          <Spin className="text-16px" />
+          <Spin className="text-16px -translate-y-1px" />
         </Delay>
       )}
     </div>

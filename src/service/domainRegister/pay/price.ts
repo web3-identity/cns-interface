@@ -1,4 +1,4 @@
-import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
+import { selectorFamily, useRecoilValue_TRANSITION_SUPPORT_UNSTABLE, useRecoilRefresher_UNSTABLE } from 'recoil';
 import { getRecoil } from 'recoil-nexus';
 import { Unit } from '@cfxjs/use-wallet-react/conflux/Fluent';
 import { fetchChain } from '@utils/fetch';
@@ -39,5 +39,5 @@ const payPrice = selectorFamily<Unit, string>({
 });
 
 export const getPayPrice = (domain: string) => getRecoil(payPrice(domain));
-export const usePayPrice = (domain: string) => useRecoilValue(payPrice(domain));
+export const usePayPrice = (domain: string) => useRecoilValue_TRANSITION_SUPPORT_UNSTABLE(payPrice(domain));
 export const useRefreshPayPrice = (domain: string) => useRecoilRefresher_UNSTABLE(payPrice(domain));
