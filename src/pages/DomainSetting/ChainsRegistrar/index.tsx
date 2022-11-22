@@ -228,7 +228,7 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
             {status === 'error' && (
               <>
                 <p className="mt-12px mb-12px text-center text-14px text-error-normal">数据更新失败</p>
-                <Button size="mini" className="flex mx-auto mb-12px" onClick={() => getDomainRegistrar(domain)}>
+                <Button size="mini" className="mx-auto mb-12px" onClick={() => getDomainRegistrar(domain)}>
                   重试
                 </Button>
               </>

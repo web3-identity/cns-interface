@@ -10,7 +10,7 @@ import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
 import Domain from '@modules/Domain';
-import { useMyDomains } from '@service/myDomains';
+import { useMyDomains, useRefreshMyDomains } from '@service/myDomains';
 import { useDomainExpire, useRefreshDomainExpire } from '@service/domainInfo';
 import { usePrefetchSettingPage } from '@service/prefetch';
 import useMainScroller from '@hooks/useMainScroller';
@@ -18,10 +18,14 @@ import NoDomains from '@assets/images/NoDomains.png';
 
 const DomainList: React.FC<{}> = ({}) => {
   const mainScroller = useMainScroller();
+  const refreshMyDomains = useRefreshMyDomains();
+
   return (
     <>
       <div className="mb-26px text-grey-normal text-22px leading-26px lt-md:text-16px lt-md:leading-18px">注册人</div>
-      <Suspense fallback={<ListLoading />}>{mainScroller && <MyDomains mainScroller={mainScroller} />}</Suspense>
+      <ErrorBoundary fallbackRender={(fallbackProps) => <ListErrorBoundaryFallback {...fallbackProps} />} onReset={refreshMyDomains}>
+        <Suspense fallback={<ListLoading />}>{mainScroller && <MyDomains mainScroller={mainScroller} />}</Suspense>
+      </ErrorBoundary>
     </>
   );
 };
@@ -32,7 +36,7 @@ const MyDomains: React.FC<{ mainScroller: HTMLDivElement }> = ({ mainScroller })
   const myDomains = useMyDomains();
   const renderRow = useCallback((props: ListRowProps) => DomainItem({ ...props, myDomains }), [myDomains]);
   const hasDomain = !!myDomains?.length;
-  
+
   return (
     <div className="relative flex flex-col rounded-24px bg-purple-dark-active dropdown-shadow lt-md:rounded-none lt-md:bg-transparent">
       {!hasDomain && (
@@ -106,12 +110,7 @@ const GotoDomainSettingButton = memo(({ domain }: { domain: string }) => {
   const prefetchSettingPage = usePrefetchSettingPage(domain);
 
   return (
-    <Link
-      to={`/setting/${domain}`}
-      className="no-underline lt-md:display-none"
-      onMouseEnter={prefetchSettingPage}
-      draggable="false"
-    >
+    <Link to={`/setting/${domain}`} className="no-underline lt-md:display-none" onMouseEnter={prefetchSettingPage} draggable="false">
       <Button>域名管理</Button>
     </Link>
   );
@@ -126,6 +125,15 @@ const ListLoading: React.FC = () => {
     </Delay>
   );
 };
+
+const ListErrorBoundaryFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => (
+  <div className="relative flex flex-col justify-center items-center h-340px rounded-24px bg-purple-dark-active dropdown-shadow lt-md:rounded-none lt-md:bg-transparent">
+    <p className="-mt-16px mb-12px text-center text-14px text-error-normal">获取列表失败</p>
+    <Button size="small" className="mx-auto mb-12px" onClick={resetErrorBoundary}>
+      重试
+    </Button>
+  </div>
+);
 
 const DomainExpire: React.FC<{ domain: string }> = ({ domain }) => {
   const refreshDomainExpire = useRefreshDomainExpire(domain);

@@ -1,5 +1,6 @@
 import React, { memo, useMemo, Suspense, type ComponentProps } from 'react';
 import cx from 'clsx';
+import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import useClipboard from 'react-use-clipboard';
 import Button from '@components/Button';
 import Avatar from '@components/Avatar';
@@ -8,7 +9,7 @@ import Delay from '@components/Delay';
 import Domain from '@modules/Domain';
 import ToolTip from '@components/Tooltip';
 import CfxAddress from '@modules/CfxAddress';
-import { useIsOwner, useDomainOwner, useDomainExpire } from '@service/domainInfo';
+import { useIsOwner, useDomainOwner, useDomainExpire, useRefreshDomainOwner, useRefreshDomainExpire } from '@service/domainInfo';
 import useIsLtMd from '@hooks/useIsLtMd';
 import showDomainTransferModal from './DomainTransferModal';
 import './index.css';
@@ -16,6 +17,8 @@ import './index.css';
 const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
   const isLtMd = useIsLtMd();
   const isOwner = useIsOwner(domain);
+  const refreshDomainOwner = useRefreshDomainOwner(domain);
+  const refreshDomainExpire = useRefreshDomainExpire(domain);
 
   return (
     <div className="flex lt-md:flex-col gap-16px p-16px rounded-16px bg-purple-dark-active dropdown-shadow">
@@ -27,9 +30,11 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
       <div className="flex-1 flex flex-col justify-end">
         <div className="relative flex items-center h-28px lt-md:h-40px">
           <span className="text-14px lt-md:text-12px text-grey-normal-hover text-opacity-50 lt-md:self-start">注册人</span>
-          <Suspense fallback={<Loading />}>
-            <DomainOwner domain={domain} />
-          </Suspense>
+          <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback type="owner" {...fallbackProps} />} onReset={refreshDomainOwner}>
+            <Suspense fallback={<Loading />}>
+              <DomainOwner domain={domain} />
+            </Suspense>
+          </ErrorBoundary>
 
           {isOwner && (
             <Button
@@ -46,9 +51,11 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
 
         <div className="mt-8px lt-md:mt-16px relative flex items-center h-28px lt-md:h-40px">
           <span className="text-14px lt-md:text-12px text-grey-normal-hover text-opacity-50 lt-md:self-start">到期时间</span>
-          <Suspense fallback={<Loading />}>
-            <DomainExpire domain={domain} />
-          </Suspense>
+          <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback type="expire" {...fallbackProps} />} onReset={refreshDomainExpire}>
+            <Suspense fallback={<Loading />}>
+              <DomainExpire domain={domain} />
+            </Suspense>
+          </ErrorBoundary>
 
           <Button className="ml-auto lt-md:self-end" size="mini">
             续费
@@ -65,6 +72,12 @@ const Loading = () => (
   <Delay mode="opacity">
     <Spin className="!lt-md:absolute left-16px text-18px lt-md:left-0 lt-md:bottom-0" />
   </Delay>
+);
+
+const ErrorBoundaryFallback: React.FC<FallbackProps & { type: 'owner' | 'expire' }> = ({ type, resetErrorBoundary }) => (
+  <span className="absolute left-66px lt-md:left-0 lt-md:bottom-0px text-14px lt-md:text-16px text-error-normal cursor-pointer select-none group" onClick={resetErrorBoundary}>
+    获取{type === 'owner' ? '注册人' : '到期时间'}失败，<span className="underline group-hover:underline-none">点此重试</span>
+  </span>
 );
 
 const DomainOwner: React.FC<{ domain: string }> = ({ domain }) => {
