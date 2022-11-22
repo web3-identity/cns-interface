@@ -3,10 +3,11 @@ import { fetchChain } from '@utils/fetch';
 import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
 import { getAccount, sendTransaction, useHexAccount } from '@service/account';
 import { ReverseRegistrar, PublicResolver } from '@contracts/index';
-import { hideAll } from '@components/showPopup';
+import { recordToHidePopup } from '@components/showPopup';
 
 export const setDomainReverseRegistrar = async ({ domain, refreshDomainReverseRegistrar }: { domain: string; refreshDomainReverseRegistrar: VoidFunction }) => {
   try {
+    const hidePopup = recordToHidePopup();
     const account = getAccount();
     const txHash = await sendTransaction({
       data: ReverseRegistrar.func.encodeFunctionData('setName', [domain]),
@@ -17,7 +18,7 @@ export const setDomainReverseRegistrar = async ({ domain, refreshDomainReverseRe
     const [receiptPromise] = waitAsyncResult(() => isTransactionReceipt(txHash));
     await receiptPromise;
     refreshDomainReverseRegistrar?.();
-    hideAll();
+    hidePopup();
   } catch (err) {
     console.error('err', err);
   }

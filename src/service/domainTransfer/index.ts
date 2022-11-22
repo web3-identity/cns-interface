@@ -3,10 +3,11 @@ import { getNameHash } from '@utils/domainHelper';
 import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
 import { validateCfxAddress, convertCfxToHex } from '@utils/addressUtils';
 import { NameWrapper } from '@contracts/index';
-import { hideAll } from '@components/showPopup';
+import { recordToHidePopup } from '@components/showPopup';
 
 export const domainTransfer = async ({ domain, transferAddress, refresh }: { domain: string; transferAddress: string; refresh: VoidFunction }) => {
   try {
+    const hidePopup = recordToHidePopup();
     if (validateCfxAddress(transferAddress)) {
       transferAddress = convertCfxToHex(transferAddress);
     }
@@ -23,7 +24,7 @@ export const domainTransfer = async ({ domain, transferAddress, refresh }: { dom
     const [receiptPromise] = waitAsyncResult(() => isTransactionReceipt(txHash));
     await receiptPromise;
     refresh?.();
-    hideAll();
+    hidePopup();
   } catch (_) {
     console.log('domainTranster err', _);
   }

@@ -62,9 +62,9 @@ const ModalContent: React.FC<Props> = ({ setEditAddress, registrableChains }) =>
 
   return (
     <form onSubmit={handleSetRegistrarAddress}>
-      <div className="pt-24px grid grid-rows-[18px_50px] grid-cols-[38.4%_61.6%] gap-y-16px">
-        <span className="text-14px text-grey-normal-hover text-opacity-50">选择公链</span>
-        <span className="text-14px text-grey-normal-hover text-opacity-50">填写地址</span>
+      <div className="pt-24px lt-md:pt-16px md:grid md:grid-rows-[18px_50px] md:grid-cols-[38.4%_61.6%] md:gap-y-16px">
+        <p className="text-14px text-grey-normal-hover text-opacity-50 lt-md:mb-8px lt-md:text-12px">选择公链</p>
+        <p className="text-14px text-grey-normal-hover text-opacity-50 lt-md:display-none">填写地址</p>
 
         <Dropdown
           className="border-2px border-purple-normal rounded-8px bg-purple-dark-active overflow-hidden dropdown-shadow"
@@ -75,19 +75,21 @@ const ModalContent: React.FC<Props> = ({ setEditAddress, registrableChains }) =>
         >
           <div
             className={cx(
-              'flex items-center pl-8px pr-12px h-full rounded-l-10px border-2px border-purple-normal text-14px text-grey-normal',
+              'flex items-center pl-8px pr-12px h-full lt-md:h-32px md:rounded-l-10px lt-md:rounded-6px border-2px border-purple-normal text-14px text-grey-normal whitespace-nowrap',
               selectableChains?.length >= 1 && 'cursor-pointer'
             )}
             onClick={triggerDropdown}
           >
             {selectedChain}
-            {selectableChains?.length >= 1 && <span className={cx('ml-auto i-ant-design:caret-down-outlined text-16px transition-transform', visible && 'rotate-180')} />}
+            {selectableChains?.length >= 1 && <span className={cx('ml-auto i-ant-design:caret-down-outlined text-16px transition-transform flex-shrink-0', visible && 'rotate-180')} />}
           </div>
         </Dropdown>
 
-        <div className="relative flex items-center h-full rounded-r-10px border-2px !border-l-none border-purple-normal text-14px text-grey-normal">
+        <p className="text-12px text-grey-normal-hover text-opacity-50 mt-16px mb-8px md:display-none">填写地址</p>
+        <div className="relative flex items-center h-full lt-md:h-32px md:rounded-r-10px lt-md:rounded-6px border-2px md:!border-l-none border-purple-normal text-14px text-grey-normal">
           <Input
             id="register-address"
+            className="!lt-md:pl-8px"
             size="small"
             placeholder="请输入地址"
             autoFocus
@@ -97,7 +99,7 @@ const ModalContent: React.FC<Props> = ({ setEditAddress, registrableChains }) =>
         </div>
       </div>
 
-      <div className="mt-140px flex justify-center items-center gap-16px">
+      <div className="mt-140px lt-md:mt-108px flex justify-center items-center gap-16px">
         <Button variant="outlined" className="min-w-152px" onClick={hideAll} type="button">
           返回
         </Button>
@@ -111,7 +113,11 @@ const ChainSelect: React.FC<{ selectableChains: Array<string>; selectChain: Func
   return (
     <CustomScrollbar className="max-h-264px">
       {selectableChains.map((chain) => (
-        <div key={chain} className="pl-8px h-48px leading-48px hover:bg-[#26233E] text-14px text-grey-normal cursor-pointer transition-colors" onClick={() => selectChain(chain)}>
+        <div
+          key={chain}
+          className="pl-8px h-48px leading-48px hover:bg-[#26233E] text-14px text-grey-normal cursor-pointer transition-colors whitespace-nowrap"
+          onClick={() => selectChain(chain)}
+        >
           {chain}
         </div>
       ))}

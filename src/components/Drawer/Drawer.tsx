@@ -1,12 +1,13 @@
 import React, { useState, useCallback, useImperativeHandle, forwardRef } from 'react';
 import { useDrag } from '@use-gesture/react';
 import { a, useSpring, config } from '@react-spring/web';
+import { uniqueId } from 'lodash-es';
 import Mask from '@components/Mask';
 import renderReactNode from '@utils/renderReactNode';
 import usePressEsc from '@hooks/usePressEsc';
 
 export interface DrawerMethod {
-  show: (Content: React.ReactNode) => void;
+  show: (Content: React.ReactNode) => string;
   hide: VoidFunction;
 }
 
@@ -18,12 +19,14 @@ const Drawer = forwardRef<DrawerMethod>((_, ref) => {
   const [{ y }, api] = useSpring(() => ({ y: height }));
 
   const show = useCallback((Content: React.ReactNode, params?: { canceled: boolean }) => {
+    const key = uniqueId('drawer');
     const { canceled } = params || {};
     api.start({ y: 0, immediate: false, config: canceled ? config.wobbly : config.stiff });
     setModalOpen(true);
     if (Content) {
       setContent(Content);
     }
+    return key;
   }, []);
 
   const hide = useCallback((velocity = 0) => {
@@ -45,7 +48,7 @@ const Drawer = forwardRef<DrawerMethod>((_, ref) => {
 
   const display = y.to((py) => (py < height ? 'block' : 'none'));
 
-  usePressEsc(hide);
+  usePressEsc(history.back);
 
   useImperativeHandle(ref, () => ({
     show,
@@ -54,7 +57,7 @@ const Drawer = forwardRef<DrawerMethod>((_, ref) => {
 
   return (
     <>
-      <Mask open={maskOpen} onClick={() => hide()} />
+      <Mask open={maskOpen} onClick={() => history.back()} />
       <a.div
         className="fixed left-0 w-100vw h-[calc(100vh+100px)] rounded-t-24px bg-purple-dark-active touch-none z-8888 dropdown-shadow"
         {...bind()}

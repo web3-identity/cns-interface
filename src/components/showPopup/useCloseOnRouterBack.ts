@@ -5,11 +5,13 @@ const useCloseOnRouterBack = (closeModal: VoidFunction) => {
     history.replaceState(null, '', '');
     history.pushState(null, '', '#modal');
 
-    const handleCloseModal = () => closeModal?.();
+    const handleCloseModal = () => {
+      closeModal?.();
+    }
+
     window.addEventListener('popstate', handleCloseModal);
     return () => {
       window.removeEventListener('popstate', handleCloseModal);
-      history.replaceState(null, '', location.pathname);
     };
   }, []);
 };

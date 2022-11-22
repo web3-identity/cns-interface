@@ -11,6 +11,7 @@ import useClipboard from 'react-use-clipboard';
 import usePressEsc from '@hooks/usePressEsc';
 import useInTranscation from '@hooks/useInTranscation';
 import { useIsOwner } from '@service/domainInfo';
+import useIsLtMd from '@hooks/useIsLtMd';
 import {
   chainsEncoder,
   getDomainRegistrar,
@@ -44,6 +45,7 @@ const chainsIcon = {
 
 const ChainsRegistrar: React.FC<{ domain: string }> = ({ domain }) => {
   const { status, domainRegistrars } = useDomainRegistrar(domain);
+  
   if (status === 'init') return <ChainsLoading />;
   if (status === 'error' && !domainRegistrars) return <ErrorBoundary domain={domain} />;
   if (!domainRegistrars) return null;
@@ -56,8 +58,8 @@ const ErrorBoundary: React.FC<{ domain: string }> = ({ domain }) => {
       <div className="flex items-center w-full mb-4px h-28px">
         <span className="mr-auto text-14px text-grey-normal">地址解析</span>
       </div>
-      <div className='flex justify-center items-center gap-12px'>
-        <span className="text-center text-14px text-grey-normal">数据拉取失败</span>
+      <div className="flex justify-center items-center gap-12px">
+        <span className="text-center text-14px text-error-normal">数据拉取失败</span>
         <Button size="mini" onClick={() => getDomainRegistrar(domain)}>
           重试
         </Button>
@@ -94,28 +96,35 @@ const Operation: React.FC<{
   handleClickSave: VoidFunction;
   handleClickExit: VoidFunction;
 }> = memo(({ domain, isOwner, domainRegistrars, editDomainRegistrars, inEdit, status, inTranscation, setEditAddress, handleClickSave, handleClickExit }) => {
+  const isLtMd = useIsLtMd();
   const registrableChains = useMemo(() => editDomainRegistrars.filter(({ address }, index) => !address && !domainRegistrars?.[index]?.address), [editDomainRegistrars]);
 
   return (
-    <div className="flex items-center w-full mb-6px h-28px">
+    <div className="flex items-center w-full mb-6px lt-md:mb-10px h-28px ">
       <span className="mr-auto text-14px text-grey-normal">地址解析</span>
 
       {isOwner && inEdit && (
         <>
           {!inTranscation && status === 'done' && (
-            <Button variant="text" size="mini" onClick={handleClickExit}>
-              取消
+            <Button variant="text" size="mini" className="lt-md:w-24px lt-md:h-24px lt-md:px-0" onClick={handleClickExit}>
+              {!isLtMd ? '取消' : <span className="i-mdi:close text-20px" />}
             </Button>
           )}
-          <Button className="mx-8px" size="mini" onClick={handleClickSave} loading={inTranscation && status !== 'update'}>
-            {status !== 'update' ? '保存' : '更新中...'}
+          <Button className={cx("mx-8px lt-md:w-24px lt-md:h-24px lt-md:px-0", inTranscation && '!text-10px')} size="mini" onClick={handleClickSave} loading={inTranscation && status !== 'update'}>
+            {!isLtMd && (status !== 'update' ? '保存' : '更新中...')}
+            {isLtMd && (
+              <>
+                {status !== 'update' && <span className="i-mdi:success text-20px" />}
+                {status === 'update' && <span className="i-line-md:uploading-loop text-20px" />}
+              </>
+            )}
           </Button>
         </>
       )}
       {isOwner && registrableChains?.length > 0 && (
         <Button
           size="mini"
-          className=''
+          className="lt-md:w-24px lt-md:h-24px lt-md:px-0"
           onClick={() =>
             showAddNewResolutionModal({
               domain,
@@ -124,7 +133,7 @@ const Operation: React.FC<{
             })
           }
         >
-          添加
+          {!isLtMd ? '添加' : <span className="i-mdi:plus text-20px" />}
         </Button>
       )}
     </div>
@@ -214,11 +223,11 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
       </div>
       {(status === 'update' || status === 'error') && (
         <Delay>
-          <div className="!absolute left-0 top-0 w-full h-full flex flex-col justify-center items-center bg-purple-dark-active bg-opacity-75">
+          <div className="!absolute left-0 top-0 w-full h-full rounded-16px flex flex-col justify-center items-center bg-purple-dark-active bg-opacity-75">
             {status === 'update' && <Spin className="text-48px" />}
             {status === 'error' && (
               <>
-                <p className="mt-12px mb-12px text-center text-14px text-grey-normal">数据更新失败</p>
+                <p className="mt-12px mb-12px text-center text-14px text-error-normal">数据更新失败</p>
                 <Button size="mini" className="flex mx-auto mb-12px" onClick={() => getDomainRegistrar(domain)}>
                   重试
                 </Button>
@@ -237,36 +246,39 @@ const ChainItem: React.FC<DomainRegistrar & { disabled: boolean; editAddress: st
 
     if (!editAddress && !address) return null;
     return (
-      <BorderBox
-        variant={editAddress?.trim() !== address?.trim() ? 'gradient' : 'transparent'}
-        className="relative flex items-center w-fit px-6px h-30px rounded-20px bg-#26233E whitespace-nowrap border-1px"
-      >
-        <img src={chainsIcon[chain]} alt={`${chain} icon`} className="w-18px h-18px" />
-        <span className="ml-4px text-14px text-grey-normal font-bold">{chain}</span>
-        <div className="registrars-chain-input relative ml-8px pr-24px text-14px text-grey-normal-hover text-opacity-50">
-          <span className={cx('pointer-events-none', editAddress !== address && '!opacity-0 select-none')}>{address || editAddress}</span>
-          {editAddress !== address && <span className="absolute left-0 top-0 w-full h-full pointer-events-none select-none">{editAddress}</span>}
-          <Input
-            size="small"
-            wrapperClassName="absolute left-0 top-0 w-full h-full opacity-0 select-none"
-            className="!px-0 !h-full !text-grey-normal !text-opacity-50 font-normal"
-            value={editAddress}
-            onChange={(evt) => setEditAddress(chain, evt.target.value)}
-            disabled={disabled}
-          />
-        </div>
+      <>
+        <BorderBox
+          variant={editAddress?.trim() !== address?.trim() ? 'gradient' : 'transparent'}
+          className="relative flex items-center w-fit lt-md:w-full px-6px h-30px rounded-20px bg-#26233E whitespace-nowrap border-1px"
+        >
+          <img src={chainsIcon[chain]} alt={`${chain} icon`} className="w-18px h-18px lt-md:flex-shrink-0" />
+          <span className="ml-4px text-14px text-grey-normal font-bold lt-md:flex-shrink-0">{chain}</span>
+          <div className="registrars-chain-input relative ml-8px pr-24px text-14px text-grey-normal-hover text-opacity-50 lt-md:overflow-hidden lt-md:flex-grow-1 lt-md:flex-shrink-1">
+            <span className={cx('pointer-events-none', editAddress !== address && '!opacity-0 select-none')}>{address || editAddress}</span>
+            {editAddress !== address && <span className="absolute left-0 top-0 w-full h-full pointer-events-none select-none">{editAddress}</span>}
+            <Input
+              size="small"
+              wrapperClassName="absolute left-0 top-0 w-full h-full opacity-0 select-none"
+              className="!px-0 !h-full !text-grey-normal !text-opacity-50 font-normal"
+              value={editAddress}
+              onChange={(evt) => setEditAddress(chain, evt.target.value)}
+              disabled={disabled}
+            />
+          </div>
 
-        <ToolTip visible={isCopied} text="复制成功">
-          <span
-            className="flex justify-center items-center w-18px h-18px  rounded-full bg-purple-dark-active hover:bg-purple-dark-hover cursor-pointer transition-colors"
-            onClick={copy}
-          >
-            <span className="i-bxs:copy-alt text-12px text-#838290" />
-          </span>
-        </ToolTip>
+          <ToolTip visible={isCopied} text="复制成功">
+            <span
+              className="flex justify-center items-center w-18px h-18px  rounded-full bg-purple-dark-active hover:bg-purple-dark-hover cursor-pointer transition-colors"
+              onClick={copy}
+            >
+              <span className="i-bxs:copy-alt text-12px text-#838290" />
+            </span>
+          </ToolTip>
 
-        {hasError && <span className="absolute -right-8px translate-x-100% text-12px text-error-normal">地址格式错误</span>}
-      </BorderBox>
+          {hasError && <span className="absolute -right-8px translate-x-100% text-12px text-error-normal lt-md:display-none">地址格式错误</span>}
+        </BorderBox>
+        {hasError && <p className="-mt-2px text-12px text-error-normal md:display-none">地址格式错误</p>}
+      </>
     );
   }
 );

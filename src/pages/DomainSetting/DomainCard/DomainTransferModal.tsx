@@ -106,7 +106,7 @@ const ModalContent: React.FC<Props> = ({ domain }) => {
 
   return (
     <>
-      <p className="mt-24px lt-md:mt-16px mb-16px text-grey-normal-hover text-opacity-50">转让地址</p>
+      <p className="mt-24px lt-md:mt-16px mb-16px lt-md:mb-8px text-14px lt-md:text-12px text-grey-normal-hover text-opacity-50">转让地址</p>
       <div className="relative">
         <Input
           id="new-domain-owner"
@@ -132,7 +132,7 @@ const ModalContent: React.FC<Props> = ({ domain }) => {
           <DomainAddress domain={inputDomain} setValidateStatus={setValidateStatus} setTransferAddress={setTransferAddress} validateSelf={validateSelf} />
         )}
       </div>
-      <div className="mt-130px lt-md:mt-162px md:mb-72px flex justify-center items-center gap-16px">
+      <div className="mt-130px lt-md:mt-174px md:mb-72px flex justify-center items-center gap-16px">
         <Button variant="outlined" className="min-w-152px" onClick={hideAll} type="button" disabled={inTranscation}>
           取消
         </Button>
