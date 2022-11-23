@@ -5,7 +5,7 @@ import { persistAtom, persistAtomWithDefault } from '@utils/recoilUtils';
 import { useRefreshDomainStatus } from '@service/domainInfo';
 import { fetchDomainOwner } from '@service/domainInfo';
 import { usePayMethod } from '@service/payMethod';
-import { getAccount } from '@service/account';
+import { getAccount, useAccount } from '@service/account';
 import LocalStorage from 'localstorage-enhance';
 import waitAsyncResult, { getAsyncResult } from '@utils/waitAsyncResult';
 import { clearCommitInfo, useCommitInfo } from './commit';
@@ -51,7 +51,14 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
       try {
         const pendingGetOwner = getDomainOwner(domain);
         const hasOwner = await (isPromise<string | null>(pendingGetOwner) ? pendingGetOwner : fetchDomainOwner(domain));
-        if (hasOwner) return;
+        
+        if (hasOwner) {
+          if (getAccount() === hasOwner) {
+            setRegisterToStep(domain, RegisterStep.Success);
+          }
+          return;
+        }
+
         const [ownerPromise, _stop] = waitAsyncResult(() => fetchDomainOwner(domain), 0);
         stop = _stop;
         const owner = await ownerPromise;
@@ -69,6 +76,7 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
     startFetch();
     return () => {
       stop?.();
+      refreshDomainStatus();
     };
   }, [domain]);
 
@@ -104,6 +112,16 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
       stop?.();
     };
   }, [domain, payMethod, registerStep, commitInfo?.commitmentHash]);
+
+  const preAccount = usePreAccount();
+  const account = useAccount();
+
+  useEffect(() => {
+    if (account && preAccount && account !== preAccount) {
+      refreshDomainStatus();
+      refreshDomainOwner();
+    }
+  }, [account, preAccount]);
 };
 
 const preAccount = atom<string>({

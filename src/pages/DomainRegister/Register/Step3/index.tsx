@@ -68,6 +68,12 @@ const ExpireTime: React.FC<{ domain: string }> = ({ domain }) => {
       <span className="-translate-y-1px text-14px text-grey-normal-hover text-opacity-50">月</span>
       <span>{date.day}</span>
       <span className="-translate-y-1px text-14px text-grey-normal-hover text-opacity-50">日</span>
+      {import.meta.env.VITE_RegisterUnit === '小时' && (
+        <>
+          <span>{date.hour}</span>
+          <span className="-translate-y-1px text-14px text-grey-normal-hover text-opacity-50">时</span>
+        </>
+      )}
     </>
   );
 };

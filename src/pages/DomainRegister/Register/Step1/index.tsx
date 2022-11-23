@@ -55,11 +55,11 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
                 <span className="i-fluent:subtract-12-filled text-16px font-bold" />
               </button>
 
-              <p className="mx-24px lt-md:mx-0px lt-md:h-38px md:min-w-76px">
+              <p className={cx("mx-24px lt-md:mx-0px lt-md:h-38px", import.meta.env.VITE_RegisterUnit === '小时' ? 'md:min-w-92px' : 'md:min-w-76px')}>
                 <span className="inline-block text-center leading-54px text-44px text-grey-normal font-bold lt-md:text-32px lt-md:leading-38px">
                   {durationYears < 10 ? `0${durationYears}` : durationYears}
                 </span>
-                <span className="ml-2px text-16px text-grey-normal-hover text-opacity-50">年</span>
+                <span className="ml-2px text-16px text-grey-normal-hover text-opacity-50">{import.meta.env.VITE_RegisterUnit || '年'}</span>
               </p>
 
               <button

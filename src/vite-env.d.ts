@@ -3,6 +3,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_CoreSpaceRpcUrl: string;
+  readonly VITE_RegisterUnit: '年' | '小时';
 }
 
 interface ImportMeta {

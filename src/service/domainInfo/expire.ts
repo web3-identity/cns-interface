@@ -14,6 +14,7 @@ interface DomainExpire {
     year: number;
     month: number;
     day: number;
+    hour: number;
   };
   /** Unit day */
   gracePeriod: number;
@@ -59,22 +60,21 @@ const domainExpireQuery = selectorFamily<DomainExpire, string>({
         });
         
         const timestamp = Number(response) * 1000;
-        const dateFormat = dayjs(timestamp).format('YYYY-MM-DD');
-        const dateFormatForSecond = dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss');
+        const dateFormat = dayjs(timestamp).format('YYYY-MM-DD-HH');
         const date = Object.fromEntries(
           dateFormat
             .split(' ')[0]
             .split('-')
-            .map((v, i) => [i === 0 ? 'year' : i === 1 ? 'month' : 'day', Number(v)])
+            .map((v, i) => [i === 0 ? 'year' : i === 1 ? 'month' : i === 2 ? 'day' : 'hour', Number(v)])
         );
+
         const GRACE_PERIOD = get(gracePeriodState);
         const gracePeriod = dayjs(timestamp).add(GRACE_PERIOD, 'day').diff(dayjs(), 'day');
         const isExpired = dayjs().isAfter(dayjs(timestamp));
 
         return {
           timestamp,
-          dateFormat,
-          dateFormatForSecond,
+          dateFormatForSecond: dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss'),
           date,
           gracePeriod,
           isExpired,

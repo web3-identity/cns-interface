@@ -159,7 +159,7 @@ const ExpireTime: React.FC<{ domain: string }> = ({ domain }) => {
         </>
       ) : (
         <>
-          域名已到期，将于<span className="text-grey-normal font-bold">{gracePeriod}</span>天后到期
+          域名已到期，将于<span className="text-grey-normal font-bold"> {gracePeriod} </span>天后回收
         </>
       )}
     </>

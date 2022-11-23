@@ -51,7 +51,7 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
             <span className="ml-24px text-28px text-grey-normal font-bold lt-md:text-16px lt-md:ml-8px md:translate-y-1px">
               {durationYears < 10 ? `0${durationYears}` : durationYears}
             </span>
-            <span className="ml-4px mt-6px">年</span>
+            <span className="ml-4px mt-6px">{import.meta.env.VITE_RegisterUnit || '年'}</span>
           </div>
 
           <div className="flex items-baseline h-32px lt-md:h-20px lt-md:items-center">

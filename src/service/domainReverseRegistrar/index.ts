@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
 import { fetchChain } from '@utils/fetch';
 import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
@@ -10,7 +11,7 @@ export const setDomainReverseRegistrar = async ({ domain, refreshDomainReverseRe
     const hidePopup = recordToHidePopup();
     const account = getAccount();
     const txHash = await sendTransaction({
-      data: ReverseRegistrar.func.encodeFunctionData('setName', [domain]),
+      data: ReverseRegistrar.func.encodeFunctionData('setName', [!domain.endsWith?.('.web3') ? domain : domain.split('.')[0]]),
       from: account!,
       to: ReverseRegistrar.address,
     });
@@ -32,14 +33,9 @@ const domainReverseRegistrarQuery = selectorFamily<string | null, string>({
         params: [{ data: ReverseRegistrar.func.encodeFunctionData('node', [hexAccount]), to: ReverseRegistrar.address }, 'latest_state'],
       });
 
-      const domain = await fetchChain<string>({
+      return await fetchChain<string>({
         params: [{ data: PublicResolver.func.encodeFunctionData('name', [node]), to: PublicResolver.address }, 'latest_state'],
-      }).then((response) => {
-        const domain = PublicResolver.func.decodeFunctionResult('name', response)?.[0];
-        return domain;
-      });
-
-      return domain;
+      }).then((response) => PublicResolver.func.decodeFunctionResult('name', response)?.[0]);
     } catch (err) {
       throw err;
     }
@@ -48,7 +44,9 @@ const domainReverseRegistrarQuery = selectorFamily<string | null, string>({
 
 export const useDomainReverseRegistrar = () => {
   const hexAccount = useHexAccount()!;
-  return useRecoilValue(domainReverseRegistrarQuery(hexAccount));
+  const domainReverseRegistrar = useRecoilValue(domainReverseRegistrarQuery(hexAccount));
+
+  return useMemo(() => !domainReverseRegistrar?.endsWith('.web3') ? domainReverseRegistrar : domainReverseRegistrar?.split?.('.')?.[0], [domainReverseRegistrar]);
 };
 
 export const useRefreshDomainReverseRegistrar = () => {

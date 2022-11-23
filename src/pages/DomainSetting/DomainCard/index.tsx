@@ -9,14 +9,14 @@ import Delay from '@components/Delay';
 import Domain from '@modules/Domain';
 import ToolTip from '@components/Tooltip';
 import CfxAddress from '@modules/CfxAddress';
-import { useIsOwner, useDomainOwner, useDomainExpire, useRefreshDomainOwner, useRefreshDomainExpire } from '@service/domainInfo';
+import { useDomainOwner, useDomainExpire, useRefreshDomainOwner, useRefreshDomainExpire } from '@service/domainInfo';
+import { useAccount } from '@service/account';
 import useIsLtMd from '@hooks/useIsLtMd';
 import showDomainTransferModal from './DomainTransferModal';
 import './index.css';
 
 const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
   const isLtMd = useIsLtMd();
-  const isOwner = useIsOwner(domain);
   const refreshDomainOwner = useRefreshDomainOwner(domain);
   const refreshDomainExpire = useRefreshDomainExpire(domain);
 
@@ -35,18 +35,6 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
               <DomainOwner domain={domain} />
             </Suspense>
           </ErrorBoundary>
-
-          {isOwner && (
-            <Button
-              className="ml-auto lt-md:self-end"
-              size="mini"
-              onClick={() => {
-                showDomainTransferModal({ domain });
-              }}
-            >
-              转让
-            </Button>
-          )}
         </div>
 
         <div className="mt-8px lt-md:mt-16px relative flex items-center h-28px lt-md:h-40px">
@@ -56,10 +44,6 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
               <DomainExpire domain={domain} />
             </Suspense>
           </ErrorBoundary>
-
-          <Button className="ml-auto lt-md:self-end" size="mini">
-            续费
-          </Button>
         </div>
       </div>
     </div>
@@ -81,28 +65,60 @@ const ErrorBoundaryFallback: React.FC<FallbackProps & { type: 'owner' | 'expire'
 );
 
 const DomainOwner: React.FC<{ domain: string }> = ({ domain }) => {
+  const account = useAccount();
   const ownerAddress = useDomainOwner(domain);
   const [isCopied, copy] = useClipboard(ownerAddress ?? '', { successDuration: 1000 });
 
   return (
-    <div className="absolute left-66px flex items-center h-full lt-md:h-fit lt-md:left-0 lt-md:bottom-0px">
-      {ownerAddress && (
-        <>
-          <Avatar address={ownerAddress} size={18} />
-          <CfxAddress className="mx-8px lt-md:mx-4px text-14px lt-md:text-16px text-grey-normal" address={ownerAddress} />
-          <ToolTip visible={isCopied} text="复制成功">
-            <span className="i-bxs:copy-alt text-20px lt-md:text-16px text-#838290 cursor-pointer" onClick={copy} />
-          </ToolTip>
-        </>
+    <>
+      <div className="absolute left-66px flex items-center h-full lt-md:h-fit lt-md:left-0 lt-md:bottom-0px">
+        {ownerAddress && (
+          <>
+            <Avatar address={ownerAddress} size={18} />
+            <CfxAddress className="mx-8px lt-md:mx-4px text-14px lt-md:text-16px text-grey-normal" address={ownerAddress} />
+            <ToolTip visible={isCopied} text="复制成功">
+              <span className="i-bxs:copy-alt text-20px lt-md:text-16px text-#838290 cursor-pointer" onClick={copy} />
+            </ToolTip>
+          </>
+        )}
+      </div>
+      {account === ownerAddress && (
+        <Button
+          className="ml-auto lt-md:self-end"
+          size="mini"
+          onClick={() => {
+            showDomainTransferModal({ domain });
+          }}
+        >
+          转让
+        </Button>
       )}
-    </div>
+    </>
   );
 };
 
 const DomainExpire: React.FC<{ domain: string }> = ({ domain }) => {
-  const expire = useDomainExpire(domain);
+  const { dateFormatForSecond, gracePeriod, isExpired } = useDomainExpire(domain);
+  const hasOwner = useDomainOwner(domain);
 
-  return <div className="absolute left-66px lt-md:left-0 lt-md:bottom-0px text-14px lt-md:text-16px text-grey-normal">预计 {expire.dateFormatForSecond}</div>;
+  if (!hasOwner) return null;
+  return (
+    <>
+      <div className="absolute left-66px lt-md:left-0 lt-md:bottom-0px text-14px lt-md:text-16px text-grey-normal">
+        {!isExpired ? (
+          `预计 ${dateFormatForSecond}`
+        ) : (
+          <>
+            域名已到期，将于<span className="text-grey-normal font-bold"> {gracePeriod} </span>天后回收
+          </>
+        )}
+      </div>
+      
+      <Button className="ml-auto lt-md:self-end" size="mini">
+        续费
+      </Button>
+    </>
+  );
 };
 
 const SplitDomain: React.FC<ComponentProps<'span'> & { domain: string; isLtMd: boolean }> = memo(({ domain, isLtMd, className, ...props }) => {
