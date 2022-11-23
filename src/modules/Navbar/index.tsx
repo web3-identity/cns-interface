@@ -1,12 +1,11 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import Button from '@components/Button';
 import { useAccount } from '@service/account';
 import { useClearRegisterInfoWhenAccountChange } from '@service/domainRegister';
+import AuthConnectButton from '@modules/AuthConnectButton';
 import StatusSearch from '@modules/StatusSearch';
 import CfxAddress from '@modules/CfxAddress';
 import Account from './Account';
-import showAccountConnector from './AccountConnector';
 
 const Navbar: React.FC = () => {
   const account = useAccount();
@@ -22,13 +21,14 @@ const Navbar: React.FC = () => {
         </Link>
 
         {pathname !== '/' && <StatusSearch where="header" className="mr-24px lt-md:display-none" />}
-        {!account && <Button onClick={showAccountConnector}>连接</Button>}
-        {account && (
-          <>
-            <CfxAddress address={account} className="mr-10px text-16px text-#AAA9C1 leading-18px" />
-            <Account account={account} />
-          </>
-        )}
+        <AuthConnectButton>
+          {account && (
+            <>
+              <CfxAddress address={account} className="mr-10px text-16px text-#AAA9C1 leading-18px" />
+              <Account account={account} />
+            </>
+          )}
+        </AuthConnectButton>
       </nav>
     </header>
   );

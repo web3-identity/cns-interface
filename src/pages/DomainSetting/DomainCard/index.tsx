@@ -8,6 +8,7 @@ import Spin from '@components/Spin';
 import Delay from '@components/Delay';
 import Domain from '@modules/Domain';
 import ToolTip from '@components/Tooltip';
+import AuthConnectButton from '@modules/AuthConnectButton';
 import CfxAddress from '@modules/CfxAddress';
 import { useDomainOwner, useDomainExpire, useRefreshDomainOwner, useRefreshDomainExpire } from '@service/domainInfo';
 import { useAccount } from '@service/account';
@@ -113,10 +114,12 @@ const DomainExpire: React.FC<{ domain: string }> = ({ domain }) => {
           </>
         )}
       </div>
-      
-      <Button className="ml-auto lt-md:self-end" size="mini">
-        续费
-      </Button>
+
+      <AuthConnectButton className="ml-auto lt-md:self-end" size="mini">
+        <Button className="ml-auto lt-md:self-end" size="mini">
+          续费
+        </Button>
+      </AuthConnectButton>
     </>
   );
 };

@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
 import { store as fluentStore, switchChain as _switchChain } from '@cfxjs/use-wallet-react/conflux/Fluent';
 import { targetChainId } from '..';
-export { connect, sendTransaction, useChainId } from '@cfxjs/use-wallet-react/conflux/Fluent';
+export { connect, sendTransaction } from '@cfxjs/use-wallet-react/conflux/Fluent';
 
 export const accountState = atom<string | null | undefined>({
   key: 'fluentAccountState',
@@ -21,6 +21,24 @@ export const accountState = atom<string | null | undefined>({
   ],
 });
 
-export const disconnect =  () => Promise<void>
+export const chainIdState = atom<string | null | undefined>({
+  key: 'fluentChainIdState',
+  default: undefined,
+  effects: [
+    ({ setSelf, trigger }) => {
+      if (trigger === 'get') {
+        setSelf(fluentStore.getState().chainId);
+      }
+
+      const unsubFluentAccount = fluentStore.subscribe(
+        (state) => state.chainId,
+        (chainId) => setSelf(chainId)
+      );
+      return unsubFluentAccount;
+    },
+  ],
+});
+
+export const disconnect = () => Promise<void>;
 
 export const switchChain = () => _switchChain('0x' + Number(targetChainId).toString(16));

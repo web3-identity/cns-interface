@@ -1,14 +1,14 @@
 import { atom, selector, useRecoilValue } from 'recoil';
 import { setRecoil, getRecoil } from 'recoil-nexus';
 import { persistAtom } from '@utils/recoilUtils';
-import { convertCfxToHex, convertHexToCfx, validateCfxAddress, validateHexAddress } from '@utils/addressUtils';
+import { convertCfxToHex, validateCfxAddress } from '@utils/addressUtils';
 import {
   accountState as fluentAccountState,
+  chainIdState as fluentChainIdState,
   connect as connectFluent,
   disconnect as disconnectFluent,
   switchChain as switchChainFluent,
   sendTransaction as sendTransactionWithFluent,
-  useChainId as useFluentChainID,
 } from './fluent';
 import {
   accountState as anywebAccountState,
@@ -23,6 +23,7 @@ export const targetChainId = isProduction ? '1029' : '1';
 const methodsMap = {
   fluent: {
     accountState: fluentAccountState,
+    chainIdState: fluentChainIdState,
     connect: connectFluent,
     switchChain: switchChainFluent,
     sendTransaction: sendTransactionWithFluent,
@@ -50,13 +51,9 @@ export const accountState = selector({
   get: ({ get }) => {
     const filter = get(accountMethodFilter);
     if (!filter) return null;
+
     const { accountState } = methodsMap[filter];
-    const account = get(accountState);
-    if (!account) return account;
-    if (validateHexAddress(account)) {
-      return convertHexToCfx(account, isProduction ? '1029' : '1');
-    }
-    return account;
+    return get(accountState);
   },
 });
 
@@ -72,6 +69,11 @@ export const hexAccountState = selector({
 export const chainIdState = selector({
   key: 'chainIdState',
   get: ({ get }) => {
+    const filter = get(accountMethodFilter);
+    if (filter === 'fluent') {
+      return get(fluentChainIdState);
+    }
+
     const account = get(accountState);
     if (!account) return null;
     if (account.startsWith('cfxtest')) return '1';
@@ -114,10 +116,4 @@ export const sendTransaction = async (params: Parameters<typeof sendTransactionW
 export const useAccount = () => useRecoilValue(accountState);
 export const useAccountMethod = () => useRecoilValue(accountMethodFilter);
 export const useHexAccount = () => useRecoilValue(hexAccountState);
-export const useChainId = () => {
-  const accountMethod = useAccountMethod();
-  const fluentChainId = useFluentChainID();
-  const chainId = useRecoilValue(chainIdState);
-
-  return accountMethod === 'fluent' ? fluentChainId : chainId;
-};
+export const useChainId = () => useRecoilValue(chainIdState);
