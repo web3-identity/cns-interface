@@ -6,8 +6,9 @@ import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
 import Domain from '@modules/Domain';
-import { useDomainStatus, useRefreshDomainStatus, DomainStatus } from '@service/domainInfo';
+import { useDomainStatus, useRefreshDomainStatus, useIsOwnerSuspense, DomainStatus } from '@service/domainInfo';
 import { usePrefetchSettingPage } from '@service/prefetch';
+import { useParamsDomain } from '@hooks/useParamsDomain';
 import { ReactComponent as StatusLocked } from '@assets/icons/status-locked.svg';
 import { ReactComponent as StatusRegistered } from '@assets/icons/status-registered.svg';
 import { ReactComponent as StatusReserved } from '@assets/icons/status-reserved.svg';
@@ -23,6 +24,7 @@ interface Props {
 
 const Status: React.FC<Props & ComponentProps<'div'>> = ({ domain, isSmall, where, className, ...props }) => {
   const refreshDomainStatus = useRefreshDomainStatus(domain);
+  const paramsDomain = useParamsDomain();
 
   return (
     <div
@@ -34,11 +36,15 @@ const Status: React.FC<Props & ComponentProps<'div'>> = ({ domain, isSmall, wher
       })}
       {...props}
     >
-      <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} isSmall={isSmall} where={where} />} onReset={refreshDomainStatus}>
-        <Suspense fallback={<StatusLoading />}>
-          <StatusContent domain={domain} isSmall={isSmall} where={where} />
-        </Suspense>
-      </ErrorBoundary>
+      {paramsDomain === domain ? (
+        <SearchDomainEqualCurrentRegister isSmall={isSmall} where={where} />
+      ) : (
+        <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} isSmall={isSmall} where={where} />} onReset={refreshDomainStatus}>
+          <Suspense fallback={<StatusLoading />}>
+            <StatusContent domain={domain} isSmall={isSmall} where={where} />
+          </Suspense>
+        </ErrorBoundary>
+      )}
     </div>
   );
 };
@@ -85,16 +91,17 @@ const statusMap = {
 
 const StatusContent: React.FC<Props> = ({ domain, where, isSmall }) => {
   const status = useDomainStatus(domain);
-  const Icon = statusMap[status].icon;
+  const isOwner = useIsOwnerSuspense(domain);
+  const Icon = !isOwner ? statusMap[status].icon : statusMap[DomainStatus.Valid].icon;
   const ellipsisLength = where === 'header' ? 14 : isSmall ? 11 : 24;
-  
+
   const prefetchSettingPage = usePrefetchSettingPage(domain);
 
   return (
     <>
       <Icon className={cx('-translate-y-2px flex-shrink-0', isSmall ? 'mr-4px w-28px h-28px' : 'mr-12px w-40px h-40px')} />
-      <span className={cx('mr-auto', statusMap[status].color)}>
-        {statusMap[status].text}
+      <span className={cx('mr-auto', !isOwner ? statusMap[status].color : statusMap[DomainStatus.Valid].color)}>
+        {!isOwner ? statusMap[status].text : '您已注册'}
         <Domain
           className={cx('font-bold', isSmall ? 'ml-4px' : 'ml-8px ')}
           domain={domain}
@@ -132,6 +139,15 @@ const ErrorBoundaryFallback: React.FC<FallbackProps & Omit<Props, 'domain'>> = (
       <Button onClick={resetErrorBoundary} className={btnClassMap[where]}>
         重试
       </Button>
+    </>
+  );
+};
+
+const SearchDomainEqualCurrentRegister: React.FC<Omit<Props, 'domain'>> = ({ where, isSmall }) => {
+  return (
+    <>
+      <StatusValid className={cx('-translate-y-2px flex-shrink-0', isSmall ? 'mr-4px w-28px h-28px' : 'mr-12px w-40px h-40px')} />
+      <span className="mr-auto text-green-normal">搜索域名为当前注册中域名</span>
     </>
   );
 };

@@ -62,13 +62,13 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
         const [ownerPromise, _stop] = waitAsyncResult(() => fetchDomainOwner(domain), 0);
         stop = _stop;
         const owner = await ownerPromise;
-        refreshDomainOwner();
         clearCommitInfo(domain);
         if (getAccount() === owner) {
           setRegisterToStep(domain, RegisterStep.Success);
           refreshMyDomains();
         } else {
           refreshDomainStatus();
+          refreshDomainOwner();
         }
       } catch (_) {}
     };
@@ -76,6 +76,7 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
     startFetch();
     return () => {
       stop?.();
+      refreshDomainOwner();
       refreshDomainStatus();
     };
   }, [domain]);
