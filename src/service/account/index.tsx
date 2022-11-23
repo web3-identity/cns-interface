@@ -2,8 +2,21 @@ import { atom, selector, useRecoilValue } from 'recoil';
 import { setRecoil, getRecoil } from 'recoil-nexus';
 import { persistAtom } from '@utils/recoilUtils';
 import { convertCfxToHex, convertHexToCfx, validateCfxAddress, validateHexAddress } from '@utils/addressUtils';
-import { accountState as fluentAccountState, connect as connectFluent, disconnect as disconnectFluent, switchChain as switchChainFluent, sendTransaction as sendTransactionWithFluent } from './fluent';
-import { accountState as anywebAccountState, connect as connectAnyweb, disconnect as disconnectAnyweb, switchChain as switchChainAnyweb, sendTransaction as sendTransactionWithAnyweb } from './anyweb';
+import {
+  accountState as fluentAccountState,
+  connect as connectFluent,
+  disconnect as disconnectFluent,
+  switchChain as switchChainFluent,
+  sendTransaction as sendTransactionWithFluent,
+  useChainId as useFluentChainID,
+} from './fluent';
+import {
+  accountState as anywebAccountState,
+  connect as connectAnyweb,
+  disconnect as disconnectAnyweb,
+  switchChain as switchChainAnyweb,
+  sendTransaction as sendTransactionWithAnyweb,
+} from './anyweb';
 import isProduction from '@utils/isProduction';
 export const targetChainId = isProduction ? '1029' : '1';
 
@@ -82,7 +95,7 @@ export const disconnect = async (method: Methods) => {
     await methodsMap[method].disconnect();
     setRecoil(accountMethodFilter, null);
   } catch (_) {}
-}
+};
 
 export const switchChain = () => {
   const method = getAccountMethod();
@@ -101,4 +114,10 @@ export const sendTransaction = async (params: Parameters<typeof sendTransactionW
 export const useAccount = () => useRecoilValue(accountState);
 export const useAccountMethod = () => useRecoilValue(accountMethodFilter);
 export const useHexAccount = () => useRecoilValue(hexAccountState);
-export const useChainId = () => useRecoilValue(chainIdState);
+export const useChainId = () => {
+  const accountMethod = useAccountMethod();
+  const fluentChainId = useFluentChainID();
+  const chainId = useRecoilValue(chainIdState);
+
+  return accountMethod === 'fluent' ? fluentChainId : chainId;
+};
