@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 export const useParamsDomain = () => {
   const { domain: _domain } = useParams();
   const params = useParams();
-  console.log(params);
   return _domain?.toLocaleLowerCase().trim() ?? '';
 };
 

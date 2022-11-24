@@ -70,6 +70,8 @@ export const chainIdState = selector({
   key: 'chainIdState',
   get: ({ get }) => {
     const filter = get(accountMethodFilter);
+    if (!filter) return null;
+    
     if (filter === 'fluent') {
       return get(fluentChainIdState);
     }
@@ -117,3 +119,7 @@ export const useAccount = () => useRecoilValue(accountState);
 export const useAccountMethod = () => useRecoilValue(accountMethodFilter);
 export const useHexAccount = () => useRecoilValue(hexAccountState);
 export const useChainId = () => useRecoilValue(chainIdState);
+export const useIsChainMatch = () => {
+  const chainId = useChainId();
+  return chainId === targetChainId;
+}

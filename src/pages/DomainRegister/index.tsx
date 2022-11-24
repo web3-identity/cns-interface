@@ -33,7 +33,7 @@ const DomainRegister: React.FC = () => {
   useMonitorDomainState(domain, registerStep);
 
   return (
-    <PageWrapper className="relative pt-72px lt-md:pt-20px">
+    <PageWrapper className="relative pt-72px lt-md:pt-16px">
       <BorderBox
         variant="gradient"
         className="mb-24px w-fit h-58px leading-58px px-20px rounded-16px text-center text-green-normal text-22px font-bold lt-md:mb-16px lt-md:w-full lt-md:h-56px lt-md:leading-56px lt-md:px-16px lt-md:rounded-12px lt-md:text-20px lt-md:text-left"

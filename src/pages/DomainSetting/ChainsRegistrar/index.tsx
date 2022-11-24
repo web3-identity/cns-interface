@@ -7,9 +7,11 @@ import Delay from '@components/Delay';
 import Input from '@components/Input';
 import ToolTip from '@components/Tooltip';
 import BorderBox from '@components/Box/BorderBox';
+import AuthConnectButton from '@modules/AuthConnectButton';
 import useClipboard from 'react-use-clipboard';
 import usePressEsc from '@hooks/usePressEsc';
 import useInTranscation from '@hooks/useInTranscation';
+import { useIsChainMatch } from '@service/account';
 import { useIsOwner } from '@service/domainInfo';
 import useIsLtMd from '@hooks/useIsLtMd';
 import {
@@ -45,7 +47,7 @@ const chainsIcon = {
 
 const ChainsRegistrar: React.FC<{ domain: string }> = ({ domain }) => {
   const { status, domainRegistrars } = useDomainRegistrar(domain);
-  
+
   if (status === 'init') return <ChainsLoading />;
   if (status === 'error' && !domainRegistrars) return <ErrorBoundary domain={domain} />;
   if (!domainRegistrars) return null;
@@ -110,7 +112,12 @@ const Operation: React.FC<{
               {!isLtMd ? '取消' : <span className="i-mdi:close text-20px" />}
             </Button>
           )}
-          <Button className={cx("mx-8px lt-md:w-24px lt-md:h-24px lt-md:px-0", inTranscation && '!text-10px')} size="mini" onClick={handleClickSave} loading={inTranscation && status !== 'update'}>
+          <Button
+            className={cx('mx-8px lt-md:w-24px lt-md:h-24px lt-md:px-0', inTranscation && '!text-10px')}
+            size="mini"
+            onClick={handleClickSave}
+            loading={inTranscation && status !== 'update'}
+          >
             {!isLtMd && (status !== 'update' ? '保存' : '更新中...')}
             {isLtMd && (
               <>
@@ -122,19 +129,21 @@ const Operation: React.FC<{
         </>
       )}
       {isOwner && registrableChains?.length > 0 && (
-        <Button
-          size="mini"
-          className="lt-md:w-24px lt-md:h-24px lt-md:px-0"
-          onClick={() =>
-            showAddNewResolutionModal({
-              domain,
-              registrableChains,
-              setEditAddress,
-            })
-          }
-        >
-          {!isLtMd ? '添加' : <span className="i-mdi:plus text-20px" />}
-        </Button>
+        <AuthConnectButton size="mini" className="lt-md:w-24px lt-md:h-24px lt-md:px-0">
+          <Button
+            size="mini"
+            className="lt-md:w-24px lt-md:h-24px lt-md:px-0"
+            onClick={() =>
+              showAddNewResolutionModal({
+                domain,
+                registrableChains,
+                setEditAddress,
+              })
+            }
+          >
+            {!isLtMd ? '添加' : <span className="i-mdi:plus text-20px" />}
+          </Button>
+        </AuthConnectButton>
       )}
     </div>
   );
@@ -142,6 +151,7 @@ const Operation: React.FC<{
 
 const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array<DomainRegistrar> }> = memo(({ status, domain, domainRegistrars }) => {
   const isOwner = useIsOwner(domain);
+  const isChainMatch = useIsChainMatch();
   const [inEdit, setInEdit] = useState(false);
   const enterEdit = useCallback(() => setInEdit(true), []);
   const exitEdit = useCallback(() => setInEdit(false), []);
@@ -214,7 +224,7 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
           <ChainItem
             key={registrar.chain}
             {...registrar}
-            disabled={inTranscation || !isOwner}
+            disabled={inTranscation || !isOwner || !isChainMatch}
             editAddress={editDomainRegistrars?.[index]?.address ?? ''}
             setEditAddress={setEditAddress}
             hasError={errors[index]}
