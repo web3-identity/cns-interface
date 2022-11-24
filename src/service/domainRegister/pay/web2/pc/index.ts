@@ -62,10 +62,11 @@ const makeOrderQuery = selectorFamily<Response, string>({
             const postRes: any = await postOrder(commitInfo.commitmentHash, domain);
 
             if (postRes?.code === 50000) {
-              throw new Error(getRes.message);
+              throw new Error(postRes.message);
             }
 
-            if (!!getRes?.tx_state && postRes?.tx_state !== 'INIT') {
+            if (!!postRes?.tx_state && postRes.tx_state !== 'INIT') {
+              // if (postRes.tx_state === 'EXECUTED_SUCCESS') return postRes;
               throw new Error(postRes?.tx_state);
             }
             return postRes;
@@ -74,7 +75,8 @@ const makeOrderQuery = selectorFamily<Response, string>({
           }
         }
 
-        if (!!getRes?.tx_state && getRes?.tx_state !== 'INIT') {
+        if (!!getRes?.tx_state && getRes.tx_state !== 'INIT') {
+          // if (getRes.tx_state === 'EXECUTED_SUCCESS') return getRes;
           throw new Error(getRes?.tx_state);
         }
         return getRes;

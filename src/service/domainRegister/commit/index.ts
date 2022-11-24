@@ -4,6 +4,7 @@ import { atomFamily, useRecoilValue } from 'recoil';
 import { setRecoil, getRecoil } from 'recoil-nexus';
 import JobSchedule from '@utils/JobSchedule';
 import { persistAtomWithNamespace } from '@utils/recoilUtils';
+import { getDomainOwner } from '@service/domainInfo';
 import { getMinCommitLockTime, getMaxCommitLockTime } from './MinMaxCommitLockTime';
 import { setRegisterToStep, RegisterStep, setWaitPayConfirm } from '..';
 
@@ -57,10 +58,14 @@ const scheduleJob = (domain: string, validTime: CommitInfo['validTime']) => {
     key: domain,
     triggerTime: [validTime.start, validTime.end],
     callback: [
-      () => {
+      async () => {
+        const domainOwner = await getDomainOwner(domain);
+        if (domainOwner) return;
         setRegisterToStep(domain, RegisterStep.WaitPay);
       },
-      () => {
+      async () => {
+        const domainOwner = await getDomainOwner(domain);
+        if (domainOwner) return;
         setRegisterToStep(domain, RegisterStep.WaitCommit);
         clearCommitInfo(domain);
       },

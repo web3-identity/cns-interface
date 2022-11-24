@@ -53,6 +53,7 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
         const hasOwner = await (isPromise<string | null>(pendingGetOwner) ? pendingGetOwner : fetchDomainOwner(domain));
         
         if (hasOwner) {
+          clearCommitInfo(domain);
           if (getAccount() === hasOwner) {
             setRegisterToStep(domain, RegisterStep.Success);
           }
@@ -89,7 +90,7 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
     let preOrderStatus: string | null = null;
     const stop = getAsyncResult(
       () => getOrderStatus(commitInfo.commitmentHash),
-      (orderStatus: string) => {
+      async (orderStatus: string) => {
         const isWaitPayConfirm = getWaitPayConfirm(domain);
         if (preOrderStatus === orderStatus) {
           return;
@@ -100,10 +101,22 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
             setWaitPayConfirm(domain, true);
           }
         } else {
-          if (isWaitPayConfirm) {
-            setWaitPayConfirm(domain, false);
+          const pendingGetOwner = getDomainOwner(domain);
+          const hasOwner = await (isPromise<string | null>(pendingGetOwner) ? pendingGetOwner : fetchDomainOwner(domain));  
+          if (orderStatus === 'EXECUTED_SUCCESS' || hasOwner) {
+            if (hasOwner !== getAccount()) {
+              refreshDomainStatus();
+              refreshDomainOwner();
+            } else {
+              setRegisterToStep(domain, RegisterStep.Success);
+              refreshMyDomains();
+            }
+          } else {
+            if (isWaitPayConfirm) {
+              setWaitPayConfirm(domain, false);
+            }
+            refreshMakeOrder();
           }
-          refreshMakeOrder();
         }
       },
       0
