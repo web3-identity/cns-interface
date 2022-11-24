@@ -104,6 +104,7 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
           const pendingGetOwner = getDomainOwner(domain);
           const hasOwner = await (isPromise<string | null>(pendingGetOwner) ? pendingGetOwner : fetchDomainOwner(domain));  
           if (orderStatus === 'EXECUTED_SUCCESS' || hasOwner) {
+            clearCommitInfo(domain);
             if (hasOwner !== getAccount()) {
               refreshDomainStatus();
               refreshDomainOwner();
