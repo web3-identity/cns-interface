@@ -63,6 +63,10 @@
   @apply block;
 }
 
+.input:focus + .clear-icon, .input:focus-visible + .clear-icon {
+  @apply pointer-events-auto;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   appearance: none !important;

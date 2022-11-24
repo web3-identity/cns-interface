@@ -263,7 +263,7 @@ const ChainItem: React.FC<DomainRegistrar & { disabled: boolean; editAddress: st
         >
           <img src={chainsIcon[chain]} alt={`${chain} icon`} className="w-18px h-18px lt-md:flex-shrink-0" />
           <span className="ml-4px text-14px text-grey-normal font-bold lt-md:flex-shrink-0">{chain}</span>
-          <div className="registrars-chain-input relative ml-8px pr-24px text-14px text-grey-normal-hover text-opacity-50 lt-md:overflow-hidden lt-md:flex-grow-1 lt-md:flex-shrink-1">
+          <div className="registrars-chain-input relative ml-8px pr-24px text-14px text-grey-normal-hover text-opacity-50 overflow-hidden lt-md:flex-grow-1 lt-md:flex-shrink-1">
             <span className={cx('pointer-events-none', editAddress !== address && '!opacity-0 select-none')}>{address || editAddress}</span>
             {editAddress !== address && <span className="absolute left-0 top-0 w-full h-full pointer-events-none select-none">{editAddress}</span>}
             <Input

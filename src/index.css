@@ -24,13 +24,10 @@ input {
 }
 
 body {
-  @apply m-0 p-0 overflow-hidden h-100vh;
+  @apply m-0 p-0 overflow-hidden h-full;
   background: linear-gradient(180deg, #302C4D 0%, #110F1B 100%);
 }
 
-#root {
-  @apply h-full;
-}
 
 .main-scroller {
   @apply w-100vw h-[calc(100vh-84px)] lt-md:h-[calc(100vh-56px)] overflow-x-hidden;

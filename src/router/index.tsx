@@ -11,34 +11,36 @@ import useMainScroller from '@hooks/useMainScroller';
 import { useWatchPathChange } from '@hooks/useLasPath';
 
 const AppRouter: React.FC = () => {
-  useMainScroller();
-
   return (
     <Router>
       <ErrorBoundary>
-        <CustomScrollbar className="main-scroller" contentClassName="min-h-full !flex flex-col pb-40px">
-          <Routes>
-            <Route path="/" element={<RouteWrapper />}>
-              <Route index element={<HomePage />} />
-              <Route path="setting/:domain" element={<DomainSetting />} />
-              <Route path="register/:domain" element={<DomainRegister />} />
-              <Route path="my-domains" element={<MyDomains />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </Route>
-          </Routes>
-        </CustomScrollbar>
+        <Routes>
+          <Route path="/" element={<RouteWrapper />}>
+            <Route index element={<HomePage />} />
+            <Route path="setting/:domain" element={<DomainSetting />} />
+            <Route path="register/:domain" element={<DomainRegister />} />
+            <Route path="my-domains" element={<MyDomains />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Route>
+        </Routes>
         <LastPageWatcher />
       </ErrorBoundary>
     </Router>
   );
 };
 
-const RouteWrapper: React.FC = () => (
-  <>
-    <Navbar />
-    <Outlet />
-  </>
-);
+const RouteWrapper: React.FC = () => {
+  useMainScroller();
+  
+  return (
+    <>
+      <Navbar />
+      <CustomScrollbar className="main-scroller" contentClassName="min-h-full !flex flex-col pb-40px">
+        <Outlet />
+      </CustomScrollbar>
+    </>
+  );
+};
 
 const LastPageWatcher = () => {
   useWatchPathChange();
