@@ -11,7 +11,7 @@ export const setDomainReverseRegistrar = async ({ domain, refreshDomainReverseRe
     const hidePopup = recordToHidePopup();
     const account = getAccount();
     const txHash = await sendTransaction({
-      data: ReverseRegistrar.func.encodeFunctionData('setName', [!domain.endsWith?.('.web3') ? domain : domain.split('.')[0]]),
+      data: ReverseRegistrar.func.encodeFunctionData('setName', [domain.endsWith?.('.web3') ? domain : `${domain}.web3`]),
       from: account!,
       to: ReverseRegistrar.address,
     });

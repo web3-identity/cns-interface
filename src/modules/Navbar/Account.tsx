@@ -25,11 +25,10 @@ const AccountDropdownItem: React.FC<ComponentProps<'div'> & { isCurrent?: boolea
 const AccountDropdown: React.FC<{ hideDropdown: VoidFunction }> = ({ hideDropdown }) => {
   const accountMethod = useAccountMethod();
   const { pathname } = useLocation();
-  const prefetchMydomainsPage = usePrefetchMydomainsPage();
 
   return (
     <div className="mt-8px flex flex-col gap-16px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow lt-md:mt-4px lt-md:p-16px">
-      <Link to="/my-domains" className="text-white no-underline cursor-default" draggable="false" onMouseEnter={prefetchMydomainsPage} onClick={hideDropdown}>
+      <Link to="/my-domains" className="text-white no-underline cursor-default" draggable="false" onClick={hideDropdown}>
         <AccountDropdownItem isCurrent={pathname?.startsWith('/my-domains')}>域名管理</AccountDropdownItem>
       </Link>
       <AccountDropdownItem
@@ -46,8 +45,13 @@ const AccountDropdown: React.FC<{ hideDropdown: VoidFunction }> = ({ hideDropdow
 
 const Account: React.FC<{ account: string }> = ({ account }) => {
   const isLtMd = useIsLtMd();
+  const prefetchMydomainsPage = usePrefetchMydomainsPage();
+
   const [visible, setVisible] = useState(false);
-  const showDropdown = useCallback(() => setVisible(true), []);
+  const showDropdown = useCallback(() => {
+    setVisible(true);
+    prefetchMydomainsPage();
+  }, []);
   const hideDropdown = useCallback(() => setVisible(false), []);
 
   return (

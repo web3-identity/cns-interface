@@ -11,10 +11,22 @@ const ToolTip: React.FC<Omit<Props, 'Content'> & { text?: string }> = ({
   interactiveDebounce = 100,
   trigger = 'mouseenter click',
   visible,
+  interactive = true,
   ...props
 }) => {
   return (
-    <Popper visible={visible} placement={placement} animationType={animationType} arrow={arrow} Content={text} delay={delay} trigger={typeof visible === 'boolean' ? undefined : trigger} interactiveDebounce={interactiveDebounce} {...props}>
+    <Popper
+      visible={visible}
+      placement={placement}
+      animationType={animationType}
+      arrow={arrow}
+      Content={text}
+      delay={delay}
+      trigger={typeof visible === 'boolean' ? undefined : trigger}
+      interactiveDebounce={interactiveDebounce}
+      interactive={interactive}
+      {...props}
+    >
       {children}
     </Popper>
   );

@@ -1,5 +1,5 @@
 import React, { Suspense, type ComponentProps } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import cx from 'clsx';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import Button from '@components/Button';
@@ -24,6 +24,7 @@ interface Props {
 
 const Status: React.FC<Props & ComponentProps<'div'>> = ({ domain, isSmall, where, className, ...props }) => {
   const refreshDomainStatus = useRefreshDomainStatus(domain);
+  const { pathname } = useLocation();
   const paramsDomain = useParamsDomain();
 
   return (
@@ -36,7 +37,7 @@ const Status: React.FC<Props & ComponentProps<'div'>> = ({ domain, isSmall, wher
       })}
       {...props}
     >
-      {paramsDomain === domain ? (
+      {pathname?.startsWith('/register/') && paramsDomain === domain ? (
         <SearchDomainEqualCurrentRegister isSmall={isSmall} where={where} />
       ) : (
         <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} isSmall={isSmall} where={where} />} onReset={refreshDomainStatus}>
