@@ -11,7 +11,7 @@ import './index.css';
 const Home: React.FC = () => {
   return (
     <PageWrapper className="home-page-wrapper flex flex-col">
-      <p className="home-title mb-48px text-center text-32px leading-38px text-grey-normal font-bold lt-md:text-30px lt-md:mb-24px lt-md:leading-36px">SHUTU NAME Service</p>
+      <p className="home-title mb-44px text-center text-32px leading-38px text-grey-normal font-bold lt-md:text-30px lt-md:mb-22px lt-md:leading-36px">Conflux Name Service</p>
       <StatusSearch where='home'/>
 
       <picture className="absolute top-0px lt-md:-top-140px left-1/2 -translate-x-1/2 w-1512px -z-1 pointer-events-none lt-md:w-full select-none" draggable="false">

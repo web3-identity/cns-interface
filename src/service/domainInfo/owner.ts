@@ -23,6 +23,9 @@ const domainOwnerQuery = selectorFamily<string | null, string>({
     try {
       return await fetchDomainOwner(domain);
     } catch (err) {
+      if (String(err)?.includes?.('Illegal char')) {
+        return null;
+      }
       throw err;
     }
   },

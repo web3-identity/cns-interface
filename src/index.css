@@ -23,6 +23,14 @@ input {
   font-display: auto;
 }
 
+@font-face {
+  font-family: 'Outfit';
+  src: url('./assets/fonts/Outfit-ExtraBold.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 800;
+  font-display: auto;
+}
+
 body {
   @apply m-0 p-0 overflow-hidden h-full;
   background: linear-gradient(180deg, #302C4D 0%, #110F1B 100%);

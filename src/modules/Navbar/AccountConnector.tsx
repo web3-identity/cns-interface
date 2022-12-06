@@ -9,7 +9,7 @@ const ConnectWallet: React.FC<ComponentProps<'div'> & { icon: string; name: stri
   return (
     <div onClick={onClick} className="flex flex-col items-center justify-center w-100px h-100px rounded-8px hover:bg-#26233E transition-colors cursor-pointer">
       {children}
-      <img className="w-24px h-24px mb-12px" src={icon} />
+      <img className="w-30px h-30px mb-8px" src={icon} />
       <span className="text-14px text-grey-normal">{name}</span>
     </div>
   );
@@ -17,7 +17,7 @@ const ConnectWallet: React.FC<ComponentProps<'div'> & { icon: string; name: stri
 
 const ConnectModalContent: React.FC = () => {
   return (
-    <div className="flex items-center justify-evently gap-12px pt-24px lt-md:justify-center">
+    <div className="flex justify-center items-center gap-20px pt-20px pb-22px lt-md:justify-center">
       <ConnectWallet onClick={() => connect('fluent')} icon={fluentImg} name="Fluent" />
       <ConnectWallet onClick={() => connect('anyweb')} icon={anywebImg} name="AnyWeb" />
     </div>

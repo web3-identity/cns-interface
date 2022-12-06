@@ -60,11 +60,7 @@
 }
 
 .input:not(:placeholder-shown) + .clear-icon {
-  @apply block;
-}
-
-.input:focus + .clear-icon, .input:focus-visible + .clear-icon {
-  @apply pointer-events-auto;
+  @apply flex;
 }
 
 input::-webkit-outer-spin-button,

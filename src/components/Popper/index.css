@@ -3,7 +3,7 @@
 }
 
 .popper--default {
-  @apply max-w-600px px-8px pt-7px pb-6px rounded-4px text-12px leading-16px text-grey-normal bg-purple-normal whitespace-normal break-words lt-md:max-w-[calc[100vw-16px]];
+  @apply max-w-600px px-8px pt-7px pb-6px rounded-4px text-14px leading-16px text-grey-normal bg-purple-normal whitespace-normal break-words lt-md:max-w-[calc[100vw-16px]];
 }
 .popper--custom {
   @apply w-fit p-0 rounded-none text-inherit;

@@ -112,7 +112,7 @@ const StatusContent: React.FC<Props> = ({ domain, where, isSmall }) => {
 
       {status === DomainStatus.Valid && (
         <Link to={`/register/${domain}`} className="no-underline">
-          <Button color="gradient" className={btnClassMap[where]}>
+          <Button className={btnClassMap[where]}>
             注册
           </Button>
         </Link>
