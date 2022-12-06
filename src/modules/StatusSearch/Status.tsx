@@ -27,6 +27,9 @@ const Status: React.FC<Props & ComponentProps<'div'>> = ({ domain, isSmall, wher
   const { pathname } = useLocation();
   const paramsDomain = useParamsDomain();
 
+  const isInRegister = pathname?.startsWith('/register/');
+  const isInSetting = pathname?.startsWith('/setting/');
+
   return (
     <div
       className={cx('flex items-center bg-purple-dark-active whitespace-nowrap', className, {
@@ -37,8 +40,8 @@ const Status: React.FC<Props & ComponentProps<'div'>> = ({ domain, isSmall, wher
       })}
       {...props}
     >
-      {pathname?.startsWith('/register/') && paramsDomain === domain ? (
-        <SearchDomainEqualCurrentRegister isSmall={isSmall} where={where} />
+      {(isInRegister || isInSetting) && paramsDomain === domain ? (
+        <SearchDomainEqualCurrentRegister isSmall={isSmall} type={isInRegister ? 'inRegister' : 'inSetting'} />
       ) : (
         <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} isSmall={isSmall} where={where} />} onReset={refreshDomainStatus}>
           <Suspense fallback={<StatusLoading />}>
@@ -112,9 +115,7 @@ const StatusContent: React.FC<Props> = ({ domain, where, isSmall }) => {
 
       {status === DomainStatus.Valid && (
         <Link to={`/register/${domain}`} className="no-underline">
-          <Button className={btnClassMap[where]}>
-            注册
-          </Button>
+          <Button className={btnClassMap[where]}>注册</Button>
         </Link>
       )}
       {status === DomainStatus.Registered && (
@@ -144,11 +145,13 @@ const ErrorBoundaryFallback: React.FC<FallbackProps & Omit<Props, 'domain'>> = (
   );
 };
 
-const SearchDomainEqualCurrentRegister: React.FC<Omit<Props, 'domain'>> = ({ where, isSmall }) => {
+const SearchDomainEqualCurrentRegister: React.FC<Pick<Props, 'isSmall'> & { type: 'inRegister' | 'inSetting' }> = ({ type, isSmall }) => {
   return (
     <>
       <StatusValid className={cx('-translate-y-2px flex-shrink-0', isSmall ? 'mr-4px w-28px h-28px' : 'mr-12px w-40px h-40px')} />
-      <span className="mr-auto text-green-normal">搜索域名为当前注册中域名</span>
+      <span className="mr-auto text-green-normal">
+        {type === 'inRegister' ? '搜索域名为当前注册中域名' : '搜索域名即为当前设置页域名'}
+      </span>
     </>
   );
 };
