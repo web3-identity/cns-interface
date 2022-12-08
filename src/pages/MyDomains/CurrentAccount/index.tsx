@@ -6,6 +6,7 @@ import Avatar from '@components/Avatar';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
 import CfxAddress from '@modules/CfxAddress';
+import Domain from '@modules/Domain';
 import { useAccount } from '@service/account';
 import { useDomainReverseRegistrar, useRefreshDomainReverseRegistrar } from '@service/domainReverseRegistrar';
 import { useMyDomains } from '@service/myDomains';
@@ -47,7 +48,7 @@ const AccountContent: React.FC<{}> = ({}) => {
             <CfxAddress address={account} />
           </div>
         ) : (
-          <div className="lt-md:inline-block lt-md:mt-4px">{`${domainReverseRegistrar}.web3`}</div>
+          <Domain className="block lt-md:inline-block lt-md:mt-4px" domain={domainReverseRegistrar} />
         )}
       </div>
       <Button className="lt-md:w-full" onClick={() => showSetReverseRegistrarModal({ account, myDomains, domainReverseRegistrar })} disabled={!myDomains?.length}>
