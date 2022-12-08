@@ -9,9 +9,10 @@ interface Props extends ComponentProps<'span'> {
   ellipsisLength?: number;
   suffix?: boolean;
   useTooltip?: boolean;
+  showIllegalSensitiveCensor?: boolean;
 }
 
-const Domain: React.FC<Props> = ({ domain, ellipsisLength = 12, suffix = true, useTooltip = true, ...props }) => {
+const Domain: React.FC<Props> = ({ domain, ellipsisLength = 12, suffix = true, useTooltip = true, showIllegalSensitiveCensor = true, ...props }) => {
   const refreshDomainSensitiveCensor = useRefreshDomainSensitiveCensor(domain);
 
   const ellipsisDomain = useMemo(() => {
@@ -25,7 +26,7 @@ const Domain: React.FC<Props> = ({ domain, ellipsisLength = 12, suffix = true, u
     <span {...props}>
       <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} />} onReset={refreshDomainSensitiveCensor}>
         <Suspense fallback={<Loading />}>
-          <SensitiveCensor domain={domain}>
+          <SensitiveCensor domain={domain} showIllegalSensitiveCensor={showIllegalSensitiveCensor}>
             <ToolTip text={`${domain}${suffix ? '.web3' : ''}`} disabled={!useTooltip || domain?.length <= ellipsisLength}>
               <span>{domain ? `${ellipsisDomain}${suffix ? '.web3' : ''}` : null}</span>
             </ToolTip>
@@ -36,13 +37,14 @@ const Domain: React.FC<Props> = ({ domain, ellipsisLength = 12, suffix = true, u
   );
 };
 
-const SensitiveCensor = ({ domain, children }: PropsWithChildren<{ domain: string }>) => {
+const SensitiveCensor = ({ domain, showIllegalSensitiveCensor, children }: PropsWithChildren<{ domain: string; showIllegalSensitiveCensor: boolean }>) => {
   const illegalSensitiveCensor = useDomainSensitiveCensor(domain);
   return (
     <>
       {illegalSensitiveCensor && (
         <>
-          ****.web3 <span className="text-error-normal">({illegalSensitiveCensor})</span>
+          ****.web3
+          {showIllegalSensitiveCensor && <span className="text-error-normal"> ({illegalSensitiveCensor})</span>}
         </>
       )}
       {!illegalSensitiveCensor && children}

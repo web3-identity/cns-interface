@@ -122,6 +122,7 @@ const StatusContent: React.FC<Props> = ({ domain, where, isSmall }) => {
           className={cx('font-bold', isSmall ? 'ml-4px' : 'ml-8px ')}
           domain={domain}
           ellipsisLength={status === DomainStatus.IllegalChar ? ellipsisLength - 4 : ellipsisLength}
+          showIllegalSensitiveCensor={false}
         />
       </span>
 

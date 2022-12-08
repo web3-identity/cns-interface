@@ -32,7 +32,6 @@ const fetchDomainSensitiveCensor = (domain: string): false | string | Promise<st
     }
   );
 
-
 const domainSensitiveCensorQuery = selectorFamily<string | false, string>({
   key: 'SensitiveCensorQuery',
   get: (domain: string) => async () => {
