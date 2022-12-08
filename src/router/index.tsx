@@ -7,7 +7,7 @@ import HomePage from '@pages/Home';
 import DomainRegister from '@pages/DomainRegister';
 import DomainSetting from '@pages/DomainSetting';
 import MyDomains from '@pages/MyDomains';
-import useMainScroller from '@hooks/useMainScroller';
+import { useSetMainScroller } from '@hooks/useMainScroller';
 import { useWatchPathChange } from '@hooks/useLasPath';
 
 const AppRouter: React.FC = () => {
@@ -30,7 +30,7 @@ const AppRouter: React.FC = () => {
 };
 
 const RouteWrapper: React.FC = () => {
-  useMainScroller();
+  useSetMainScroller();
   
   return (
     <>

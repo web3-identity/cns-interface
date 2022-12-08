@@ -6,7 +6,7 @@ import DomainList from './DomainList';
 
 const MyDomains: React.FC = () => {
   return (
-    <PageWrapper className="pt-36px lt-md:pt-16px">
+    <PageWrapper className="pt-4px">
       <AuthConnectButton className="flex mx-auto mt-180px">
         <CurrentAccount />
         <DomainList />

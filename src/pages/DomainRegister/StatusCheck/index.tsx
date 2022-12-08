@@ -1,11 +1,11 @@
-import React, { memo, Suspense, type PropsWithChildren, type ComponentProps } from 'react';
+import React, { memo, useCallback, Suspense, type PropsWithChildren, type ComponentProps } from 'react';
 import cx from 'clsx';
 import { Link } from 'react-router-dom';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
-import { useDomainStatus, useRefreshDomainStatus, useIsOwnerSuspense, DomainStatus } from '@service/domainInfo';
+import { useDomainStatus, useRefreshDomainStatus, useIsOwnerSuspense, useRefreshDomainOwner, DomainStatus, useDomainSensitiveCensor, useRefreshDomainSensitiveCensor } from '@service/domainInfo';
 import { RegisterBox } from '@pages/DomainRegister';
 
 interface Props {
@@ -14,10 +14,17 @@ interface Props {
 
 const StatusCheck = ({ domain, isPending, children }: PropsWithChildren<Props & { isPending: boolean }>) => {
   const refreshDomainStatus = useRefreshDomainStatus(domain);
+  const refreshDomainOwner = useRefreshDomainOwner(domain);
+  const refreshDomainSensitiveCensor = useRefreshDomainSensitiveCensor(domain);
+  const refresh = useCallback(() => {
+    refreshDomainStatus();
+    refreshDomainOwner();
+    refreshDomainSensitiveCensor();
+  }, [domain]);
 
   return (
     <div className="relative">
-      <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} />} onReset={refreshDomainStatus}>
+      <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} />} onReset={refresh}>
         <Suspense fallback={<StatusLoading />}>
           <StatusContent domain={domain} children={children} />
         </Suspense>
@@ -67,22 +74,23 @@ const Warning = () => (
 const StatusContent = ({ domain, children }: PropsWithChildren<Props>) => {
   const status = useDomainStatus(domain);
   const isOwner = useIsOwnerSuspense(domain);
+  const illegalSensitiveCensor = useDomainSensitiveCensor(domain);
 
   return (
     <>
-      {status === DomainStatus.Valid || isOwner ? (
+      {illegalSensitiveCensor === false && (status === DomainStatus.Valid || isOwner) ? (
         children
       ) : (
         <RegisterBox className="relative flex flex-col justify-center items-center">
           <Warning />
-          <p className="mt-16px mb-20px text-14px text-grey-normal">{statusMap[status].text}</p>
+          <p className="mt-16px mb-20px text-14px text-grey-normal">{illegalSensitiveCensor || statusMap[status].text}</p>
 
-          {status === DomainStatus.Registered && (
+          {!illegalSensitiveCensor && status === DomainStatus.Registered && (
             <Link to={`/setting/${domain}`} className="no-underline">
               <Button className="w-152px lt-md:w-132px">查看</Button>
             </Link>
           )}
-          {status !== DomainStatus.Registered && (
+          {(illegalSensitiveCensor || status !== DomainStatus.Registered) && (
             <Link to="/" className="no-underline">
               <Button className="w-152px lt-md:w-132px">重新搜索</Button>
             </Link>
