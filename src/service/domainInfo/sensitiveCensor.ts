@@ -10,7 +10,7 @@ import LocalStorage from 'localstorage-enhance';
  * @returns false when valid, detail string when illegal.
  */
 const fetchDomainSensitiveCensor = (domain: string): false | string | Promise<string | false> =>
-  fetchApi<{ detail: string; conclusion: '合规' | '合规'; data: Array<{ msg: string }> }>({ path: '/censor/text', method: 'POST', params: { content: domain } }).then(
+  fetchApi<{ detail: string; conclusion: '合规' | '合规'; data: Array<{ msg: string }> }>({ path: 'censor/text', method: 'POST', params: { content: domain } }).then(
     async (res) => {
       if (!!res?.detail) {
         if (String(res?.detail).includes('Open api qps request limit reached')) {
