@@ -1,5 +1,4 @@
 import React, { memo, useMemo, Suspense, type ComponentProps } from 'react';
-import cx from 'clsx';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import useClipboard from 'react-use-clipboard';
 import Button from '@components/Button';
@@ -8,9 +7,8 @@ import Spin from '@components/Spin';
 import Delay from '@components/Delay';
 import Domain from '@modules/Domain';
 import ToolTip from '@components/Tooltip';
-import AuthConnectButton from '@modules/AuthConnectButton';
 import CfxAddress from '@modules/CfxAddress';
-import { useDomainOwner, useDomainExpire, useRefreshDomainOwner, useRefreshDomainExpire } from '@service/domainInfo';
+import { useDomainOwner, useDomainExpire, useRefreshDomainOwner, useRefreshDomainExpire, useDomainSensitiveCensor, useRefreshDomainSensitiveCensor } from '@service/domainInfo';
 import { useAccount } from '@service/account';
 import useIsLtMd from '@hooks/useIsLtMd';
 import { ReactComponent as LogoTransparent } from '@assets/icons/logo-transparent.svg';
@@ -21,12 +19,19 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
   const isLtMd = useIsLtMd();
   const refreshDomainOwner = useRefreshDomainOwner(domain);
   const refreshDomainExpire = useRefreshDomainExpire(domain);
+  const refreshDomainSensitiveCensor = useRefreshDomainSensitiveCensor(domain);
 
   return (
     <div className="flex lt-md:flex-col gap-16px p-16px rounded-16px bg-purple-dark-active dropdown-shadow">
-      <div className="flex flex-col justify-between w-200px h-200px px-10px py-16px lt-md:w-125px lt-md:h-120px lt-md:px-6px lt-md:py-8px text-purple-dark-active domain-card">
+      <div className="relative flex flex-col justify-between w-200px h-200px px-10px py-16px lt-md:w-125px lt-md:h-120px lt-md:px-6px lt-md:py-8px text-purple-dark-active domain-card">
         <LogoTransparent className="mr-14px w-36px h-20px flex-shrink-0 lt-md:w-27px lt-md:h-15px" />
-        <SplitDomain className="text-right text-22px font-bold lt-md:text-18px" domain={domain} isLtMd={isLtMd} />
+        <div className="text-right text-22px font-bold lt-md:text-18px">
+          <ErrorBoundary fallbackRender={(fallbackProps) => <SensitiveCensorErrorFallback {...fallbackProps} />} onReset={refreshDomainSensitiveCensor}>
+            <Suspense fallback={<SensitiveCensorLoading />}>
+              <SplitDomain domain={domain} isLtMd={isLtMd} />
+            </Suspense>
+          </ErrorBoundary>
+        </div>
       </div>
 
       <div className="flex-1 flex flex-col justify-end">
@@ -116,16 +121,25 @@ const DomainExpire: React.FC<{ domain: string }> = ({ domain }) => {
         )}
       </div>
 
-      <AuthConnectButton className="ml-auto lt-md:self-end" size="mini">
-        <Button className="ml-auto lt-md:self-end" size="mini">
-          续费
-        </Button>
-      </AuthConnectButton>
+      {/* <Button className="ml-auto lt-md:self-end" size="mini">
+        续费
+      </Button> */}
     </>
   );
 };
 
+const SensitiveCensorLoading: React.FC = () => <Delay delay={300}>敏感词检测...</Delay>;
+const SensitiveCensorErrorFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => (
+  <div className="text-14px lt-md:text-12px text-error-normal cursor-pointer select-none group" onClick={resetErrorBoundary}>
+    <span>敏感词检测失败</span>
+    <span className='lt-md:display-none'>，</span>
+    <br className='md:display-none'/>
+    <span className="underline group-hover:underline-none lt-md:block lt-md:mt-2px">点此重试</span>
+  </div>
+);
+
 const SplitDomain: React.FC<ComponentProps<'div'> & { domain: string; isLtMd: boolean }> = memo(({ domain, isLtMd, ...props }) => {
+  const illegalSensitiveCensor = useDomainSensitiveCensor(domain);
   const maxRows = isLtMd ? 4 : 5;
   const maxCols = isLtMd ? 11 : 14;
 
@@ -142,16 +156,19 @@ const SplitDomain: React.FC<ComponentProps<'div'> & { domain: string; isLtMd: bo
     return res.reverse();
   }, [domain, isLtMd]);
 
+  if (illegalSensitiveCensor)
+    return (
+      <>
+        <p className="mb-4px lt-md:mb-2px text-error-normal text-14px lt-md:text-12px">({illegalSensitiveCensor})</p>
+        <p>****.web3</p>
+      </>
+    );
   return (
     <ToolTip disabled={splitDomains.length <= maxRows - 1} text={`${domain}.web3`}>
       <div {...props}>
         {splitDomains.map((split, index) => (
           <p key={split}>
-            {splitDomains.length > maxRows - 1 && index === splitDomains.length - 1 ? (
-              <Domain domain={split} suffix={false} useTooltip={false} ellipsisLength={maxCols} />
-            ) : (
-              split
-            )}
+            {splitDomains.length > maxRows - 1 && index === splitDomains.length - 1 ? <Domain domain={split} suffix={false} useTooltip={false} ellipsisLength={maxCols} /> : split}
           </p>
         ))}
       </div>

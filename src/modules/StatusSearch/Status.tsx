@@ -1,4 +1,4 @@
-import React, { Suspense, type ComponentProps } from 'react';
+import React, { useCallback, Suspense, type ComponentProps } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import cx from 'clsx';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
@@ -6,7 +6,7 @@ import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
 import Domain from '@modules/Domain';
-import { useDomainStatus, useRefreshDomainStatus, useIsOwnerSuspense, DomainStatus } from '@service/domainInfo';
+import { useDomainStatus, useRefreshDomainStatus, useIsOwnerSuspense, useRefreshDomainOwner, useDomainSensitiveCensor, useRefreshDomainSensitiveCensor, DomainStatus } from '@service/domainInfo';
 import { usePrefetchSettingPage } from '@service/prefetch';
 import { useParamsDomain } from '@hooks/useParamsDomain';
 import { ReactComponent as StatusLocked } from '@assets/icons/status-locked.svg';
@@ -24,6 +24,14 @@ interface Props {
 
 const Status: React.FC<Props & ComponentProps<'div'>> = ({ domain, isSmall, where, className, ...props }) => {
   const refreshDomainStatus = useRefreshDomainStatus(domain);
+  const refreshDomainOwner = useRefreshDomainOwner(domain);
+  const refreshDomainSensitiveCensor = useRefreshDomainSensitiveCensor(domain);
+  const refresh = useCallback(() => {
+    refreshDomainStatus();
+    refreshDomainOwner();
+    refreshDomainSensitiveCensor();
+  }, [domain]);
+
   const { pathname } = useLocation();
   const paramsDomain = useParamsDomain();
 
@@ -43,7 +51,7 @@ const Status: React.FC<Props & ComponentProps<'div'>> = ({ domain, isSmall, wher
       {(isInRegister || isInSetting) && paramsDomain === domain ? (
         <SearchDomainEqualCurrentRegister isSmall={isSmall} type={isInRegister ? 'inRegister' : 'inSetting'} />
       ) : (
-        <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} isSmall={isSmall} where={where} />} onReset={refreshDomainStatus}>
+        <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} isSmall={isSmall} where={where} />} onReset={refresh}>
           <Suspense fallback={<StatusLoading />}>
             <StatusContent domain={domain} isSmall={isSmall} where={where} />
           </Suspense>
@@ -96,7 +104,9 @@ const statusMap = {
 const StatusContent: React.FC<Props> = ({ domain, where, isSmall }) => {
   const status = useDomainStatus(domain);
   const isOwner = useIsOwnerSuspense(domain);
-  const Icon = !isOwner ? statusMap[status].icon : statusMap[DomainStatus.Valid].icon;
+  const illegalSensitiveCensor = useDomainSensitiveCensor(domain);
+
+  const Icon = illegalSensitiveCensor ? statusMap[DomainStatus.IllegalChar].icon : !isOwner ? statusMap[status].icon : statusMap[DomainStatus.Valid].icon;
   const ellipsisLength = where === 'header' ? 14 : isSmall ? 11 : 24;
 
   const prefetchSettingPage = usePrefetchSettingPage(domain);
@@ -104,8 +114,10 @@ const StatusContent: React.FC<Props> = ({ domain, where, isSmall }) => {
   return (
     <>
       <Icon className={cx('-translate-y-2px flex-shrink-0', isSmall ? 'mr-4px w-28px h-28px' : 'mr-12px w-40px h-40px')} />
-      <span className={cx('mr-auto', !isOwner ? statusMap[status].color : statusMap[DomainStatus.Valid].color)}>
-        {!isOwner ? statusMap[status].text : '您已注册'}
+      <span
+        className={cx('mr-auto', illegalSensitiveCensor ? statusMap[DomainStatus.IllegalChar].color : !isOwner ? statusMap[status].color : statusMap[DomainStatus.Valid].color)}
+      >
+        {illegalSensitiveCensor ? (!isOwner ? illegalSensitiveCensor : `${illegalSensitiveCensor} (您已注册)`) : !isOwner ? statusMap[status].text : '您已注册'}
         <Domain
           className={cx('font-bold', isSmall ? 'ml-4px' : 'ml-8px ')}
           domain={domain}
@@ -113,15 +125,19 @@ const StatusContent: React.FC<Props> = ({ domain, where, isSmall }) => {
         />
       </span>
 
-      {status === DomainStatus.Valid && (
-        <Link to={`/register/${domain}`} className="no-underline">
-          <Button className={btnClassMap[where]}>注册</Button>
-        </Link>
-      )}
-      {status === DomainStatus.Registered && (
-        <Link to={`/setting/${domain}`} className="no-underline" onMouseEnter={prefetchSettingPage}>
-          <Button className={btnClassMap[where]}>查看</Button>
-        </Link>
+      {!illegalSensitiveCensor && (
+        <>
+          {status === DomainStatus.Valid && (
+            <Link to={`/register/${domain}`} className="no-underline">
+              <Button className={btnClassMap[where]}>注册</Button>
+            </Link>
+          )}
+          {status === DomainStatus.Registered && (
+            <Link to={`/setting/${domain}`} className="no-underline" onMouseEnter={prefetchSettingPage}>
+              <Button className={btnClassMap[where]}>查看</Button>
+            </Link>
+          )}
+        </>
       )}
     </>
   );
@@ -149,9 +165,7 @@ const SearchDomainEqualCurrentRegister: React.FC<Pick<Props, 'isSmall'> & { type
   return (
     <>
       <StatusValid className={cx('-translate-y-2px flex-shrink-0', isSmall ? 'mr-4px w-28px h-28px' : 'mr-12px w-40px h-40px')} />
-      <span className="mr-auto text-green-normal">
-        {type === 'inRegister' ? '搜索域名为当前注册中域名' : '搜索域名即为当前设置页域名'}
-      </span>
+      <span className="mr-auto text-green-normal">{type === 'inRegister' ? '搜索域名为当前注册中域名' : '搜索域名即为当前设置页域名'}</span>
     </>
   );
 };

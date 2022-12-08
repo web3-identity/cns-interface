@@ -1,5 +1,6 @@
 import React, { memo, useMemo, type ComponentProps } from 'react';
 import ToolTip from '@components/Tooltip';
+// import { useDomainSensitiveCensor, useRefreshDomainSensitiveCensor } from '@service/domainInfo';
 
 interface Props extends ComponentProps<'span'> {
   domain: string;
@@ -23,5 +24,12 @@ const Domain: React.FC<Props> = ({ domain, ellipsisLength = 12, suffix = true, u
     </ToolTip>
   );
 };
+
+// const SensitiveCensor: React.FC<{ domain: string; }> = ({ domain, children }) => {
+//   const illegalSensitiveCensor = useDomainSensitiveCensor(domain);
+
+//   if (illegalSensitiveCensor) return `****.web3 (${illegalSensitiveCensor})`
+//   return children;
+// }
 
 export default memo(Domain);

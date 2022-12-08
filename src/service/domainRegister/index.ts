@@ -4,7 +4,7 @@ import { setRecoil } from 'recoil-nexus';
 import { persistAtom, persistAtomWithDefault } from '@utils/recoilUtils';
 import { useRefreshDomainStatus } from '@service/domainInfo';
 import { fetchDomainOwner } from '@service/domainInfo';
-import { usePayMethod } from '@service/payMethod';
+import payMethod from '@service/payMethod';
 import { getAccount, useAccount } from '@service/account';
 import LocalStorage from 'localstorage-enhance';
 import waitAsyncResult, { getAsyncResult } from '@utils/waitAsyncResult';
@@ -82,7 +82,6 @@ export const useMonitorDomainState = (domain: string, registerStep: RegisterStep
     };
   }, [domain]);
 
-  const payMethod = usePayMethod();
   const commitInfo = useCommitInfo(domain);
   useEffect(() => {
     if (payMethod === 'web3' || !commitInfo?.commitmentHash || registerStep !== RegisterStep.WaitPay || !domain) return;

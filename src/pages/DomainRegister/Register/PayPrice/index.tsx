@@ -3,10 +3,10 @@ import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import cx from 'clsx';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
-import { usePayMethod } from '@service/payMethod';
+import payMethod from '@service/payMethod';
 import { commitRegistration as _commitRegistration, usePayPrice, useRefreshPayPrice } from '@service/domainRegister';
 
-const PrideFetch: React.FC<{ domain: string; payMethod: ReturnType<typeof usePayMethod> }> = ({ domain, payMethod }) => {
+const PrideFetch: React.FC<{ domain: string; }> = ({ domain }) => {
   const payPrice = usePayPrice(domain);
 
   if (payMethod === 'web3') {
@@ -32,7 +32,6 @@ const ErrorBoundaryFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) 
 );
 
 const PayPrice: React.FC<{ domain: string; isPending?: boolean; className?: string }> = ({ domain, isPending, className }) => {
-  const payMethod = usePayMethod();
   const refreshPayPrice = useRefreshPayPrice(domain);
 
   return (
@@ -41,7 +40,7 @@ const PayPrice: React.FC<{ domain: string; isPending?: boolean; className?: stri
         <Suspense fallback={<Loading isPending={isPending} />}>
           <span className="mr-4px text-.35em text-grey-normal-hover text-opacity-50">{payMethod === 'web3' ? 'CFX' : '￥'}</span>
           <span className="text-grey-normal font-bold">
-            <PrideFetch domain={domain} payMethod={payMethod} />
+            <PrideFetch domain={domain} />
           </span>
         </Suspense>
         {isPending && <Loading isPending={isPending} />}

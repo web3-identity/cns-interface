@@ -1,10 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import Button from '@components/Button';
 import Domain from '@modules/Domain';
-import isMobile from '@utils/isMobie';
 import timerNotifier from '@utils/timerNotifier';
 import { web3Pay as _web3Pay, type CommitInfo } from '@service/domainRegister';
-import { usePayMethod } from '@service/payMethod';
+import payMethod from '@service/payMethod';
 import { ReactComponent as FluentIcon } from '@assets/icons/fluent.svg';
 import { RegisterBox } from '@pages/DomainRegister';
 import useInTranscation from '@hooks/useInTranscation';
@@ -12,7 +11,6 @@ import QRCode from './QRCode_web2pc';
 import PayPrice from '../PayPrice';
 
 const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ domain, commitInfo }) => {
-  const payMethod = usePayMethod();
   const remainTimeDOM = useRef<HTMLDivElement>(null);
   const { durationYears, validTime } = commitInfo! || {};
 

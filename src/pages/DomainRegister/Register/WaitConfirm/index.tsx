@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import Spin from '@components/Spin';
 import { RegisterBox } from '@pages/DomainRegister';
-import { usePayMethod } from '@service/payMethod';
+import payMethod from '@service/payMethod';
 import { usePrefetchMakeOrder } from '@service/domainRegister';
 
 const WaitCommitConfirm: React.FC<{ domain: string; type: 'waitCommitConfirm' | 'waitPayConfirm' }> = ({ domain, type }) => {
-  const payMethod = usePayMethod();
   const prefetchMakeOrder = usePrefetchMakeOrder();
   useEffect(() => {
     if (type !== 'waitCommitConfirm' || payMethod !== 'web2') return;

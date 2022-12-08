@@ -15,7 +15,7 @@ const Navbar: React.FC = () => {
 
   return (
     <header className="relative flex flex-col justify-end items-center h-84px text-grey-normal whitespace-nowrap z-100 lt-md:h-56px lt-md:pt-16px">
-      <nav className="flex items-center w-full lt-md:h-40px xl:max-w-1232px lt-xl:px-24px lt-md:px-12px lt-tiny:px-6px">
+      <nav className="flex items-center w-full xl:max-w-1232px lt-xl:px-24px lt-md:px-12px lt-tiny:px-6px">
         <NavLink to="/" className="mr-auto flex items-center text-grey-normal no-underline" style={({ isActive }) => ({ pointerEvents: isActive ? 'none' : undefined })}>
           <Logo className="w-54px h-54px flex-shrink-0 lt-md:w-32px lt-md:h-32px" />
           <span className="ml-7px lt-md:ml-4px text-28px lt-md:text-16.6px translate-y-5px lt-md:translate-y-3px font-[Outfit] font-extrabold lt-mini:display-none">.WEB3</span>

@@ -4,7 +4,7 @@ import { Unit } from '@cfxjs/use-wallet-react/conflux/Fluent';
 import { fetchChain } from '@utils/fetch';
 import { Web3Controller } from '@contracts/index';
 import { yearsToSeconds } from '@utils/date';
-import { payMethodState } from '@service/payMethod';
+import payMethod from '@service/payMethod';
 import { commitInfoState } from '@service/domainRegister/commit';
 import { registerDurationYearsState } from '@pages/DomainRegister/Register/Step1';
 
@@ -13,7 +13,6 @@ const payPrice = selectorFamily<Unit, string>({
   get:
     (domain: string) =>
     async ({ get }) => {
-      const payMethod = get(payMethodState);
       const registerDurationYears = get(registerDurationYearsState(domain));
       const commitInfo = get(commitInfoState(domain));
       const durationYears = commitInfo?.durationYears ?? registerDurationYears ?? 1;

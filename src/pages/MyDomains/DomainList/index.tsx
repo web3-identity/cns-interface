@@ -94,9 +94,9 @@ const DomainItem = ({ index, style, key, myDomains }: ListRowProps & { myDomains
           </div>
         </div>
 
-        <Button variant="text" className="lt-md:display-none mr-28px">
+        {/* <Button variant="text" className="lt-md:display-none mr-28px">
           续费
-        </Button>
+        </Button> */}
         <GotoDomainSettingButton domain={domain} />
 
         <span className="i-dashicons:arrow-right-alt2 text-24px text-grey-normal md:display-none" />
