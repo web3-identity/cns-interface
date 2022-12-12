@@ -4,6 +4,7 @@ import PublicResolverABI from './abis/PublicResolver.json';
 import NameWrapperABI from './abis/NameWrapper.json';
 import BaseRegistrarABI from './abis/BaseRegistrar.json';
 import ReverseRegistrarABI from './abis/ReverseRegistrar.json';
+import ReverseRecordsABI from './abis/ReverseRecords.json';
 import MulticallABI from './abis/Multicall.json';
 import { convertCfxToHex } from '@utils/addressUtils';
 import isProduction from '@utils/isProduction';
@@ -19,28 +20,33 @@ const createContract = (address: string, ABI: ContractInterface) => {
 };
 
 export const Web3Controller = createContract(
-  isProduction ? 'cfxtest:acbrnwph2609zbf21np0501d87xb9dnvuakpv911xk' : 'cfxtest:acbrnwph2609zbf21np0501d87xb9dnvuakpv911xk',
+  isProduction ? 'cfxtest:acde0h4f9nz70h146d4p0wbbx38zamwhue3uce1ndt' : 'cfxtest:acde0h4f9nz70h146d4p0wbbx38zamwhue3uce1ndt',
   Web3ControllerABI
 );
 
 export const PublicResolver = createContract(
-  isProduction ? 'cfxtest:acecxexm0pg268m44jncw5bmagwwmun53jj9msmadj' : 'cfxtest:acecxexm0pg268m44jncw5bmagwwmun53jj9msmadj',
+  isProduction ? 'cfxtest:acfcb2fv6t8xrxyyx3x1atwmdrhh5xvfd21zsje216' : 'cfxtest:acfcb2fv6t8xrxyyx3x1atwmdrhh5xvfd21zsje216',
   PublicResolverABI
 );
 
 export const NameWrapper = createContract(
-  isProduction ? 'cfxtest:acdc4xzy0pg1dzrbajgmv8nw3cjyj6ezn2dzncc4w5' : 'cfxtest:acdc4xzy0pg1dzrbajgmv8nw3cjyj6ezn2dzncc4w5',
+  isProduction ? 'cfxtest:acbttry22rsx7k54ms6hbkc0c8tf680u5pc0r31ef5' : 'cfxtest:acbttry22rsx7k54ms6hbkc0c8tf680u5pc0r31ef5',
   NameWrapperABI
 );
 
 export const BaseRegistrar = createContract(
-  isProduction ? 'cfxtest:acc1ttg7287cybsdy6bn0002nzepypn29yavjbj36g' : 'cfxtest:acc1ttg7287cybsdy6bn0002nzepypn29yavjbj36g',
+  isProduction ? 'cfxtest:acbp262fvjzva1raef4n3e5yyszy9spsc20cmztnya' : 'cfxtest:acbp262fvjzva1raef4n3e5yyszy9spsc20cmztnya',
   BaseRegistrarABI
 );
 
 export const ReverseRegistrar = createContract(
-  isProduction ? 'cfxtest:ach1p03gkptxz07p4ecn66gjpd0xrnkkbj1n6p96d5' : 'cfxtest:ach1p03gkptxz07p4ecn66gjpd0xrnkkbj1n6p96d5',
+  isProduction ? 'cfxtest:acfmezysbf86jy3jnw835bnamxp08dxzd61w5ur8hy' : 'cfxtest:acfmezysbf86jy3jnw835bnamxp08dxzd61w5ur8hy',
   ReverseRegistrarABI
+);
+
+export const ReverseRecords = createContract(
+  isProduction ? 'cfxtest:acccv089mvek41rsmjyf1yyg922phjd0ppt16hfuv1' : 'cfxtest:acccv089mvek41rsmjyf1yyg922phjd0ppt16hfuv1',
+  ReverseRecordsABI
 );
 
 export const Multicall = createContract(isProduction ? 'cfxtest:acedvt79ncbjs6zmfgj4gjurtb26gsmr1jv9kzmgy2' : 'cfxtest:acedvt79ncbjs6zmfgj4gjurtb26gsmr1jv9kzmgy2', MulticallABI);
