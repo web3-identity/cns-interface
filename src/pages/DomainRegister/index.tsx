@@ -42,7 +42,7 @@ const DomainRegister: React.FC = () => {
       </BorderBox>
       <StatusCheck domain={domain} isPending={isPending}>
         <Register domain={domain} registerStep={registerStep} />
-        <ProgressBar domain={domain} registerStep={registerStep} />
+        <ProgressBar registerStep={registerStep} />
       </StatusCheck>
     </PageWrapper>
   );

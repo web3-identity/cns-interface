@@ -1,0 +1,8 @@
+.toast-item-wrapper {
+  @apply mobile:mb-12px lt-mobile:mb-6px;
+  box-shadow: 0px 4px 8px rgba(22, 20, 35, 0.25);
+}
+
+.toast-wrapper {
+  @apply md:top-112px lt-md:top-68px lt-mobile:top-16px xl:left-[calc(50%+249px)] !lt-xl:right-24px !lt-md:right-12px !lt-tiny:right-6px;
+}

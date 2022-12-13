@@ -6,7 +6,7 @@ import renderReactNode from '@utils/renderReactNode';
 import useCloseOnRouterBack from '../useCloseOnRouterBack';
 import { recordCurrentPopup } from '../';
 
-export const DrawerPopup = new DrawerClass();
+export const DrawerPopup = new DrawerClass(true);
 
 const Drawer: React.FC<{ Content: ReactNode | Function; title: string; className?: string }> = memo(({ Content, title, className }) => {
   const account = useAccount();

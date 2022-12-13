@@ -28,7 +28,7 @@ export const maxCommitLockTimeState = atom<number>({
 
 export const useMinCommitLockTime = () => useRecoilValue(minCommitLockTimeState);
 export const useMaxCommitLockTime = () => useRecoilValue(maxCommitLockTimeState);
-export const getMinCommitLockTime = () => getRecoil(minCommitLockTimeState) ?? 30;
+export const getMinCommitLockTime = () => getRecoil(minCommitLockTimeState) ?? 10;
 export const getMaxCommitLockTime = () => getRecoil(maxCommitLockTimeState) ?? 600;
 
 (() => {

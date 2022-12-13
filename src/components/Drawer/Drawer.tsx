@@ -4,7 +4,6 @@ import { a, useSpring, config } from '@react-spring/web';
 import { uniqueId } from 'lodash-es';
 import Mask from '@components/Mask';
 import renderReactNode from '@utils/renderReactNode';
-import usePressEsc from '@hooks/usePressEsc';
 
 export interface DrawerMethod {
   show: (Content: React.ReactNode) => string;
@@ -47,8 +46,6 @@ const Drawer = forwardRef<DrawerMethod>((_, ref) => {
   );
 
   const display = y.to((py) => (py < height ? 'block' : 'none'));
-
-  usePressEsc(history.back);
 
   useImperativeHandle(ref, () => ({
     show,

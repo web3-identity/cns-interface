@@ -43,7 +43,7 @@ export class PopupClass implements PopupMethods {
   }
 
   judgeInit(method: keyof PopupMethods, args?: any): any {
-
+    
   }
 
   resetMethod = () => {
@@ -64,6 +64,7 @@ export class PopupClass implements PopupMethods {
     const judgeIsReady = () => {
       if (this.popupRef.current) {
         this.completeInit();
+        this.resetMethod();
       } else {
         setTimeout(judgeIsReady, 16);
       }
@@ -81,7 +82,6 @@ export class PopupClass implements PopupMethods {
     }
     createRoot(container).render(<PopupComponent ref={this.popupRef} />);
     await this.waitRefReady();
-    this.resetMethod();
     this.isEndInit = true;
   };
 
@@ -94,7 +94,6 @@ export class PopupClass implements PopupMethods {
     }
     const component = createPortal(React.createElement(PopupComponent, { ref: this.popupRef }), container);
     this.waitRefReady().then(() => {
-      this.resetMethod();
       this.isEndInit = true;
     });
     return component;

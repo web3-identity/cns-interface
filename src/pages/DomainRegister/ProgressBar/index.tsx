@@ -4,7 +4,7 @@ import { RegisterStep } from '@service/domainRegister';
 import { ReactComponent as Rocket } from '@assets/images/Rocket.svg';
 import './index.css';
 
-const ProgressBar: React.FC<{ domain: string; registerStep: RegisterStep; }> = ({ domain, registerStep }) => {
+const ProgressBar: React.FC<{ registerStep: RegisterStep; }> = ({ registerStep }) => {
   return (
     <div className="mt-24px relative flex justify-between items-center px-32px text-18px text-grey-normal">
       <div
@@ -39,7 +39,7 @@ const ProgressBar: React.FC<{ domain: string; registerStep: RegisterStep; }> = (
       </div>
 
       <Rocket
-        className={cx('absolute left-1/2 top-1/2 -translate-y-[calc(50%-4px)] w-86px h-57px transition-all duration-400ms', {
+        className={cx('absolute top-1/2 -translate-y-[calc(50%-4px)] w-86px h-57px transition-all duration-400ms', {
           'left-0': registerStep === RegisterStep.WaitCommit,
           'left-[calc(50%-52px)]': registerStep === RegisterStep.WaitPay,
           'left-[calc(100%-100px)]': registerStep === RegisterStep.Success,

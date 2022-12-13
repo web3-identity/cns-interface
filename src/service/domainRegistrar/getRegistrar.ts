@@ -39,6 +39,23 @@ export const fetchDomainRegistrar = (domain: string): Promise<Array<DomainRegist
   });
 };
 
+export const fetchConfluxCoreRegistrar = (domain: string) =>
+  fetchChain<string>({
+    params: [{ data: PublicResolver.func.encodeFunctionData('addr', [getNameHash(domain + '.web3'), chainsType['Conflux Core']]), to: PublicResolver.address }, 'latest_state'],
+  }).then((response) => {
+    let address = '';
+    try {
+      const decodeRes: string = PublicResolver.func.decodeFunctionResult('addr', response)?.[0];
+      if (decodeRes === '0x' || decodeRes === '0x0000000000000000000000000000000000000000') return address;
+      // may encode error
+      address = decodeRes;
+      address = chainsEncoder['Conflux Core'].encode(decodeRes);
+      return address;
+    } catch (_) {
+      return address;
+    }
+  });
+
 const domainRegistrarState = atomFamily<Array<DomainRegistrar> | null, string>({
   key: 'domainRegistrarState',
   effects: [persistAtomWithDefault(null)],
@@ -50,13 +67,13 @@ const domainRegistrarStatus = atomFamily<Status, string>({
   effects: [persistAtomWithDefault('init')],
 });
 
-const fetchTick: Record<string, { id: number; timestamp: number; }> = {};
+const fetchTick: Record<string, { id: number; timestamp: number }> = {};
 
 export const setDomainRegistrarStatusUpdate = (domain: string) => setRecoil(domainRegistrarStatus(domain), 'update');
 export const getDomainRegistrar = async (domain: string, forceUpdate = false) => {
   const lastFetchTick = fetchTick[domain];
   const currentTimestamp = Date.now();
-  if (!forceUpdate && lastFetchTick && ((currentTimestamp - lastFetchTick.timestamp) <= 10000)) {
+  if (!forceUpdate && lastFetchTick && currentTimestamp - lastFetchTick.timestamp <= 10000) {
     return;
   }
   const currentFechTick = { id: (lastFetchTick?.id ?? 0) + 1, timestamp: currentTimestamp };

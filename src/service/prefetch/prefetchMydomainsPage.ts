@@ -1,15 +1,15 @@
 import { useCallback } from 'react';
 import { throttle } from 'lodash-es';
 import { usePrefetchMyDomains } from '@service/myDomains';
-import { usePrefetchDomainReverseRegistrar } from '@service/domainReverseRegistrar';
+import { usePrefetchAccountReverseRegistrar } from '@service/accountReverseRegistrar';
 
 export const usePrefetchMydomainsPage = () => {
   const prefetchMyDomains = usePrefetchMyDomains();
-  const prefetchDomainReverseRegistrar = usePrefetchDomainReverseRegistrar();
+  const prefetchAccountReverseRegistrar = usePrefetchAccountReverseRegistrar();
   return useCallback(
     throttle(() => {
       prefetchMyDomains();
-      prefetchDomainReverseRegistrar();
+      prefetchAccountReverseRegistrar();
     }, 10000),
     []
   );

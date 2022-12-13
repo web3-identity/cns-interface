@@ -17,6 +17,7 @@ export type CommitInfo = {
   secret: string;
   wrapperExpiry: number;
   durationYears: number;
+  setAddrData: string;
 };
 
 export const commitInfoState = atomFamily<CommitInfo | null, string>({
@@ -24,7 +25,7 @@ export const commitInfoState = atomFamily<CommitInfo | null, string>({
   effects: [persistAtomWithNamespace('CommitInfo')],
 });
 
-export const setCommitInfo = (domain: string, commitInfo: { commitmentHash: string; commitTime: number; secret: string; wrapperExpiry: number; durationYears: number }) => {
+export const setCommitInfo = (domain: string, commitInfo: { commitmentHash: string; commitTime: number; secret: string; wrapperExpiry: number; durationYears: number; setAddrData: string; }) => {
   const minCommitLockTime = getMinCommitLockTime();
   const maxCommitLockTime = getMaxCommitLockTime();
   if (!commitInfo || !minCommitLockTime || !maxCommitLockTime) {
@@ -42,6 +43,7 @@ export const setCommitInfo = (domain: string, commitInfo: { commitmentHash: stri
     secret: commitInfo.secret,
     durationYears: commitInfo.durationYears,
     wrapperExpiry: commitInfo.wrapperExpiry,
+    setAddrData: commitInfo.setAddrData
   });
 
   scheduleJob(domain, validTime);

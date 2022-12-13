@@ -135,7 +135,7 @@ const PopupContainer = forwardRef<PopupMethods>((_, ref) => {
     <div>
       <Mask open={openMask} className={maskClassName} style={maskStyle} onClick={maskClickHandler} />
       <List
-        className={cx('fixed flex flex-col items-center w-fit left-[50%] top-[30%] translate-x-[-50%] z-[201]', listClassName)}
+        className={cx('fixed flex flex-col items-center w-fit z-[201]', listClassName)}
         list={popupList}
         animatedSize={animatedSize}
         style={listStyle}

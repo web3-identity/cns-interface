@@ -23,6 +23,7 @@ import {
   type Status,
   type DomainRegistrar,
 } from '@service/domainRegistrar';
+import { useRefreshAccountReverseRegistrar } from '@service/accountReverseRegistrar';
 import BinanceIcon from '@assets/chains/Binance.png';
 import BitcoinIcon from '@assets/chains/Bitcoin.png';
 import ConfluxIcon from '@assets/chains/Conflux.png';
@@ -185,6 +186,7 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
     setEditDomainRegistrars(cloneDeep(domainRegistrars));
   }, [domainRegistrars]);
 
+  const refreshAccountReverseRegistrar = useRefreshAccountReverseRegistrar();
   const handleClickSave = useCallback(() => {
     if (hasError) return;
     const data: Array<DomainRegistrar> = [];
@@ -197,6 +199,7 @@ const Chains: React.FC<{ domain: string; status: Status; domainRegistrars: Array
     setMultiRegistrarAddress({
       domain,
       data,
+      refreshAccountReverseRegistrar,
     });
   }, [editDomainRegistrars, hasError]);
 

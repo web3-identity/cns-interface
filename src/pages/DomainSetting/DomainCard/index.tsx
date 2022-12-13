@@ -7,9 +7,11 @@ import Spin from '@components/Spin';
 import Delay from '@components/Delay';
 import Domain from '@modules/Domain';
 import ToolTip from '@components/Tooltip';
+import { showToast } from '@components/showPopup';
 import CfxAddress from '@modules/CfxAddress';
 import { useDomainOwner, useDomainExpire, useRefreshDomainOwner, useRefreshDomainExpire, useDomainSensitiveCensor, useRefreshDomainSensitiveCensor } from '@service/domainInfo';
 import { useAccount } from '@service/account';
+import { useHandleSetAccountReverseRegistrar } from '@service/accountReverseRegistrar';
 import useIsLtMd from '@hooks/useIsLtMd';
 import { ReactComponent as LogoTransparent } from '@assets/icons/logo-transparent.svg';
 import showDomainTransferModal from './DomainTransferModal';
@@ -20,6 +22,8 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
   const refreshDomainOwner = useRefreshDomainOwner(domain);
   const refreshDomainExpire = useRefreshDomainExpire(domain);
   const refreshDomainSensitiveCensor = useRefreshDomainSensitiveCensor(domain);
+
+  const handleSetAccountReverseRegistrar = useHandleSetAccountReverseRegistrar(domain);
 
   return (
     <div className="flex lt-md:flex-col gap-16px p-16px rounded-16px bg-purple-dark-active dropdown-shadow">
@@ -34,7 +38,13 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col justify-end">
+      <div className="flex-1 flex flex-col justify-end gap-8px">
+        <div className="relative flex items-center h-28px lt-md:h-32px">
+          <Button className="ml-auto lt-md:self-end" size="mini" onClick={handleSetAccountReverseRegistrar}>
+            设为.web3域名
+          </Button>
+        </div>
+
         <div className="relative flex items-center h-28px lt-md:h-40px">
           <span className="text-14px lt-md:text-12px text-grey-normal-hover text-opacity-50 lt-md:self-start">注册人</span>
           <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback type="owner" {...fallbackProps} />} onReset={refreshDomainOwner}>
@@ -44,7 +54,7 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
           </ErrorBoundary>
         </div>
 
-        <div className="mt-8px lt-md:mt-16px relative flex items-center h-28px lt-md:h-40px">
+        <div className="lt-md:mt-16px relative flex items-center h-28px lt-md:h-40px">
           <span className="text-14px lt-md:text-12px text-grey-normal-hover text-opacity-50 lt-md:self-start">到期时间</span>
           <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback type="expire" {...fallbackProps} />} onReset={refreshDomainExpire}>
             <Suspense fallback={<Loading />}>
@@ -132,8 +142,8 @@ const SensitiveCensorLoading: React.FC = () => <Delay delay={300}>敏感词检�
 const SensitiveCensorErrorFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => (
   <div className="text-14px lt-md:text-12px text-error-normal cursor-pointer select-none group" onClick={resetErrorBoundary}>
     <span>敏感词检测失败</span>
-    <span className='lt-md:display-none'>，</span>
-    <br className='md:display-none'/>
+    <span className="lt-md:display-none">，</span>
+    <br className="md:display-none" />
     <span className="underline group-hover:underline-none lt-md:block lt-md:mt-2px">点此重试</span>
   </div>
 );

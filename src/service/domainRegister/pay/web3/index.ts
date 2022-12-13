@@ -18,7 +18,7 @@ export const web3Pay = async ({ domain, durationYears }: Params) => {
     const commitInfo = getCommitInfo(domain);
     const payPrice = getPayPrice(domain);
 
-    const params = [domain, hexAccount, durationSeconds, commitInfo.secret, PublicResolver.hexAddress, [], true, 0, commitInfo.wrapperExpiry];
+    const params = [domain, hexAccount, durationSeconds, commitInfo.secret, PublicResolver.hexAddress, [commitInfo.setAddrData], true, 0, commitInfo.wrapperExpiry];
 
     const txHash = await sendTransaction({
       data: Web3Controller.func.encodeFunctionData('register', params),

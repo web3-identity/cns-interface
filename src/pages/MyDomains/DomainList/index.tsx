@@ -1,5 +1,5 @@
-import React, { memo, Suspense, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import React, { memo, Suspense, useCallback, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { type ListRowProps } from 'react-virtualized';
 import List from 'react-virtualized/dist/es/List';
@@ -12,6 +12,7 @@ import Spin from '@components/Spin';
 import Domain from '@modules/Domain';
 import { useMyDomains, useRefreshMyDomains } from '@service/myDomains';
 import { useDomainExpire, useRefreshDomainExpire } from '@service/domainInfo';
+import { handleSetAccountReverseRegistrar, useRefreshAccountReverseRegistrar } from '@service/accountReverseRegistrar';
 import { usePrefetchSettingPage } from '@service/prefetch';
 import useMainScroller from '@hooks/useMainScroller';
 import NoDomains from '@assets/images/NoDomains.png';
@@ -34,7 +35,11 @@ export default memo(DomainList);
 
 const MyDomains: React.FC<{ mainScroller: HTMLDivElement }> = ({ mainScroller }) => {
   const myDomains = useMyDomains();
-  const renderRow = useCallback((props: ListRowProps) => DomainItem({ ...props, myDomains }), [myDomains]);
+
+  const navigate = useNavigate();
+  const refreshAccountReverseRegistrar = useRefreshAccountReverseRegistrar();
+  const renderRow = useCallback((props: ListRowProps) => DomainItem({ ...props, myDomains, refreshAccountReverseRegistrar, navigate }), [myDomains]);
+
   const hasDomain = !!myDomains?.length;
 
   return (
@@ -80,7 +85,14 @@ const MyDomains: React.FC<{ mainScroller: HTMLDivElement }> = ({ mainScroller })
   );
 };
 
-const DomainItem = ({ index, style, key, myDomains }: ListRowProps & { myDomains: ReturnType<typeof useMyDomains> }) => {
+const DomainItem = ({
+  index,
+  style,
+  key,
+  myDomains,
+  navigate,
+  refreshAccountReverseRegistrar,
+}: ListRowProps & { myDomains: ReturnType<typeof useMyDomains>; refreshAccountReverseRegistrar: VoidFunction; navigate: ReturnType<typeof useNavigate> }) => {
   const domain = myDomains[index];
 
   return (
@@ -94,9 +106,9 @@ const DomainItem = ({ index, style, key, myDomains }: ListRowProps & { myDomains
           </div>
         </div>
 
-        {/* <Button variant="text" className="lt-md:display-none mr-28px">
-          续费
-        </Button> */}
+        <Button variant="text" className="lt-md:display-none mr-28px" onClick={() => handleSetAccountReverseRegistrar({ domain, navigate, refreshAccountReverseRegistrar })}>
+          设为.web3域名
+        </Button>
         <GotoDomainSettingButton domain={domain} />
 
         <span className="i-dashicons:arrow-right-alt2 text-24px text-grey-normal md:display-none" />

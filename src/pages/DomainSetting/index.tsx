@@ -17,7 +17,7 @@ const DomainSetting: React.FC = () => {
   const prefetchMyDomainsPage = usePrefetchMydomainsPage();
 
   return (
-    <PageWrapper className="pt-4px">
+    <PageWrapper className="pt-40px lt-md:pt-4px">
       {!isMobile() && (
         <Link className="no-underline" to={isBack ? (-1 as unknown as string) : '/my-domains'} onMouseEnter={isBack ? undefined : prefetchMyDomainsPage}>
           <Button variant="text" color="white" className="!inline-flex mb-16px lt-md:mb-6px relative text-22px pl-36px pr-14px lt-md:text-18px lt-md:pl-28px lt-md:pr-12px">
