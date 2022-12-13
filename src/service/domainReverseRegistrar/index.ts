@@ -4,7 +4,7 @@ import { getRecoil } from 'recoil-nexus';
 import { fetchChain } from '@utils/fetch';
 import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
 import { getAccount, sendTransaction, useHexAccount, getHexAccount } from '@service/account';
-import { ReverseRegistrar, PublicResolver } from '@contracts/index';
+import { ReverseRegistrar, PublicResolver, ReverseRecords } from '@contracts/index';
 import { recordToHidePopup } from '@components/showPopup';
 
 export const setDomainReverseRegistrar = async ({ domain, refreshDomainReverseRegistrar }: { domain: string; refreshDomainReverseRegistrar: VoidFunction }) => {
@@ -30,13 +30,12 @@ const domainReverseRegistrarQuery = selectorFamily<string | null, string>({
   key: 'domainReverseRegistrar',
   get: (hexAccount: string) => async () => {
     try {
-      const node = await fetchChain<string>({
-        params: [{ data: ReverseRegistrar.func.encodeFunctionData('node', [hexAccount]), to: ReverseRegistrar.address }, 'latest_state'],
+      const res = await fetchChain<string>({
+        params: [{ data: ReverseRecords.func.encodeFunctionData('getNames', [[hexAccount]]), to: ReverseRecords.address }, 'latest_state'],
+      }).then((response) => {
+        return ReverseRecords.func.decodeFunctionResult('getNames', response)?.[0]?.[0];
       });
-
-      return await fetchChain<string>({
-        params: [{ data: PublicResolver.func.encodeFunctionData('name', [node]), to: PublicResolver.address }, 'latest_state'],
-      }).then((response) => PublicResolver.func.decodeFunctionResult('name', response)?.[0]);
+      return res;
     } catch (err) {
       throw err;
     }

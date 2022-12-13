@@ -3,10 +3,10 @@ import payMethod from '@service/payMethod';
 import { randomSecret } from '@utils/domainHelper';
 import { fetchChain } from '@utils/fetch';
 import dayjs from 'dayjs';
-import isMobile from '@utils/isMobie';
 import { yearsToSeconds } from '@utils/date';
 import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
 import { Web3Controller, PublicResolver } from '@contracts/index';
+import { createSetAddrData } from '@service/domainRegistrar/setRegistrarAddress';
 import { postCommitmentToBackend } from './web2Additional/pc';
 import { setCommitInfo } from '../';
 
@@ -23,12 +23,11 @@ interface Params {
 export const commitRegistration = async ({ domain, durationYears }: Params) => {
   try {
     const durationSeconds = yearsToSeconds(durationYears);
-    const account = getAccount();
+    const account = getAccount()!;
     const hexAccount = getHexAccount();
     const secret = randomSecret();
     const wrapperExpiry = dayjs().unix() + durationSeconds;
     const commitParams = [domain, hexAccount, durationSeconds, secret, PublicResolver.hexAddress, [], true, 0, wrapperExpiry];
-
     const commitmentHash: string = await fetchChain({
       params: [
         {

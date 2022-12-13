@@ -11,8 +11,6 @@ import './index.css';
 export const ModalPopup = new PopupClass(true);
 ModalPopup.initPromise.then(() => {
   ModalPopup.setListClassName('modal-wrapper');
-  ModalPopup.setItemWrapperClassName('toast-item-wrapper');
-  ModalPopup.setAnimatedSize(false);
 });
 
 const Modal: React.FC<{ Content: ReactNode | Function; title: string; className?: string }> = memo(({ Content, title, className }) => {

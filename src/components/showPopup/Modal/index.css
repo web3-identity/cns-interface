@@ -1,5 +1,7 @@
 .modal-wrapper {
-  top: 340px !important;
+  left: 50%;
+  top: 340px;
+  transform: translate(-50%);
 }
 
 @media screen and (max-height: 1080px) {

@@ -54,12 +54,12 @@ export const slideRight = {
   enter: {
     opacity: 1,
     transform: 'translate3d(0%, 0, 0)',
-    config: { mass: 1, tension: 210, friction: 20 },
+    config: { mass: 1, tension: 440, friction: 31 },
   },
   leave: {
     opacity: 0,
     transform: 'translate3d(175%, 0, 0)',
-    config: { mass: 1, tension: 170, friction: 23, clamp: true },
+    config: { mass: 1, tension: 320, friction: 26, clamp: true },
   },
 };
 

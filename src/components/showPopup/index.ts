@@ -1,5 +1,6 @@
 export * from './Drawer';
 export * from './Modal';
+export * from './Toast';
 
 let currentPopup: string | number | null = null;
 

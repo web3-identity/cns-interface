@@ -9,6 +9,7 @@ import AutoSizer from 'react-virtualized/dist/es/AutoSizer';
 import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
+import { showToast } from '@components/showPopup';
 import Domain from '@modules/Domain';
 import { useMyDomains, useRefreshMyDomains } from '@service/myDomains';
 import { useDomainExpire, useRefreshDomainExpire } from '@service/domainInfo';
@@ -94,9 +95,9 @@ const DomainItem = ({ index, style, key, myDomains }: ListRowProps & { myDomains
           </div>
         </div>
 
-        {/* <Button variant="text" className="lt-md:display-none mr-28px">
-          续费
-        </Button> */}
+        <Button variant="text" className="lt-md:display-none mr-28px" onClick={() => showToast('提示信息提示信息提示信息提示信息提示信！', { type: 'success' }) }>
+          设为.web3域名
+        </Button>
         <GotoDomainSettingButton domain={domain} />
 
         <span className="i-dashicons:arrow-right-alt2 text-24px text-grey-normal md:display-none" />
