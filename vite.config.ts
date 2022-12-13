@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import path from 'path';
 import react from '@vitejs/plugin-react-swc';
-import compression  from 'vite-plugin-compression'
+import compression from 'vite-plugin-compression';
 import Unocss from 'unocss/vite';
 import presetIcons from '@unocss/preset-icons';
 import presetWind from '@unocss/preset-wind';
@@ -34,7 +34,7 @@ export default defineConfig({
           sm: '640px',
           md: '768px',
           lg: '1024px',
-          xl : '1280px',
+          xl: '1280px',
           '2xl': '1536px',
         },
         colors: {
@@ -78,9 +78,9 @@ export default defineConfig({
       '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@components': path.resolve(__dirname, 'src/components'),
       '@service': path.resolve(__dirname, 'src/service'),
-      punycode: "rollup-plugin-node-polyfills/polyfills/punycode",
+      punycode: 'rollup-plugin-node-polyfills/polyfills/punycode',
       buffer: 'rollup-plugin-node-polyfills/polyfills/buffer-es6',
-      'crypto-addr-codec': 'crypto-addr-codec/dist/index.js'
+      'crypto-addr-codec': 'crypto-addr-codec/dist/index.js',
     },
   },
   build: {
@@ -88,12 +88,12 @@ export default defineConfig({
     rollupOptions: {
       plugins: [visualizer()],
       output: {
-        manualChunks: id => {
-          if(id.includes('node_modules')) {
-            return 'vendor'
-          }
-        }
-      }
+        // manualChunks: (id) => {
+        //   // if (id.includes('node_modules') && !id.includes('buffer') && !id.includes('polyfill')) {
+        //   //   return 'vendor';
+        //   // }
+        // },
+      },
     },
   },
   optimizeDeps: {
