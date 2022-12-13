@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import path from 'path';
-import react from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-react-swc';
+import compression  from 'vite-plugin-compression'
 import Unocss from 'unocss/vite';
 import presetIcons from '@unocss/preset-icons';
 import presetWind from '@unocss/preset-wind';
@@ -63,6 +64,7 @@ export default defineConfig({
       },
     }),
     react(),
+    compression(),
   ],
   resolve: {
     alias: {
@@ -85,6 +87,13 @@ export default defineConfig({
     minify: false,
     rollupOptions: {
       plugins: [visualizer()],
+      output: {
+        manualChunks: id => {
+          if(id.includes('node_modules')) {
+            return 'vendor'
+          }
+        }
+      }
     },
   },
   optimizeDeps: {
