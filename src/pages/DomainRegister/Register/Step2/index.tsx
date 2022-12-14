@@ -40,7 +40,7 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
       <div className="mt-24px flex-1 flex justify-between md:px-4% lt-md:flex-col">
         <div className="md:pt-8px flex flex-col gap-20px">
           <div className="flex items-baseline h-32px lt-md:h-20px lt-md:items-center">
-            注册域名
+            注册用户名
             <Domain className="ml-24px text-28px text-grey-normal font-bold lt-md:text-16px lt-md:ml-8px md:translate-y-1px" domain={domain} />
           </div>
 
@@ -79,7 +79,7 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
                   微信扫码
                 </>
               )}
-              支付域名注册费
+              支付用户名注册费
             </p>
             <p className="mt-2px flex items-center">
               请在

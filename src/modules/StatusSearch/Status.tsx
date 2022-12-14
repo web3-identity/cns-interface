@@ -86,12 +86,12 @@ const statusMap = {
   },
   [DomainStatus.TooShort]: {
     icon: StatusInvalid,
-    text: '域名太短',
+    text: '用户名太短',
     color: 'text-error-normal',
   },
   [DomainStatus.IllegalChar]: {
     icon: StatusInvalid,
-    text: '域名包含不支持的字符',
+    text: '用户名包含不支持的字符',
     color: 'text-error-normal',
   },
   [DomainStatus.NotOpen]: {
@@ -166,7 +166,7 @@ const SearchDomainEqualCurrentRegister: React.FC<Pick<Props, 'isSmall'> & { type
   return (
     <>
       <StatusValid className={cx('-translate-y-2px flex-shrink-0', isSmall ? 'mr-4px w-28px h-28px' : 'mr-12px w-40px h-40px')} />
-      <span className="mr-auto text-green-normal">{type === 'inRegister' ? '搜索域名为当前注册中域名' : '搜索域名即为当前设置页域名'}</span>
+      <span className="mr-auto text-green-normal">{type === 'inRegister' ? '搜索用户名为当前注册中用户名' : '搜索用户名即为当前设置页用户名'}</span>
     </>
   );
 };

@@ -19,7 +19,7 @@ const Step3: React.FC<{ domain: string }> = ({ domain }) => {
       <div className="mt-54px lt-md:mt-20px flex flex-row-reverse justify-center gap-72px lt-md:flex-col lt-md:gap-28px">
         <div>
           <p className="flex items-baseline h-32px lt-md:h-16px">
-            注册域名
+            注册用户名
             <Domain className="ml-24px text-28px text-grey-normal font-bold lt-md:text-16px lt-md:ml-8px md:translate-y-1px" domain={domain} />
           </p>
 
@@ -42,7 +42,7 @@ const Step3: React.FC<{ domain: string }> = ({ domain }) => {
       </div>
 
       <Link to={`/setting/${domain}`} className="mx-auto no-underline md:-translate-x-13px lt-md:mt-auto lt-md:w-full" onMouseEnter={prefetchSettingPage}>
-        <Button className="w-152px lt-md:w-full">管理域名</Button>
+        <Button className="w-152px lt-md:w-full">管理用户名</Button>
       </Link>
     </RegisterBox>
   );

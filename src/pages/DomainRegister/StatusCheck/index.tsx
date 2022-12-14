@@ -46,22 +46,22 @@ const statusMap = {
     text: '可注册',
   },
   [DomainStatus.Registered]: {
-    text: '域名已被注册',
+    text: '用户名已被注册',
   },
   [DomainStatus.Reserved]: {
-    text: '域名未开放',
+    text: '用户名未开放',
   },
   [DomainStatus.Locked]: {
-    text: '域名已锁定',
+    text: '用户名已锁定',
   },
   [DomainStatus.TooShort]: {
-    text: '域名太短',
+    text: '用户名太短',
   },
   [DomainStatus.IllegalChar]: {
-    text: '域名包含不支持的字符',
+    text: '用户名包含不支持的字符',
   },
   [DomainStatus.NotOpen]: {
-    text: '域名未开放',
+    text: '用户名未开放',
   },
 } as const;
 

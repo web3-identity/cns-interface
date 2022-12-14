@@ -55,7 +55,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
                 <span className="i-fluent:subtract-12-filled text-16px font-bold" />
               </button>
 
-              <p className={cx("mx-24px lt-md:mx-0px lt-md:h-38px", import.meta.env.VITE_RegisterUnit === '小时' ? 'md:min-w-92px' : 'md:min-w-76px')}>
+              <p className={cx('mx-24px lt-md:mx-0px lt-md:h-38px', import.meta.env.VITE_RegisterUnit === '小时' ? 'md:min-w-92px' : 'md:min-w-76px')}>
                 <span className="inline-block text-center leading-54px text-44px text-grey-normal font-bold lt-md:text-32px lt-md:leading-38px">
                   {durationYears < 10 ? `0${durationYears}` : durationYears}
                 </span>
@@ -94,23 +94,19 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
   );
 };
 
-const ActionButton: React.FC<{ className: string; inTranscation: boolean; domain: string; durationYears: number; commitRegistration: typeof _commitRegistration }> = memo(({
-  inTranscation,
-  domain,
-  durationYears,
-  className,
-  commitRegistration,
-}) => (
-  <AuthConnectButton className={className}>
-    <Button className={className} loading={inTranscation} onClick={() => commitRegistration({ domain, durationYears })}>
-      申请
-    </Button>
-  </AuthConnectButton>
-));
+const ActionButton: React.FC<{ className: string; inTranscation: boolean; domain: string; durationYears: number; commitRegistration: typeof _commitRegistration }> = memo(
+  ({ inTranscation, domain, durationYears, className, commitRegistration }) => (
+    <AuthConnectButton className={className}>
+      <Button className={className} loading={inTranscation} onClick={() => commitRegistration({ domain, durationYears })}>
+        申请
+      </Button>
+    </AuthConnectButton>
+  )
+);
 
 const Tip: React.FC<ComponentProps<'p'>> = memo(({ className, ...props }) => (
   <p className={cx('whitespace-normal', className)} {...props}>
-    在此步骤中，您可以请求注册并执行两个交易中的第一个。 根据顺序，系统将执行第一个申请，以确保没有其他用户同时注册此域名。 最多需要等待
+    在此步骤中，您需要先发送一笔交易，用于提交该用户名的申请。在申请通过后，您需要完成支付并等待程序执行完成，即可获得此用户名。最多需要等待
     <MinCommitmentLockTime />
   </p>
 ));

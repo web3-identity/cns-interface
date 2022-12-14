@@ -29,7 +29,7 @@ const AccountDropdown: React.FC<{ hideDropdown: VoidFunction }> = ({ hideDropdow
   return (
     <div className="mt-8px flex flex-col gap-16px p-24px rounded-24px bg-#26233E text-grey-normal text-14px font-bold dropdown-shadow lt-md:mt-4px lt-md:p-16px">
       <Link to="/my-domains" className="text-white no-underline cursor-default" draggable="false" onClick={hideDropdown}>
-        <AccountDropdownItem isCurrent={pathname?.startsWith('/my-domains')}>域名管理</AccountDropdownItem>
+        <AccountDropdownItem isCurrent={pathname?.startsWith('/my-domains')}>用户名管理</AccountDropdownItem>
       </Link>
       <AccountDropdownItem
         onClick={() => {

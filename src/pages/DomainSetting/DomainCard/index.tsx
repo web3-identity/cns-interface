@@ -41,7 +41,7 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
       <div className="flex-1 flex flex-col justify-end gap-8px">
         <div className="relative flex items-center h-28px lt-md:h-32px">
           <Button className="ml-auto lt-md:self-end" size="mini" onClick={handleSetAccountReverseRegistrar}>
-            设为.web3域名
+            设为.web3用户名
           </Button>
         </div>
 
@@ -126,7 +126,7 @@ const DomainExpire: React.FC<{ domain: string }> = ({ domain }) => {
           `预计 ${dateFormatForSecond}`
         ) : (
           <>
-            域名已到期，将于<span className="text-grey-normal font-bold"> {gracePeriod} </span>天后回收
+            用户名已到期，将于<span className="text-grey-normal font-bold"> {gracePeriod} </span>天后回收
           </>
         )}
       </div>

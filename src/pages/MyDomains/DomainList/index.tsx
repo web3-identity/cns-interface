@@ -48,7 +48,7 @@ const MyDomains: React.FC<{ mainScroller: HTMLDivElement }> = ({ mainScroller })
         <div className="flex flex-col justify-center items-center h-340px">
           <img className="w-112px h-88px -mt-16px mb-20px" src={NoDomains} alt="no domains" />
           <p className="text-grey-normal text-14px">
-            暂无域名，去
+            暂无用户名，去
             <Link className="text-purple-normal" to="/">
               申请
             </Link>
@@ -107,7 +107,7 @@ const DomainItem = ({
         </div>
 
         <Button variant="text" className="lt-md:display-none mr-28px" onClick={() => handleSetAccountReverseRegistrar({ domain, navigate, refreshAccountReverseRegistrar })}>
-          设为.web3域名
+          设为.web3用户名
         </Button>
         <GotoDomainSettingButton domain={domain} />
 
@@ -123,7 +123,7 @@ const GotoDomainSettingButton = memo(({ domain }: { domain: string }) => {
 
   return (
     <Link to={`/setting/${domain}`} className="no-underline lt-md:display-none" onMouseEnter={prefetchSettingPage} draggable="false">
-      <Button>域名管理</Button>
+      <Button>用户名管理</Button>
     </Link>
   );
 });
@@ -171,7 +171,7 @@ const ExpireTime: React.FC<{ domain: string }> = ({ domain }) => {
         </>
       ) : (
         <>
-          域名已到期，将于<span className="text-grey-normal font-bold"> {gracePeriod} </span>天后回收
+          用户名已到期，将于<span className="text-grey-normal font-bold"> {gracePeriod} </span>天后回收
         </>
       )}
     </>

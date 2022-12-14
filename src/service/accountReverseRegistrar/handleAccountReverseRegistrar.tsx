@@ -35,7 +35,7 @@ export const handleSetAccountReverseRegistrar = async ({
     showToast(
       <>
         <p>
-          域名 <Domain domain={domain} /> 已是 .web3 域名
+          用户名 <Domain domain={domain} /> 已是 .web3 用户名
         </p>
       </>,
       { type: 'warning', key: `Registrar-already-${domain}` }
@@ -49,7 +49,7 @@ export const handleSetAccountReverseRegistrar = async ({
       <>
         <p>必须先将当前账户地址设置到</p>
         <p>
-          域名 <Domain domain={domain} /> 的解析里！
+          用户名 <Domain domain={domain} /> 的解析里！
           {from === 'my-domains' && (
             <span
               className="text-white underline underline-offset-3px cursor-pointer"
@@ -69,7 +69,7 @@ export const handleSetAccountReverseRegistrar = async ({
     try {
       await setAccountReverseRegistrar(domain);
       await refreshAccountReverseRegistrar();
-      showToast(`设置 ${domain}.web3 为 .web3域名成功！`, { type: 'success' });
+      showToast(`设置 ${domain}.web3 为 .web3用户名成功！`, { type: 'success' });
     } catch (_) {}
   }
 };

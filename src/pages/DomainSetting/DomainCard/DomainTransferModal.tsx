@@ -123,8 +123,8 @@ const ModalContent: React.FC<Props> = ({ domain }) => {
           <div className="absolute left-7px top-[calc(100%+.5em)] flex items-center h-20px text-12px text-error-normal">
             {validateStatus === 'error-format' && '地址格式错误'}
             {validateStatus === 'error-required' && '请输入转让地址'}
-            {validateStatus === 'error-registrar' && '该域名未设置 Conflux Core 解析地址'}
-            {validateStatus === 'error-registrar-format' && '该域名 Conflux Core 解析地址 格式错误'}
+            {validateStatus === 'error-registrar' && '该用户名未设置 Conflux Core 解析地址'}
+            {validateStatus === 'error-registrar-format' && '该用户名 Conflux Core 解析地址 格式错误'}
             {validateStatus === 'error-self' && '不能转给自己'}
           </div>
         )}
@@ -181,18 +181,18 @@ const DomainAddress: React.FC<Props & { setValidateStatus: Function; setTransfer
     <div className="absolute left-7px top-[calc(100%+.5em)] h-20px flex items-center text-12px text-grey-normal">
       {status === 'done' && cfxRegistrar?.address && (
         <>
-          <span className="mr-6px whitespace-nowrap">域名解析:</span>
+          <span className="mr-6px whitespace-nowrap">用户名解析:</span>
           {cfxRegistrar.address}
         </>
       )}
       {status === 'error' && (
         <span className="mr-6px text-error-normal cursor-pointer select-none group" onClick={() => getDomainRegistrar(domain)}>
-          域名解析失败，<span className="underline group-hover:underline-none">点此重试</span>
+          用户名解析失败，<span className="underline group-hover:underline-none">点此重试</span>
         </span>
       )}
       {(status === 'init' || status === 'update') && (
         <Delay delay={100}>
-          <span className="mr-6px">域名解析:</span>
+          <span className="mr-6px">用户名解析:</span>
           <Spin className="text-16px -translate-y-1px" />
         </Delay>
       )}
@@ -202,9 +202,9 @@ const DomainAddress: React.FC<Props & { setValidateStatus: Function; setTransfer
 
 const showDomainTransferModal = (params: Props) => {
   if (isMobile()) {
-    showDrawer({ Content: <ModalContent {...params} />, title: '域名转让' });
+    showDrawer({ Content: <ModalContent {...params} />, title: '用户名转让' });
   } else {
-    showModal({ Content: <ModalContent {...params} />, title: '域名转让' });
+    showModal({ Content: <ModalContent {...params} />, title: '用户名转让' });
   }
 };
 
