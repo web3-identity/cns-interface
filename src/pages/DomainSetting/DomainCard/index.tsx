@@ -25,6 +25,9 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
 
   const handleSetAccountReverseRegistrar = useHandleSetAccountReverseRegistrar(domain);
 
+  const account = useAccount();
+  const ownerAddress = useDomainOwner(domain);
+
   return (
     <div className="flex lt-md:flex-col gap-16px p-16px rounded-16px bg-purple-dark-active dropdown-shadow">
       <div className="relative flex flex-col justify-between w-200px h-200px px-10px py-16px lt-md:w-125px lt-md:h-120px lt-md:px-6px lt-md:py-8px text-purple-dark-active domain-card">
@@ -40,9 +43,11 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
 
       <div className="flex-1 flex flex-col justify-end gap-8px">
         <div className="relative flex items-center h-28px lt-md:h-32px">
-          <Button className="ml-auto lt-md:self-end" size="mini" onClick={handleSetAccountReverseRegistrar}>
-            设为.web3用户名
-          </Button>
+          {account === ownerAddress && (
+            <Button className="ml-auto lt-md:self-end" size="mini" onClick={handleSetAccountReverseRegistrar}>
+              设为.web3用户名
+            </Button>
+          )}
         </div>
 
         <div className="relative flex items-center h-28px lt-md:h-40px">
