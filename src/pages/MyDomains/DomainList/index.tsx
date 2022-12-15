@@ -23,7 +23,7 @@ const DomainList: React.FC<{}> = ({}) => {
 
   return (
     <>
-      <div className="mb-26px text-grey-normal text-22px leading-26px lt-md:text-16px lt-md:leading-18px">注册人</div>
+      <div className="mb-26px text-grey-normal text-22px leading-26px lt-md:text-16px lt-md:leading-18px">我的用户名</div>
       <ErrorBoundary fallbackRender={(fallbackProps) => <ListErrorBoundaryFallback {...fallbackProps} />} onReset={refreshMyDomains}>
         <Suspense fallback={<ListLoading />}>{mainScroller && <MyDomains mainScroller={mainScroller} />}</Suspense>
       </ErrorBoundary>
