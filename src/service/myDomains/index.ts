@@ -8,12 +8,23 @@ const myDomainsQuery = selectorFamily<Array<string>, string>({
   key: 'myDomains',
   get: (hexAccount: string) => async () => {
     try {
-      return await fetchChain<string>({
+      const myDomains = await fetchChain<string>({
         params: [{ data: NameWrapper.func.encodeFunctionData('userDomains', [hexAccount]), to: NameWrapper.address }, 'latest_state'],
       }).then((response) => {
-        const myDomains = NameWrapper.func.decodeFunctionResult('userDomains', response)?.[0].map((domain: string) => getDomainLabel(dnsNameNotationDecode(domain)));
+        const res = NameWrapper.func.decodeFunctionResult('userDomains', response)?.[0].map((domain: string) => getDomainLabel(dnsNameNotationDecode(domain)));
+        const myDomains: Array<string> = [];
+        res?.forEach((domain: string) => {
+          if (domain.endsWith('.web3')) {
+            myDomains.push(domain.slice(0, -5));
+          } else if (domain.endsWith('\u0004web3\u0000')) {
+            myDomains.push(domain.slice(0, -6));
+          } else {
+            myDomains.push(domain);
+          }
+        });
         return myDomains;
       });
+      return myDomains;
     } catch (err) {
       throw err;
     }

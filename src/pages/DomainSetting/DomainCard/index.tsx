@@ -7,7 +7,6 @@ import Spin from '@components/Spin';
 import Delay from '@components/Delay';
 import Domain from '@modules/Domain';
 import ToolTip from '@components/Tooltip';
-import { showToast } from '@components/showPopup';
 import CfxAddress from '@modules/CfxAddress';
 import { useDomainOwner, useDomainExpire, useRefreshDomainOwner, useRefreshDomainExpire, useDomainSensitiveCensor, useRefreshDomainSensitiveCensor } from '@service/domainInfo';
 import { useAccount } from '@service/account';
@@ -23,11 +22,6 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
   const refreshDomainExpire = useRefreshDomainExpire(domain);
   const refreshDomainSensitiveCensor = useRefreshDomainSensitiveCensor(domain);
 
-  const handleSetAccountReverseRegistrar = useHandleSetAccountReverseRegistrar(domain);
-
-  const account = useAccount();
-  const ownerAddress = useDomainOwner(domain);
-
   return (
     <div className="flex lt-md:flex-col gap-16px p-16px rounded-16px bg-purple-dark-active dropdown-shadow">
       <div className="relative flex flex-col justify-between w-200px h-200px px-10px py-16px lt-md:w-125px lt-md:h-120px lt-md:px-6px lt-md:py-8px text-purple-dark-active domain-card">
@@ -42,27 +36,23 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
       </div>
 
       <div className="flex-1 flex flex-col justify-end gap-8px">
-        <div className="relative flex items-center h-28px lt-md:h-32px">
-          {account === ownerAddress && (
-            <Button className="ml-auto lt-md:self-end" size="mini" onClick={handleSetAccountReverseRegistrar}>
-              设为.web3用户名
-            </Button>
-          )}
-        </div>
+        <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback type="owner" {...fallbackProps} />} onReset={refreshDomainOwner}>
+          <Suspense fallback={<Loading type="owner" />}>
+            <div className="relative flex items-center h-28px lt-md:h-32px">
+              <SetAsAccountReverseRegistrar domain={domain} />
+            </div>
 
-        <div className="relative flex items-center h-28px lt-md:h-40px">
-          <span className="text-14px lt-md:text-12px text-grey-normal-hover text-opacity-50 lt-md:self-start">注册人</span>
-          <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback type="owner" {...fallbackProps} />} onReset={refreshDomainOwner}>
-            <Suspense fallback={<Loading />}>
+            <div className="relative flex items-center h-28px lt-md:h-40px">
+              <span className="text-14px lt-md:text-12px text-grey-normal-hover text-opacity-50 lt-md:self-start">注册人</span>
               <DomainOwner domain={domain} />
-            </Suspense>
-          </ErrorBoundary>
-        </div>
+            </div>
+          </Suspense>
+        </ErrorBoundary>
 
         <div className="lt-md:mt-16px relative flex items-center h-28px lt-md:h-40px">
           <span className="text-14px lt-md:text-12px text-grey-normal-hover text-opacity-50 lt-md:self-start">到期时间</span>
           <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback type="expire" {...fallbackProps} />} onReset={refreshDomainExpire}>
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading type="expire" />}>
               <DomainExpire domain={domain} />
             </Suspense>
           </ErrorBoundary>
@@ -74,17 +64,62 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
 
 export default DomainCard;
 
-const Loading = () => (
-  <Delay mode="opacity">
-    <Spin className="!lt-md:absolute left-16px text-18px lt-md:left-0 lt-md:bottom-0" />
-  </Delay>
-);
+const SetAsAccountReverseRegistrar: React.FC<{ domain: string }> = ({ domain }) => {
+  const account = useAccount();
+  const ownerAddress = useDomainOwner(domain);
+  const handleSetAccountReverseRegistrar = useHandleSetAccountReverseRegistrar(domain);
 
-const ErrorBoundaryFallback: React.FC<FallbackProps & { type: 'owner' | 'expire' }> = ({ type, resetErrorBoundary }) => (
-  <span className="absolute left-66px lt-md:left-0 lt-md:bottom-0px text-14px lt-md:text-16px text-error-normal cursor-pointer select-none group" onClick={resetErrorBoundary}>
-    获取{type === 'owner' ? '注册人' : '到期时间'}失败，<span className="underline group-hover:underline-none">点此重试</span>
-  </span>
-);
+  return (
+    <>
+      {account === ownerAddress && (
+        <Button className="ml-auto lt-md:self-end" size="mini" onClick={handleSetAccountReverseRegistrar}>
+          设为.web3用户名
+        </Button>
+      )}
+    </>
+  );
+};
+
+const Loading: React.FC<{ type: 'owner' | 'expire' }> = ({ type }) => {
+  if (type === 'owner') {
+    return (
+      <div className="relative flex items-center h-28px lt-md:h-40px">
+        <span className="text-14px lt-md:text-12px text-grey-normal-hover text-opacity-50 lt-md:self-start">注册人</span>
+        <Delay mode="opacity">
+          <Spin className="!lt-md:absolute left-16px text-18px lt-md:left-0 lt-md:bottom-0" />
+        </Delay>
+      </div>
+    );
+  }
+
+  return (
+    <Delay mode="opacity">
+      <Spin className="!lt-md:absolute left-16px text-18px lt-md:left-0 lt-md:bottom-0" />
+    </Delay>
+  );
+};
+
+const ErrorBoundaryFallback: React.FC<FallbackProps & { type: 'owner' | 'expire' }> = ({ type, resetErrorBoundary }) => {
+  if (type === 'owner') {
+    return (
+      <div className="relative flex items-center h-28px lt-md:h-40px">
+        <span className="text-14px lt-md:text-12px text-grey-normal-hover text-opacity-50 lt-md:self-start">注册人</span>
+        <span
+          className="absolute left-66px lt-md:left-0 lt-md:bottom-0px text-14px lt-md:text-16px text-error-normal cursor-pointer select-none group"
+          onClick={resetErrorBoundary}
+        >
+          获取注册人失败，<span className="underline group-hover:underline-none">点此重试</span>
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <span className="absolute left-66px lt-md:left-0 lt-md:bottom-0px text-14px lt-md:text-16px text-error-normal cursor-pointer select-none group" onClick={resetErrorBoundary}>
+      获取到期时间失败，<span className="underline group-hover:underline-none">点此重试</span>
+    </span>
+  );
+};
 
 const DomainOwner: React.FC<{ domain: string }> = ({ domain }) => {
   const account = useAccount();

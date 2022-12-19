@@ -31,7 +31,6 @@ const payPrice = selectorFamily<Unit, string>({
         const [[{ _hex: price }]] = Web3Controller.func.decodeFunctionResult(payMethod === 'web3' ? 'rentPrice' : 'rentPriceInFiat', encodeData);
         return Unit.fromMinUnit(price);
       } catch (err) {
-        console.error('Pay price error: ', err);
         throw err;
       }
     },
