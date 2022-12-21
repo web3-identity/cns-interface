@@ -38,7 +38,7 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col justify-end gap-8px">
+      <div className="relative flex-1 flex flex-col justify-end gap-8px lt-md:gap-16px">
         <ErrorBoundary
           fallbackRender={(fallbackProps) => <ErrorBoundaryFallback type="owner" {...fallbackProps} />}
           onReset={() => {
@@ -47,7 +47,7 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
           }}
         >
           <Suspense fallback={<Loading type="owner" />}>
-            <div className="relative flex items-center h-28px lt-md:h-32px">
+            <div className="relative flex items-center h-28px lt-md:absolute lt-md:right-0 lt-md:-top-44px">
               <SetAsAccountReverseRegistrar domain={domain} />
             </div>
 
@@ -58,7 +58,7 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
           </Suspense>
         </ErrorBoundary>
 
-        <div className="lt-md:mt-16px relative flex items-center h-28px lt-md:h-40px">
+        <div className="relative flex items-center h-28px lt-md:h-40px">
           <span className="text-14px lt-md:text-12px text-grey-normal-hover text-opacity-50 lt-md:self-start">到期时间</span>
           <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback type="expire" {...fallbackProps} />} onReset={refreshDomainExpire}>
             <Suspense fallback={<Loading type="expire" />}>
@@ -197,9 +197,9 @@ const DomainExpire: React.FC<{ domain: string }> = ({ domain }) => {
         )}
       </div>
 
-      {/* <Button className="ml-auto lt-md:self-end" size="mini">
+      <Button className="ml-auto lt-md:self-end" size="mini">
         续费
-      </Button> */}
+      </Button>
     </>
   );
 };

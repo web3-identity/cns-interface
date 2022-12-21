@@ -26,11 +26,13 @@ export const handleSetAccountReverseRegistrar = async ({
   navigate,
   refreshAccountReverseRegistrar,
   from = 'my-domains',
+  inTransitionCallback,
 }: {
   domain: string;
   navigate: ReturnType<typeof useNavigate>;
   refreshAccountReverseRegistrar: VoidFunction;
   from: 'setting' | 'my-domains';
+  inTransitionCallback?: VoidFunction;
 }) => {
   const currentReverseRegistrar = await getAccountReverseRegistrar();
   const confluxCoreRegistrar = await fetchConfluxCoreRegistrar(domain);
@@ -72,6 +74,7 @@ export const handleSetAccountReverseRegistrar = async ({
     );
   } else {
     try {
+      inTransitionCallback?.();
       await setAccountReverseRegistrar(domain);
       await refreshAccountReverseRegistrar();
       showToast(!!domain ? `设置 ${domain} 为 .web3用户名 成功！` : '取消展示成功！', { type: 'success' });

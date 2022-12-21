@@ -17,6 +17,7 @@ import { useAccountReverseRegistrar, handleSetAccountReverseRegistrar, useRefres
 import { usePrefetchSettingPage } from '@service/prefetch';
 import useMainScroller from '@hooks/useMainScroller';
 import NoDomains from '@assets/images/NoDomains.png';
+import { ReactComponent as Logo } from '@assets/icons/logo.svg';
 
 const DomainList: React.FC<{}> = ({}) => {
   const mainScroller = useMainScroller();
@@ -111,7 +112,7 @@ const DomainItem = ({
   accountReverseRegistrar: string | null;
   myDomains: ReturnType<typeof useMyDomains>;
   inTranscationDomains: Array<string>;
-  setInTranscationDomains:  React.Dispatch<React.SetStateAction<string[]>>;
+  setInTranscationDomains: React.Dispatch<React.SetStateAction<string[]>>;
   refreshAccountReverseRegistrar: VoidFunction;
   navigate: ReturnType<typeof useNavigate>;
 }) => {
@@ -122,7 +123,15 @@ const DomainItem = ({
       <div className="relative flex justify-between items-center px-24px h-full lt-md:px-16px lt-md:rounded-12px lt-md:bg-purple-dark-active">
         {index !== 0 && <div className="absolute left-24px top-1px w-[calc(100%-48px)] h-1px bg-purple-normal bg-opacity-30 lt-md:display-none select-none pointer-events-none" />}
         <div className="mr-auto flex flex-col gap-6px lt-md:gap-8px">
-          <Domain className="text-grey-normal text-22px font-bold lt-md:text-16px leading-26px lt-md:leading-18px" domain={domain} />
+          <div className="flex items-center">
+            <Logo className="mr-8px lt-md:mr-6px w-24px h-24px" />
+            <Domain className="text-grey-normal text-22px font-bold lt-md:text-16px leading-26px lt-md:leading-18px" domain={domain} />
+            {domain === accountReverseRegistrar && (
+              <span className="ml-8px lt-md:ml-5px flex justify-center items-center w-52px h-22px lt-md:h-20px leading-20px lt-md:leading-18px rounded-4px border-1px border-green-normal text-green-normal text-12px md:translate-y-1px">
+                已展示
+              </span>
+            )}
+          </div>
           <div className="flex items-center h-18px lt-md:h-14px text-grey-normal-hover text-opacity-50 text-14px lt-md:text-12px">
             <DomainExpire domain={domain} />
           </div>
@@ -133,9 +142,14 @@ const DomainItem = ({
           className={cx('lt-md:display-none mr-28px', { 'opacity-40 pointer-events-none': accountReverseRegistrar === domain })}
           onClick={async () => {
             const curClickDomain = domain;
-            setInTranscationDomains(pre => [...pre, curClickDomain]);
-            await handleSetAccountReverseRegistrar({ domain, navigate, refreshAccountReverseRegistrar, from: 'setting' });
-            setInTranscationDomains(pre => pre.filter(domain => domain !== curClickDomain));
+            await handleSetAccountReverseRegistrar({
+              domain,
+              navigate,
+              refreshAccountReverseRegistrar,
+              from: 'setting',
+              inTransitionCallback: () => setInTranscationDomains((pre) => [...pre, curClickDomain]),
+            });
+            setInTranscationDomains((pre) => pre.filter((domain) => domain !== curClickDomain));
           }}
           loading={inTranscationDomains?.includes?.(domain)}
         >
@@ -143,8 +157,7 @@ const DomainItem = ({
         </Button>
         <GotoDomainSettingButton domain={domain} />
 
-        <span className="i-dashicons:arrow-right-alt2 text-24px text-grey-normal md:display-none" />
-        <Link to={`/setting/${domain}`} className="absolute w-full h-full left-0 top-0 no-underline md:display-none" />
+        <span className="i-dashicons:arrow-right-alt2 text-24px text-grey-normal md:display-none flex-shrink-0" />
       </div>
     </div>
   );
@@ -154,9 +167,12 @@ const GotoDomainSettingButton = memo(({ domain }: { domain: string }) => {
   const prefetchSettingPage = usePrefetchSettingPage(domain);
 
   return (
-    <Link to={`/setting/${domain}`} className="no-underline lt-md:display-none" onMouseEnter={prefetchSettingPage} draggable="false">
-      <Button className="min-w-128px">管理</Button>
-    </Link>
+    <>
+      <Link to={`/setting/${domain}`} className="no-underline lt-md:display-none" onMouseEnter={prefetchSettingPage} draggable="false">
+        <Button className="min-w-128px">管理</Button>
+      </Link>
+      <Link to={`/setting/${domain}`} className="absolute w-full h-full left-0 top-0 no-underline md:display-none md:pointer-events-none" onMouseEnter={prefetchSettingPage} draggable="false" />
+    </>
   );
 });
 
