@@ -39,7 +39,7 @@ const domainSensitiveCensorQuery = selectorFamily<string | false, string>({
       if (payMethod === 'web3') return false;
       const cachedRes = LocalStorage.getItem(`SensitiveCensor-${domain}`) as string | false | null;
       if (cachedRes !== null) {
-        setTimeout(() => fetchDomainSensitiveCensor(domain));
+        // setTimeout(() => fetchDomainSensitiveCensor(domain));
         return cachedRes;
       }
 

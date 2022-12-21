@@ -109,7 +109,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/v0': {
-        target: 'http://app-test.web3verse.space/',
+        target: 'http://app-test.conflux-chain.org.cn/',
         changeOrigin: true,
       },
     },

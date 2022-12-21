@@ -1,16 +1,18 @@
 import React, { Suspense } from 'react';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Domain from '@modules/Domain';
 import Button from '@components/Button';
 import Delay from '@components/Delay';
 import Spin from '@components/Spin';
-import { ReactComponent as SuccessIcon } from '@assets/icons/Success.svg';
 import { useDomainExpire, useRefreshDomainExpire } from '@service/domainInfo';
 import { usePrefetchSettingPage } from '@service/prefetch';
 import { RegisterBox } from '@pages/DomainRegister';
+import { ReactComponent as SuccessIcon } from '@assets/icons/Success.svg';
 
 const Step3: React.FC<{ domain: string }> = ({ domain }) => {
+  const navigate = useNavigate();
+
   const refreshDomainExpire = useRefreshDomainExpire(domain);
   const prefetchSettingPage = usePrefetchSettingPage(domain);
 
@@ -41,7 +43,15 @@ const Step3: React.FC<{ domain: string }> = ({ domain }) => {
         </div>
       </div>
 
-      <Link to={`/setting/${domain}`} className="mx-auto no-underline md:-translate-x-13px lt-md:mt-auto lt-md:w-full" onMouseEnter={prefetchSettingPage}>
+      <Link
+        to={`/setting/${domain}`}
+        className="mx-auto no-underline md:-translate-x-13px lt-md:mt-auto lt-md:w-full"
+        onMouseEnter={prefetchSettingPage}
+        onClick={(evt) => {
+          evt.preventDefault();
+          navigate(`/setting/${domain}`, { state: { backTo: '/my-domains' } });
+        }}
+      >
         <Button className="w-152px lt-md:w-full">管理用户名</Button>
       </Link>
     </RegisterBox>

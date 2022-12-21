@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import PageWrapper from '@components/Layout/PageWrapper';
 import Button from '@components/Button';
 import { useParamsDomainWithTransition } from '@hooks/useParamsDomain';
@@ -11,10 +11,11 @@ import ChainsRegistrar from './ChainsRegistrar';
 
 const DomainSetting: React.FC = () => {
   const { domain } = useParamsDomainWithTransition();
-  const lastPath = useLasPath();
-  const isBack = !!lastPath && !lastPath?.startsWith('/my-domains');
-
   const prefetchMyDomainsPage = usePrefetchMydomainsPage();
+
+  const { state } = useLocation();
+  const lastPath = useLasPath();
+  const isBack = state?.backTo !== '/my-domains' && !!lastPath && !lastPath?.startsWith('/my-domains');
 
   return (
     <PageWrapper className="pt-40px lt-md:pt-4px">
