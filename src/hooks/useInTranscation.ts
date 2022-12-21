@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-const useInTranscation = <T extends (params: any) => Promise<any> | null | undefined>(transcationFunc: T) => {
+const useInTranscation = <T extends (params: any) => void | Promise<any> | null | undefined>(transcationFunc: T) => {
   const [inTranscation, setInTranscation] = useState(false);
   const execTranscation = useCallback(async (params: any) => {
     try {

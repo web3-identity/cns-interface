@@ -11,9 +11,14 @@ export const useHandleSetAccountReverseRegistrar = (domain: string) => {
   const navigate = useNavigate();
   const refreshAccountReverseRegistrar = useRefreshAccountReverseRegistrar();
 
-  return useCallback(() => {
-    handleSetAccountReverseRegistrar({ domain, navigate, refreshAccountReverseRegistrar, from: 'setting' });
-  }, [domain]);
+  const _handleSetAccountReverseRegistrar = useCallback(() => handleSetAccountReverseRegistrar({ domain, navigate, refreshAccountReverseRegistrar, from: 'setting' }), [domain]);
+
+  const { inTranscation, execTranscation} = useInTranscation(_handleSetAccountReverseRegistrar);
+
+  return {
+    inTranscation,
+    handleSetAccountReverseRegistrar: execTranscation
+  } as const;
 };
 
 export const handleSetAccountReverseRegistrar = async ({
@@ -43,7 +48,7 @@ export const handleSetAccountReverseRegistrar = async ({
     return;
   }
 
-  if (confluxCoreRegistrar !== currentAccount) {
+  if (domain && confluxCoreRegistrar !== currentAccount) {
     hideToast(`Registrar-check-${domain}-${from === 'setting' ? 'my-domains' : 'setting'}`);
     const toastKey = showToast(
       <>
@@ -69,7 +74,7 @@ export const handleSetAccountReverseRegistrar = async ({
     try {
       await setAccountReverseRegistrar(domain);
       await refreshAccountReverseRegistrar();
-      showToast(`设置 ${domain}.web3 为 .web3用户名成功！`, { type: 'success' });
+      showToast(!!domain ? `设置 ${domain} 为 .web3用户名 成功！` : '取消展示成功！', { type: 'success' });
     } catch (_) {}
   }
 };

@@ -1,4 +1,5 @@
-import React, { memo, Suspense, useCallback, useState } from 'react';
+import React, { memo, useState, useCallback, Suspense } from 'react';
+import cx from 'clsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { type ListRowProps } from 'react-virtualized';
@@ -12,7 +13,7 @@ import Spin from '@components/Spin';
 import Domain from '@modules/Domain';
 import { useMyDomains, useRefreshMyDomains } from '@service/myDomains';
 import { useDomainExpire, useRefreshDomainExpire } from '@service/domainInfo';
-import { handleSetAccountReverseRegistrar, useRefreshAccountReverseRegistrar } from '@service/accountReverseRegistrar';
+import { useAccountReverseRegistrar, handleSetAccountReverseRegistrar, useRefreshAccountReverseRegistrar } from '@service/accountReverseRegistrar';
 import { usePrefetchSettingPage } from '@service/prefetch';
 import useMainScroller from '@hooks/useMainScroller';
 import NoDomains from '@assets/images/NoDomains.png';
@@ -20,13 +21,16 @@ import NoDomains from '@assets/images/NoDomains.png';
 const DomainList: React.FC<{}> = ({}) => {
   const mainScroller = useMainScroller();
   const refreshMyDomains = useRefreshMyDomains();
+  const refreshAccountReverseRegistrar = useRefreshAccountReverseRegistrar();
+  const refresh = useCallback(() => {
+    refreshMyDomains();
+    refreshAccountReverseRegistrar();
+  }, [refreshMyDomains, refreshAccountReverseRegistrar]);
 
   return (
     <>
-      <div className="mb-26px text-grey-normal text-22px leading-26px lt-md:text-16px lt-md:leading-18px">
-        我的用户名
-      </div>
-      <ErrorBoundary fallbackRender={(fallbackProps) => <ListErrorBoundaryFallback {...fallbackProps} />} onReset={refreshMyDomains}>
+      <div className="mb-26px text-grey-normal text-22px leading-26px lt-md:text-16px lt-md:leading-18px">我的用户名</div>
+      <ErrorBoundary fallbackRender={(fallbackProps) => <ListErrorBoundaryFallback {...fallbackProps} />} onReset={refresh}>
         <Suspense fallback={<ListLoading />}>{mainScroller && <MyDomains mainScroller={mainScroller} />}</Suspense>
       </ErrorBoundary>
     </>
@@ -37,10 +41,16 @@ export default memo(DomainList);
 
 const MyDomains: React.FC<{ mainScroller: HTMLDivElement }> = ({ mainScroller }) => {
   const myDomains = useMyDomains();
+  const accountReverseRegistrar = useAccountReverseRegistrar();
 
-  const navigate = useNavigate();
+  const [inTranscationDomains, setInTranscationDomains] = useState<Array<string>>([]);
+
   const refreshAccountReverseRegistrar = useRefreshAccountReverseRegistrar();
-  const renderRow = useCallback((props: ListRowProps) => DomainItem({ ...props, myDomains, refreshAccountReverseRegistrar, navigate }), [myDomains]);
+  const navigate = useNavigate();
+  const renderRow = useCallback(
+    (props: ListRowProps) => DomainItem({ ...props, accountReverseRegistrar, myDomains, inTranscationDomains, setInTranscationDomains, refreshAccountReverseRegistrar, navigate }),
+    [accountReverseRegistrar, inTranscationDomains, myDomains]
+  );
 
   const hasDomain = !!myDomains?.length;
 
@@ -91,10 +101,20 @@ const DomainItem = ({
   index,
   style,
   key,
+  accountReverseRegistrar,
   myDomains,
+  inTranscationDomains,
+  setInTranscationDomains,
   navigate,
   refreshAccountReverseRegistrar,
-}: ListRowProps & { myDomains: ReturnType<typeof useMyDomains>; refreshAccountReverseRegistrar: VoidFunction; navigate: ReturnType<typeof useNavigate> }) => {
+}: ListRowProps & {
+  accountReverseRegistrar: string | null;
+  myDomains: ReturnType<typeof useMyDomains>;
+  inTranscationDomains: Array<string>;
+  setInTranscationDomains:  React.Dispatch<React.SetStateAction<string[]>>;
+  refreshAccountReverseRegistrar: VoidFunction;
+  navigate: ReturnType<typeof useNavigate>;
+}) => {
   const domain = myDomains[index];
 
   return (
@@ -108,8 +128,18 @@ const DomainItem = ({
           </div>
         </div>
 
-        <Button variant="text" className="lt-md:display-none mr-28px" onClick={() => handleSetAccountReverseRegistrar({ domain, navigate, refreshAccountReverseRegistrar })}>
-          设为.web3用户名
+        <Button
+          variant="text"
+          className={cx('lt-md:display-none mr-28px', { 'opacity-40 pointer-events-none': accountReverseRegistrar === domain })}
+          onClick={async () => {
+            const curClickDomain = domain;
+            setInTranscationDomains(pre => [...pre, curClickDomain]);
+            await handleSetAccountReverseRegistrar({ domain, navigate, refreshAccountReverseRegistrar, from: 'setting' });
+            setInTranscationDomains(pre => pre.filter(domain => domain !== curClickDomain));
+          }}
+          loading={inTranscationDomains?.includes?.(domain)}
+        >
+          {accountReverseRegistrar === domain ? '已设为展示' : '设为展示'}
         </Button>
         <GotoDomainSettingButton domain={domain} />
 
@@ -125,7 +155,7 @@ const GotoDomainSettingButton = memo(({ domain }: { domain: string }) => {
 
   return (
     <Link to={`/setting/${domain}`} className="no-underline lt-md:display-none" onMouseEnter={prefetchSettingPage} draggable="false">
-      <Button>用户名管理</Button>
+      <Button className="min-w-128px">管理</Button>
     </Link>
   );
 });

@@ -1,4 +1,5 @@
 import React, { memo, useMemo, Suspense, type ComponentProps } from 'react';
+import cx from 'clsx';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import useClipboard from 'react-use-clipboard';
 import Button from '@components/Button';
@@ -10,9 +11,10 @@ import ToolTip from '@components/Tooltip';
 import CfxAddress from '@modules/CfxAddress';
 import { useDomainOwner, useDomainExpire, useRefreshDomainOwner, useRefreshDomainExpire, useDomainSensitiveCensor, useRefreshDomainSensitiveCensor } from '@service/domainInfo';
 import { useAccount } from '@service/account';
-import { useHandleSetAccountReverseRegistrar } from '@service/accountReverseRegistrar';
+import { useAccountReverseRegistrar, useHandleSetAccountReverseRegistrar, useRefreshAccountReverseRegistrar } from '@service/accountReverseRegistrar';
 import useIsLtMd from '@hooks/useIsLtMd';
 import { ReactComponent as LogoTransparent } from '@assets/icons/logo-transparent.svg';
+import { ReactComponent as CopyIcon } from '@assets/icons/copy.svg';
 import showDomainTransferModal from './DomainTransferModal';
 import './index.css';
 
@@ -21,6 +23,7 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
   const refreshDomainOwner = useRefreshDomainOwner(domain);
   const refreshDomainExpire = useRefreshDomainExpire(domain);
   const refreshDomainSensitiveCensor = useRefreshDomainSensitiveCensor(domain);
+  const refreshAccountReverseRegistrar = useRefreshAccountReverseRegistrar();
 
   return (
     <div className="flex lt-md:flex-col gap-16px p-16px rounded-16px bg-purple-dark-active dropdown-shadow">
@@ -36,7 +39,13 @@ const DomainCard: React.FC<{ domain: string }> = ({ domain }) => {
       </div>
 
       <div className="flex-1 flex flex-col justify-end gap-8px">
-        <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback type="owner" {...fallbackProps} />} onReset={refreshDomainOwner}>
+        <ErrorBoundary
+          fallbackRender={(fallbackProps) => <ErrorBoundaryFallback type="owner" {...fallbackProps} />}
+          onReset={() => {
+            refreshDomainOwner();
+            refreshAccountReverseRegistrar();
+          }}
+        >
           <Suspense fallback={<Loading type="owner" />}>
             <div className="relative flex items-center h-28px lt-md:h-32px">
               <SetAsAccountReverseRegistrar domain={domain} />
@@ -67,14 +76,29 @@ export default DomainCard;
 const SetAsAccountReverseRegistrar: React.FC<{ domain: string }> = ({ domain }) => {
   const account = useAccount();
   const ownerAddress = useDomainOwner(domain);
-  const handleSetAccountReverseRegistrar = useHandleSetAccountReverseRegistrar(domain);
+  const accountReverseRegistrar = useAccountReverseRegistrar();
+  const { inTranscation, handleSetAccountReverseRegistrar } = useHandleSetAccountReverseRegistrar(domain);
 
   return (
     <>
       {account === ownerAddress && (
-        <Button className="ml-auto lt-md:self-end" size="mini" onClick={handleSetAccountReverseRegistrar}>
-          设为.web3用户名
-        </Button>
+        <div className="flex items-center gap-8px ml-auto lt-md:self-end">
+          <ToolTip text="将此用户名设置为当前地址的展示用户名（即反向解析）。 设置成功后在已支持的应用中，将会默认展示此用户名。 每个地址只能设置一个展示用户名。 设置成功后，可以在 我的用户名页，取消已展示的用户名。">
+            <div className="inline-flex justify-center items-center w-24px h-24px lt-md:w-28px lt-md:h-28px bg-violet-normal-hover rounded-4px lt-md:rounded-6px cursor-pointer">
+              <span className="i-bi:question-lg text-18px lt-md:text-21px text-#838290 font-bold" />
+            </div>
+          </ToolTip>
+
+          <Button
+            className={cx({ '!px-0 !text-grey-normal pointer-events-none': accountReverseRegistrar === domain })}
+            size="mini"
+            variant={accountReverseRegistrar !== domain ? 'contained' : 'text'}
+            onClick={handleSetAccountReverseRegistrar}
+            loading={inTranscation}
+          >
+            {accountReverseRegistrar === domain ? '已设为展示用户名' : '设为展示'}
+          </Button>
+        </div>
       )}
     </>
   );
@@ -134,7 +158,9 @@ const DomainOwner: React.FC<{ domain: string }> = ({ domain }) => {
             <Avatar address={ownerAddress} size={18} />
             <CfxAddress className="mx-8px lt-md:mx-4px text-14px lt-md:text-16px text-grey-normal" address={ownerAddress} />
             <ToolTip visible={isCopied} text="复制成功">
-              <span className="i-bxs:copy-alt text-20px lt-md:text-16px text-#838290 cursor-pointer" onClick={copy} />
+              <div className="inline-flex justify-center items-center w-24px h-24px bg-violet-normal-hover hover:bg-violet-normal rounded-4px cursor-pointer transition-colors" onClick={copy}>
+                <CopyIcon className="w-14px h-15px" />
+              </div>
             </ToolTip>
           </>
         )}

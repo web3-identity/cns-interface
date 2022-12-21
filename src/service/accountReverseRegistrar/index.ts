@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
-import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
+import { selectorFamily, useRecoilValue_TRANSITION_SUPPORT_UNSTABLE, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
 import { getRecoil } from 'recoil-nexus';
 import { fetchChain } from '@utils/fetch';
+import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
 import { getAccount, sendTransaction, useHexAccount, getHexAccount } from '@service/account';
 import { ReverseRegistrar, ReverseRecords } from '@contracts/index';
 export * from './handleAccountReverseRegistrar';
@@ -13,6 +14,9 @@ export const setAccountReverseRegistrar = async (domain: string) => {
     from: account!,
     to: ReverseRegistrar.address,
   });
+
+  const [receiptPromise] = waitAsyncResult(() => isTransactionReceipt(txHash));
+  await receiptPromise;
 };
 
 const accountReverseRegistrarQuery = selectorFamily<string | null, string>({
@@ -33,7 +37,7 @@ const accountReverseRegistrarQuery = selectorFamily<string | null, string>({
 
 export const useAccountReverseRegistrar = () => {
   const hexAccount = useHexAccount()!;
-  const accountReverseRegistrar = useRecoilValue(accountReverseRegistrarQuery(hexAccount));
+  const accountReverseRegistrar = useRecoilValue_TRANSITION_SUPPORT_UNSTABLE(accountReverseRegistrarQuery(hexAccount));
 
   return useMemo(() => (!accountReverseRegistrar?.endsWith('.web3') ? accountReverseRegistrar : accountReverseRegistrar?.split?.('.')?.[0]), [accountReverseRegistrar]);
 };

@@ -32,6 +32,7 @@ import EtherClassicIcon from '@assets/chains/EtherClassic.png';
 import EthereumIcon from '@assets/chains/Ethereum.png';
 import SolanaIcon from '@assets/chains/Solana.png';
 import FlowIcon from '@assets/chains/Flow.png';
+import { ReactComponent as CopyIcon } from '@assets/icons/copy.svg';
 import showAddNewResolutionModal from './AddNewResolutionModal';
 import './index.css';
 
@@ -285,7 +286,7 @@ const ChainItem: React.FC<DomainRegistrar & { disabled: boolean; editAddress: st
               className="ml-4px flex justify-center items-center w-18px h-18px rounded-full bg-purple-dark-active hover:bg-purple-dark-hover cursor-pointer transition-colors"
               onClick={copy}
             >
-              <span className="i-bxs:copy-alt text-12px text-#838290" />
+              <CopyIcon className="w-10px" />
             </span>
           </ToolTip>
 

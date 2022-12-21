@@ -4,5 +4,5 @@
 }
 
 .toast-wrapper {
-  @apply md:top-112px lt-md:top-68px lt-mobile:top-16px xl:left-[calc(50%+249px)] !lt-xl:right-24px !lt-md:right-12px !lt-tiny:right-6px;
+  @apply !w-full !items-end xl:max-w-1232px lt-xl:px-24px lt-md:px-12px lt-tiny:px-6px md:top-112px lt-md:top-68px lt-mobile:top-16px left-50% -translate-x-50%;
 }
