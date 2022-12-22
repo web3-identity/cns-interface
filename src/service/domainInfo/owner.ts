@@ -23,7 +23,9 @@ const domainOwnerQuery = selectorFamily<string | null, string>({
     try {
       return await fetchDomainOwner(domain);
     } catch (err) {
-      throw err;
+      const isIllegalChar = String(err).includes('Illegal char');
+      if (isIllegalChar) return null;
+      else throw err;
     }
   },
 });
@@ -31,7 +33,12 @@ const domainOwnerQuery = selectorFamily<string | null, string>({
 export const getDomainOwner = (domain: string): string | null | Promise<string | null> => getRecoil(domainOwnerQuery(domain));
 export const useDomainOwner = (domain: string) => useRecoilValue(domainOwnerQuery(domain));
 export const useRefreshDomainOwner = (domain: string) => useRecoilRefresher_UNSTABLE(domainOwnerQuery(domain));
-export const usePrefetchDomainOwner = () => useRecoilCallback(({ snapshot }) => (domain: string) => snapshot.getPromise(domainOwnerQuery(domain)));
+export const usePrefetchDomainOwner = () =>
+  useRecoilCallback(
+    ({ snapshot }) =>
+      (domain: string) =>
+        snapshot.getPromise(domainOwnerQuery(domain))
+  );
 
 export const useIsOwnerSuspense = (domain: string) => {
   const account = useAccount();

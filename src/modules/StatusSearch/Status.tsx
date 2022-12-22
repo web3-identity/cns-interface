@@ -59,7 +59,7 @@ const Status: React.FC<Props & ComponentProps<'div'>> = ({ domain, isSmall, wher
       {(isInRegister || isInSetting) && paramsDomain === domain ? (
         <SearchDomainEqualCurrentRegister isSmall={isSmall} type={isInRegister ? 'inRegister' : 'inSetting'} />
       ) : (
-        <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} isSmall={isSmall} where={where} domain={domain} />} onReset={refresh}>
+        <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} isSmall={isSmall} where={where} />} onReset={refresh}>
           <Suspense fallback={<StatusLoading />}>
             <StatusContent domain={domain} isSmall={isSmall} where={where} />
           </Suspense>
@@ -158,25 +158,14 @@ const StatusLoading: React.FC = () => (
   </Delay>
 );
 
-const ErrorBoundaryFallback: React.FC<FallbackProps & Props> = ({ resetErrorBoundary, domain, where, isSmall, error }) => {
-  const isIllegalChar = String(error).includes('Illegal char');
-  const ellipsisLength = where === 'header' ? 14 : isSmall ? 11 : 24;
-
+const ErrorBoundaryFallback: React.FC<FallbackProps & Omit<Props, 'domain'>> = ({ resetErrorBoundary, where, isSmall }) => {
   return (
     <>
       <StatusInvalid className={cx('-translate-y-2px flex-shrink-0', isSmall ? 'mr-4px w-28px h-28px' : 'mr-12px w-40px h-40px')} />
-      <span className="mr-auto text-error-normal">
-        {isIllegalChar ? statusMap[DomainStatus.IllegalChar].text : '网络错误'}
-        {isIllegalChar && (
-          <Domain className={cx('font-bold', isSmall ? 'ml-4px' : 'ml-8px ')} domain={domain} ellipsisLength={ellipsisLength - 4} showIllegalSensitiveCensor={false} />
-        )}
-      </span>
-
-      {!isIllegalChar && (
-        <Button onClick={resetErrorBoundary} className={btnClassMap[where]}>
-          重试
-        </Button>
-      )}
+      <span className="mr-auto text-error-normal">网络错误</span>
+      <Button onClick={resetErrorBoundary} className={btnClassMap[where]}>
+        重试
+      </Button>
     </>
   );
 };
