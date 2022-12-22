@@ -36,7 +36,7 @@ export const usePrefetchDomainOwner = () => useRecoilCallback(({ snapshot }) => 
 export const useIsOwnerSuspense = (domain: string) => {
   const account = useAccount();
   const owner = useDomainOwner(domain);
-  return account === owner;
+  return !!account && !!owner && account === owner;
 };
 
 export const useIsOwner = (domain: string) => {

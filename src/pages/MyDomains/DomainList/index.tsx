@@ -1,4 +1,5 @@
-import React, { memo, useState, useCallback, Suspense } from 'react';
+import React, { memo, useCallback, Suspense } from 'react';
+import { atom, useRecoilState, type SetterOrUpdater } from 'recoil';
 import cx from 'clsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
@@ -40,11 +41,17 @@ const DomainList: React.FC<{}> = ({}) => {
 
 export default memo(DomainList);
 
+
+const inTranscationDomainsState = atom<Array<string>>({
+  key: 'inTranscationDomains',
+  default: []
+});
+
 const MyDomains: React.FC<{ mainScroller: HTMLDivElement }> = ({ mainScroller }) => {
   const myDomains = useMyDomains();
   const accountReverseRegistrar = useAccountReverseRegistrar();
 
-  const [inTranscationDomains, setInTranscationDomains] = useState<Array<string>>([]);
+  const [inTranscationDomains, setInTranscationDomains] = useRecoilState(inTranscationDomainsState);
 
   const refreshAccountReverseRegistrar = useRefreshAccountReverseRegistrar();
   const navigate = useNavigate();
@@ -112,7 +119,7 @@ const DomainItem = ({
   accountReverseRegistrar: string | null;
   myDomains: ReturnType<typeof useMyDomains>;
   inTranscationDomains: Array<string>;
-  setInTranscationDomains: React.Dispatch<React.SetStateAction<string[]>>;
+  setInTranscationDomains: SetterOrUpdater<Array<string>>;
   refreshAccountReverseRegistrar: VoidFunction;
   navigate: ReturnType<typeof useNavigate>;
 }) => {
