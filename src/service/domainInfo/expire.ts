@@ -1,5 +1,6 @@
 import { atom, selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
 import { getRecoil, setRecoil } from 'recoil-nexus';
+import LocalStorage from 'localstorage-enhance';
 import { persistAtom, handleRecoilInit } from '@utils/recoilUtils';
 import dayjs from 'dayjs';
 import { fetchChain } from '@utils/fetch';
@@ -41,6 +42,7 @@ export const gracePeriodState = atom<number>({
 (() => {
   fetchGracePeriod().then((res) => {
     try {
+      LocalStorage.setItem({ key: 'gracePeriod', data: res });
       handleRecoilInit((set) => set(gracePeriodState, res));
     } catch (_) {
       setRecoil(gracePeriodState, res);

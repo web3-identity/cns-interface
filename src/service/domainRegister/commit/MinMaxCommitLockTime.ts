@@ -1,5 +1,6 @@
 import { atom, useRecoilValue } from 'recoil';
 import { getRecoil, setRecoil } from 'recoil-nexus';
+import LocalStorage from 'localstorage-enhance';
 import { persistAtom, handleRecoilInit } from '@utils/recoilUtils';
 import { fetchChain } from '@utils/fetch';
 import { Web3Controller } from '@contracts/index';
@@ -34,6 +35,7 @@ export const getMaxCommitLockTime = () => getRecoil(maxCommitLockTimeState) ?? 6
 (() => {
   fetchCommitmentLockTime('min').then((res) => {
     try {
+      LocalStorage.setItem({ key: 'minCommitmentLockTime', data: res });
       handleRecoilInit((set) => set(minCommitLockTimeState, res));
     } catch (_) {
       setRecoil(minCommitLockTimeState, res)
@@ -41,6 +43,7 @@ export const getMaxCommitLockTime = () => getRecoil(maxCommitLockTimeState) ?? 6
   });
   fetchCommitmentLockTime('max').then((res) => {
     try {
+      LocalStorage.setItem({ key: 'maxCommitmentLockTime', data: res });
       handleRecoilInit((set) => set(maxCommitLockTimeState, res));
     } catch (_) {
       setRecoil(maxCommitLockTimeState, res)

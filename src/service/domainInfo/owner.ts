@@ -50,6 +50,6 @@ export const useIsOwner = (domain: string) => {
   const account = useAccount();
   const { state, contents } = useRecoilValueLoadable(domainOwnerQuery(domain));
 
-  if (state === 'hasValue' && contents) return account === contents;
+  if (state === 'hasValue' && contents) return  !!account && !!contents && account === contents;
   return null;
 };
