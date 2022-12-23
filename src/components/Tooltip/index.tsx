@@ -8,8 +8,7 @@ const ToolTip: React.FC<Omit<Props, 'Content'> & { text?: string }> = ({
   animationType = 'fade',
   arrow = true,
   delay = 180,
-  interactiveDebounce = 100,
-  trigger = 'mouseenter click',
+  trigger = 'mouseenter',
   visible,
   interactive = true,
   ...props
@@ -23,7 +22,6 @@ const ToolTip: React.FC<Omit<Props, 'Content'> & { text?: string }> = ({
       Content={text}
       delay={delay}
       trigger={typeof visible === 'boolean' ? undefined : trigger}
-      interactiveDebounce={interactiveDebounce}
       interactive={interactive}
       {...props}
     >
