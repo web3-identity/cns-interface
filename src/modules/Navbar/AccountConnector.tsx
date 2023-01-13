@@ -1,5 +1,5 @@
 import React, { useCallback, type ComponentProps } from 'react';
-import { showModal, showDrawer, hideModal, hideDrawer } from '@components/showPopup';
+import { showModal, showDrawer } from '@components/showPopup';
 import fluentImg from '@assets/icons/fluent.svg';
 import anywebImg from '@assets/icons/anyweb.svg';
 import cellarImg from '@assets/icons/cellar.png';
@@ -13,11 +13,11 @@ const ConnectWallet: React.FC<ComponentProps<'div'> & { icon: string; name: stri
     try {
       await connect();
       if (connectorId) {
-        hideModal(connectorId);
-        hideDrawer();
+        history.back();
         connectorId = null;
       }
-    } catch (err) {}
+    } catch (err) {
+    }
   }, [connect]);
 
   return (

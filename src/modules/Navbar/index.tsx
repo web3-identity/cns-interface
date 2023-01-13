@@ -14,7 +14,6 @@ const Navbar: React.FC = () => {
   const account = useAccount();
   const { pathname } = useLocation();
   useClearRegisterInfoWhenAccountChange(account);
-
   const mainScrollerDistance = useMainScrollerDistance();
 
   return (
