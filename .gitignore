@@ -26,7 +26,6 @@ dist-ssr
 
 .gitkeep
 pnpm-lock.yaml
-yarn.lock
 stats.html
 package-lock.json
 __unconfig_vite.config.ts
