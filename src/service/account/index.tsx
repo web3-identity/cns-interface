@@ -17,6 +17,13 @@ import {
   switchChain as switchChainAnyweb,
   sendTransaction as sendTransactionWithAnyweb,
 } from './anyweb';
+import {
+  accountState as cellarAccountState,
+  connect as connectCellar,
+  disconnect as disconnectCellar,
+  switchChain as switchChainCellar,
+  sendTransaction as sendTransactionWithCellar,
+} from './cellar';
 import isProduction from '@utils/isProduction';
 export const targetChainId = isProduction ? '1029' : '1';
 
@@ -36,6 +43,13 @@ const methodsMap = {
     sendTransaction: sendTransactionWithAnyweb,
     disconnect: disconnectAnyweb,
   },
+  cellar: {
+    accountState: cellarAccountState,
+    connect: connectCellar,
+    switchChain: switchChainCellar,
+    sendTransaction: sendTransactionWithCellar,
+    disconnect: disconnectCellar,
+  }
 } as const;
 
 type Methods = keyof typeof methodsMap;

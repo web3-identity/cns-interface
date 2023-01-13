@@ -2,7 +2,6 @@ import { atom } from 'recoil';
 import { setRecoil, getRecoil } from 'recoil-nexus';
 import { persistAtom } from '@utils/recoilUtils';
 import { Provider } from '@idealight-labs/anyweb-js-sdk';
-import { targetChainId } from '..';
 import isProduction from '@utils/isProduction';
 import { sendTransaction as send } from '@cfxjs/use-wallet-react/conflux/Fluent';
 
@@ -53,7 +52,7 @@ interface Account {
   address: Array<string | null | undefined>;
 }
 
-export const connect = async () => {
+export const connect = async () =>
   provider
     .request({
       method: 'cfx_accounts',
@@ -69,18 +68,12 @@ export const connect = async () => {
       const { address } = account;
       setRecoil(accountState, address[0]);
     })
-    .catch((err) => {
-      console.error(err);
-    });
-};
 
-export const disconnect = async () => {
+export const disconnect = async () =>
   provider
     .request({
       method: 'anyweb_revoke',
     })
-    .then(() => {});
-};
 
 export const sendTransaction = (params: Parameters<typeof send>[0]) =>
   provider.request({
