@@ -1,27 +1,26 @@
-import React, { useCallback, type ComponentProps } from 'react';
-import { showModal, showDrawer } from '@components/showPopup';
+import React, { type ComponentProps } from 'react';
+import { showModal, showDrawer, hideAllModal, hideAllToast } from '@components/showPopup';
 import fluentImg from '@assets/icons/fluent.svg';
 import anywebImg from '@assets/icons/anyweb.svg';
 import cellarImg from '@assets/icons/cellar.png';
 import { connect } from '@service/account';
 import isMobile from '@utils/isMobie';
 
-let connectorId: string | null = null;
-
 const ConnectWallet: React.FC<ComponentProps<'div'> & { icon: string; name: string; connect: () => Promise<void> }> = ({ children, connect, icon, name }) => {
-  const handleClick = useCallback(async () => {
-    try {
-      await connect();
-      if (connectorId) {
-        history.back();
-        connectorId = null;
-      }
-    } catch (err) {
-    }
-  }, [connect]);
-
   return (
-    <div onClick={handleClick} className="flex flex-col items-center justify-center w-100px h-100px rounded-8px hover:bg-#26233E transition-colors cursor-pointer">
+    <div
+      onClick={async () => {
+        try {
+          await connect();
+          if (name === 'Cellar') {
+            hideAllModal();
+            hideAllToast();
+            history.back();
+          }
+        } catch (_) {}
+      }}
+      className="flex flex-col items-center justify-center w-100px h-100px rounded-8px hover:bg-#26233E transition-colors cursor-pointer"
+    >
       {children}
       <img className="w-30px h-30px mb-8px" src={icon} />
       <span className="text-14px text-grey-normal">{name}</span>
@@ -39,12 +38,11 @@ const ConnectModalContent: React.FC = () => {
   );
 };
 
-
 const showAccountConnector = () => {
   if (isMobile()) {
-    connectorId = showDrawer({ Content: <ConnectModalContent />, title: '连接钱包' });
+    showDrawer({ Content: <ConnectModalContent />, title: '连接钱包' });
   } else {
-    connectorId = showModal({ Content: <ConnectModalContent />, className: '!max-w-370px', title: '连接钱包' }) as string;
+    showModal({ Content: <ConnectModalContent />, className: '!max-w-370px', title: '连接钱包' }) as string;
   }
 };
 

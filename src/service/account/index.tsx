@@ -103,12 +103,10 @@ export const getHexAccount = () => getRecoil(hexAccountState);
 
 export const connect = async (method: Methods) => {
   try {
-    console.log('connect', method)
     await methodsMap[method].connect();
     setRecoil(accountMethodFilter, method);
-  } catch (_) {
-    console.log('connect error', _)
-
+  } catch (err) {
+    throw err;
   }
 };
 

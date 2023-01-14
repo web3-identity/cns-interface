@@ -26,3 +26,7 @@ completeDetect().then(() => {
     </RecoilRoot>
   );
 });
+
+if (location.hash) {
+  history.replaceState(null, '', location.origin + location.pathname);
+}
