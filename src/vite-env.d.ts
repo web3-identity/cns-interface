@@ -22,12 +22,12 @@ declare module 'react-virtualized' {
 }
 
 declare module 'react-virtualized/dist/es/List' {
-   const List: React.FC<any>;
-   export default List;
+  const List: React.FC<any>;
+  export default List;
 }
 
 declare module 'react-virtualized/dist/es/WindowScroller' {
-  const WindowScroller: React.FC<{ scrollElement: Element; children: (props: any) => any}>;
+  const WindowScroller: React.FC<{ scrollElement: Element; children: (props: any) => any }>;
   export default WindowScroller;
 }
 
@@ -36,6 +36,14 @@ declare module 'react-virtualized/dist/es/WindowScroller/utils/dimensions' {
 }
 
 declare module 'react-virtualized/dist/es/AutoSizer' {
-  const AutoSizer: React.FC<{ disableHeight: boolean; children: (props: any) => any}>;
+  const AutoSizer: React.FC<{ disableHeight: boolean; children: (props: any) => any }>;
   export default AutoSizer;
+}
+
+declare module 'cellar-js-sdk' {
+  export const CellarEnv = { PRO: '', PRE: '', DEV: '' } as { PRO: string; PRE: string; DEV: string };
+  export class Cellar {
+    constructor(params: { appId: string; env: string }) {}
+    request: (parms: any) => any;
+  }
 }

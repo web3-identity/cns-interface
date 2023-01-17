@@ -20,7 +20,7 @@
     "@tippyjs/react": "^4.2.6",
     "@use-gesture/react": "^10.2.23",
     "@web3identity/address-encoder": "^0.2.21",
-    "cellar-js-sdk": "1.2.28",
+    "cellar-js-sdk": "^1.2.28",
     "clsx": "^1.2.1",
     "custom-react-scrollbar": "0.0.4",
     "dayjs": "^1.11.7",

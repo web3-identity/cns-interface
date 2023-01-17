@@ -1,12 +1,9 @@
 import { Cellar, CellarEnv } from 'cellar-js-sdk';
 import { atom } from 'recoil';
-import { setRecoil, getRecoil } from 'recoil-nexus';
+import { setRecoil } from 'recoil-nexus';
 import { persistAtom } from '@utils/recoilUtils';
 import isProduction from '@utils/isProduction';
 import { type sendTransaction as sendParams } from '@cfxjs/use-wallet-react/conflux/Fluent';
-
-globalThis.process = {};
-globalThis.process.env = 'development';
 
 const cellar = new Cellar({
   appId: '84a131626ec245939f3d83e6ea01cb08',
