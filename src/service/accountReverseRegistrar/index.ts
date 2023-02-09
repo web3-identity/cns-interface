@@ -22,6 +22,7 @@ export const setAccountReverseRegistrar = async (domain: string) => {
 const accountReverseRegistrarQuery = selectorFamily<string | null, string>({
   key: 'accountReverseRegistrar',
   get: (hexAccount: string) => async () => {
+    if (!hexAccount) return null;
     try {
       const res = await fetchChain<string>({
         params: [{ data: ReverseRecords.func.encodeFunctionData('getNames', [[hexAccount]]), to: ReverseRecords.address }, 'latest_state'],

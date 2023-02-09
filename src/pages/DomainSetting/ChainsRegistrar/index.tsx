@@ -271,7 +271,7 @@ const ChainItem: React.FC<DomainRegistrar & { disabled: boolean; editAddress: st
             <span className="text-14px opacity-0 select-none pointer-events-none">{address || editAddress}</span>
             <Input
               size="small"
-              wrapperClassName="absolute left-0 top-0 w-full h-full opacity-50 hover:opacity-100 focus-within:opacity-100 transition-opacity"
+              wrapperClassName={cx("absolute left-0 top-0 w-full h-full opacity-50 focus-within:opacity-100 transition-opacity", !disabled && 'hover:opacity-100 ')}
               className="!px-0 !h-full !text-grey-normal-hover font-normal placeholder-transparent"
               value={editAddress}
               onChange={(evt) => setEditAddress(chain, evt.target.value)}
