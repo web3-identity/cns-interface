@@ -4,13 +4,6 @@
   transform-origin: center center;
 }
 
-.spin-left {
-  fill: url(#spin-left);
-}
-.spin-right {
-  fill: url(#spin-right);
-}
-
 @keyframes spinAnimation {
   0% {
     transform: rotate(0);

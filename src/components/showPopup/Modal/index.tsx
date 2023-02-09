@@ -13,7 +13,7 @@ ModalPopup.initPromise.then(() => {
   ModalPopup.setListClassName('modal-wrapper');
 });
 
-const Modal: React.FC<{ Content: ReactNode | Function; title: string; className?: string }> = memo(({ Content, title, className }) => {
+const Modal: React.FC<{ Content: ReactNode | Function; title: string; className?: string; onClose?: VoidFunction }> = memo(({ Content, title, className, onClose }) => {
   const account = useAccount();
 
   const hasInit = useRef(false);
@@ -25,15 +25,20 @@ const Modal: React.FC<{ Content: ReactNode | Function; title: string; className?
     history.back();
   }, [account]);
 
-  const handleClose = useCallback(() => history.back(), []);
-  usePressEsc(handleClose);
-  useCloseOnRouterBack(ModalPopup.hideAll);
+  const backHistory = useCallback(() => history.back(), []);
+  const handleClose = useCallback(() => {
+    ModalPopup.hideAll();
+    onClose?.();
+  }, [onClose]);
+
+  usePressEsc(backHistory);
+  useCloseOnRouterBack(handleClose);
 
   return (
     <div className={cx('relative w-90vw max-w-568px p-24px rounded-24px bg-purple-dark-active overflow-hidden dropdown-shadow', className)}>
       <div className="flex justify-between items-center text-22px text-grey-normal font-bold">
         {title}
-        <span className="i-ep:close-bold text-24px text-green-normal cursor-pointer" onClick={handleClose} />
+        <span className="i-ep:close-bold text-24px text-green-normal cursor-pointer" onClick={backHistory} />
       </div>
       <div className="mt-20px h-1px bg-#6667ab4c pointer-events-none" />
 
@@ -42,9 +47,9 @@ const Modal: React.FC<{ Content: ReactNode | Function; title: string; className?
   );
 });
 
-export const showModal = ({ Content, title, className }: { Content: Function | ReactNode; title: string; className?: string }) => {
-  const popupId =  ModalPopup.show({
-    Content: <Modal Content={Content} title={title} className={className} />,
+export const showModal = (props: { Content: Function | ReactNode; title: string; className?: string; onClose?: VoidFunction }) => {
+  const popupId = ModalPopup.show({
+    Content: <Modal {...props} />,
     duration: 0,
     showMask: true,
     animationType: 'door',

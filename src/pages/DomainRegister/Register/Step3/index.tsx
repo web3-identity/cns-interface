@@ -27,7 +27,7 @@ const Step3: React.FC<{ domain: string }> = ({ domain }) => {
 
           <div className="mt-20px flex items-baseline h-32px lt-md:h-16px">
             <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} />} onReset={refreshDomainExpire}>
-              有效期至
+              有效期至<span className="opacity-0">占</span>
               <div className="relative inline-flex items-baseline gap-3px ml-24px text-28px text-grey-normal font-bold lt-md:text-16px lt-md:ml-8px md:translate-y-1px">
                 <Suspense fallback={<ExpireTimeLoading />}>
                   <ExpireTime domain={domain} />

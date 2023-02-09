@@ -17,6 +17,7 @@ import { useDomainExpire, useRefreshDomainExpire } from '@service/domainInfo';
 import { useAccountReverseRegistrar, handleSetAccountReverseRegistrar, useRefreshAccountReverseRegistrar } from '@service/accountReverseRegistrar';
 import { usePrefetchSettingPage } from '@service/prefetch';
 import useMainScroller from '@hooks/useMainScroller';
+import showDomainRenewModal from '@pages/DomainRenew';
 import NoDomains from '@assets/images/NoDomains.png';
 import { ReactComponent as Logo } from '@assets/icons/logo.svg';
 
@@ -41,10 +42,9 @@ const DomainList: React.FC<{}> = ({}) => {
 
 export default memo(DomainList);
 
-
 const inTranscationDomainsState = atom<Array<string>>({
   key: 'inTranscationDomains',
-  default: []
+  default: [],
 });
 
 const MyDomains: React.FC<{ mainScroller: HTMLDivElement }> = ({ mainScroller }) => {
@@ -146,7 +146,7 @@ const DomainItem = ({
 
         <Button
           variant="text"
-          className={cx('lt-md:display-none mr-28px', { 'opacity-40 pointer-events-none': accountReverseRegistrar === domain })}
+          className={cx('lt-md:display-none mr-4px', { 'opacity-40 pointer-events-none': accountReverseRegistrar === domain })}
           onClick={async () => {
             const curClickDomain = domain;
             await handleSetAccountReverseRegistrar({
@@ -162,6 +162,10 @@ const DomainItem = ({
         >
           {accountReverseRegistrar === domain ? '已设为展示' : '设为展示'}
         </Button>
+        <Button variant="text" className="lt-md:display-none mr-24px" onClick={() => showDomainRenewModal({ domain })}>
+          续费
+        </Button>
+
         <GotoDomainSettingButton domain={domain} />
 
         <span className="i-dashicons:arrow-right-alt2 text-24px text-grey-normal md:display-none flex-shrink-0" />
@@ -178,7 +182,12 @@ const GotoDomainSettingButton = memo(({ domain }: { domain: string }) => {
       <Link to={`/setting/${domain}`} className="no-underline lt-md:display-none" onMouseEnter={prefetchSettingPage} draggable="false">
         <Button className="min-w-128px">管理</Button>
       </Link>
-      <Link to={`/setting/${domain}`} className="absolute w-full h-full left-0 top-0 no-underline md:display-none md:pointer-events-none" onMouseEnter={prefetchSettingPage} draggable="false" />
+      <Link
+        to={`/setting/${domain}`}
+        className="absolute w-full h-full left-0 top-0 no-underline md:display-none md:pointer-events-none"
+        onMouseEnter={prefetchSettingPage}
+        draggable="false"
+      />
     </>
   );
 });

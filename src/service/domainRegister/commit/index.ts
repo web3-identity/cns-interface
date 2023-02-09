@@ -5,6 +5,7 @@ import { setRecoil, getRecoil } from 'recoil-nexus';
 import JobSchedule from '@utils/JobSchedule';
 import { persistAtomWithNamespace } from '@utils/recoilUtils';
 import { getDomainOwner } from '@service/domainInfo';
+import { resetRegisterDurationYears } from '@pages/DomainRegister/Register/Step1';
 import { getMinCommitLockTime, getMaxCommitLockTime } from './MinMaxCommitLockTime';
 import { setRegisterToStep, RegisterStep, setWaitPayConfirm } from '..';
 
@@ -50,6 +51,7 @@ export const setCommitInfo = (domain: string, commitInfo: { commitmentHash: stri
 };
 
 export const clearCommitInfo = (domain: string) => {
+  resetRegisterDurationYears(domain);
   setRecoil(commitInfoState(domain), null);
   JobSchedule.removeJob(domain);
   setWaitPayConfirm(domain, false);

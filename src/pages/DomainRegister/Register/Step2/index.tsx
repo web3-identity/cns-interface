@@ -15,7 +15,7 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
   const { durationYears, validTime } = commitInfo! || {};
 
   useEffect(() => {
-    if (!validTime?.end || !remainTimeDOM) return;
+    if (!validTime?.end || !remainTimeDOM.current) return;
     const timerUnit: Parameters<typeof timerNotifier.addUnit>[0] = {
       key: 'commit-remainTime',
       type: 'second',
@@ -45,7 +45,7 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
           </div>
 
           <div className="flex items-baseline h-32px lt-md:h-20px lt-md:items-center">
-            注册时长
+            注册时长<span className="opacity-0">占</span>
             <span className="ml-24px text-28px text-grey-normal font-bold lt-md:text-16px lt-md:ml-8px md:translate-y-1px">
               {durationYears < 10 ? `0${durationYears}` : durationYears}
             </span>
@@ -54,6 +54,7 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
 
           <div className="flex items-baseline h-32px lt-md:h-20px lt-md:items-center">
             <span>总计花费</span>
+            <span className="opacity-0">占</span>
             <PayPrice className="ml-24px text-28px lt-md:text-16px lt-md:ml-8px md:translate-y-1px" domain={domain} />
           </div>
         </div>
@@ -84,7 +85,7 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
             <p className="mt-2px flex items-center">
               请在
               <span ref={remainTimeDOM} className="contain-content inline-block mx-4px text-center text-grey-normal lt-md:text-14px lt-md:leading-24px">
-                09:30
+                09:45
               </span>
               内完成支付
             </p>

@@ -20,7 +20,7 @@ export const web3Pay = async ({ domain, durationYears }: Params) => {
 
     const params = [domain, hexAccount, durationSeconds, commitInfo.secret, PublicResolver.hexAddress, [commitInfo.setAddrData], true, 0, commitInfo.wrapperExpiry];
 
-    const txHash = await sendTransaction({
+    await sendTransaction({
       data: Web3Controller.func.encodeFunctionData('register', params),
       from: account!,
       to: Web3Controller.address,
@@ -28,6 +28,9 @@ export const web3Pay = async ({ domain, durationYears }: Params) => {
     });
 
     setWaitPayConfirm(domain, true);
+
+    // Start waiting for the polling owner to change.
+    // if it is not done within three minutes, it can be considered a failure and go back to the second payment step.
     setTimeout(() => setWaitPayConfirm(domain, false), 1000 * 180);
   } catch (err) {
     console.error('err', err);

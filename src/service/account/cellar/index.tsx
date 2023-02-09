@@ -6,7 +6,7 @@ import isProduction from '@utils/isProduction';
 import { type sendTransaction as sendParams } from '@cfxjs/use-wallet-react/conflux/Fluent';
 
 const cellar = new Cellar({
-  appId: '84a131626ec245939f3d83e6ea01cb08',
+  appId: isProduction ? '2f04420b4221433b9baafb4aeecbff4b' : '84a131626ec245939f3d83e6ea01cb08',
   env: isProduction ? CellarEnv.PRO : CellarEnv.PRE,
 });
 

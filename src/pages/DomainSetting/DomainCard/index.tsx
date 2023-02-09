@@ -12,6 +12,7 @@ import CfxAddress from '@modules/CfxAddress';
 import { useDomainOwner, useDomainExpire, useRefreshDomainOwner, useRefreshDomainExpire, useDomainSensitiveCensor, useRefreshDomainSensitiveCensor } from '@service/domainInfo';
 import { useAccount } from '@service/account';
 import { useAccountReverseRegistrar, useHandleSetAccountReverseRegistrar, useRefreshAccountReverseRegistrar } from '@service/accountReverseRegistrar';
+import showDomainRenewModal from '@pages/DomainRenew';
 import useIsLtMd from '@hooks/useIsLtMd';
 import { ReactComponent as LogoTransparent } from '@assets/icons/logo-transparent.svg';
 import { ReactComponent as CopyIcon } from '@assets/icons/copy.svg';
@@ -197,7 +198,7 @@ const DomainExpire: React.FC<{ domain: string }> = ({ domain }) => {
         )}
       </div>
 
-      <Button className="ml-auto lt-md:self-end" size="mini">
+      <Button className="ml-auto lt-md:self-end" size="mini" onClick={() => showDomainRenewModal({ domain })}>
         续费
       </Button>
     </>

@@ -29,16 +29,19 @@ export const maxCommitLockTimeState = atom<number>({
 
 export const useMinCommitLockTime = () => useRecoilValue(minCommitLockTimeState);
 export const useMaxCommitLockTime = () => useRecoilValue(maxCommitLockTimeState);
-export const getMinCommitLockTime = () => getRecoil(minCommitLockTimeState) ?? 10;
+export const getMinCommitLockTime = () => getRecoil(minCommitLockTimeState) ?? (10 + 5);
 export const getMaxCommitLockTime = () => getRecoil(maxCommitLockTimeState) ?? 600;
 
 (() => {
   fetchCommitmentLockTime('min').then((res) => {
+    // It seems that pay's minimum time is a little larger than this number
+    const minTime = res + 5;
+    
     try {
-      LocalStorage.setItem({ key: 'minCommitmentLockTime', data: res });
-      handleRecoilInit((set) => set(minCommitLockTimeState, res));
+      LocalStorage.setItem({ key: 'minCommitmentLockTime', data: minTime });
+      handleRecoilInit((set) => set(minCommitLockTimeState, minTime));
     } catch (_) {
-      setRecoil(minCommitLockTimeState, res)
+      setRecoil(minCommitLockTimeState, minTime)
     }
   });
   fetchCommitmentLockTime('max').then((res) => {

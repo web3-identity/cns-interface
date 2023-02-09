@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, type ReactNode } from 'react';
+import React, { memo, useEffect, useCallback, useRef, type ReactNode } from 'react';
 import cx from 'clsx';
 import { useAccount } from '@service/account';
 import { DrawerClass } from '@components/Drawer';
@@ -8,7 +8,7 @@ import { recordCurrentPopup } from '../';
 
 export const DrawerPopup = new DrawerClass(true);
 
-const Drawer: React.FC<{ Content: ReactNode | Function; title: string; className?: string }> = memo(({ Content, title, className }) => {
+const Drawer: React.FC<{ Content: ReactNode | Function; title: string; className?: string; onClose?: VoidFunction }> = memo(({ Content, title, className, onClose }) => {
   const account = useAccount();
 
   const hasInit = useRef(false);
@@ -20,7 +20,12 @@ const Drawer: React.FC<{ Content: ReactNode | Function; title: string; className
     history.back();
   }, [account]);
 
-  useCloseOnRouterBack(DrawerPopup.hide);
+  const handleClose = useCallback(() => {
+    DrawerPopup.hide();
+    onClose?.();
+  }, [onClose]);
+
+  useCloseOnRouterBack(handleClose);
 
   return (
     <div className={cx('px-16px p-24px pb-40px h-full', className)}>
@@ -35,11 +40,11 @@ const Drawer: React.FC<{ Content: ReactNode | Function; title: string; className
   );
 });
 
-export const showDrawer = (props: { Content: React.ReactNode; title: string }) => {
+export const showDrawer = (props: { Content: React.ReactNode; title: string; onClose?: VoidFunction }) => {
   const popupId = DrawerPopup.show(<Drawer {...props} />);
   recordCurrentPopup(popupId);
   return popupId;
-}
+};
 
 export const hideDrawer = () => DrawerPopup.hide();
 export const hideAllDawer = () => DrawerPopup.hide();

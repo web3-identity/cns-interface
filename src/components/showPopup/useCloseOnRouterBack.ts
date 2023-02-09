@@ -13,7 +13,7 @@ const useCloseOnRouterBack = (closeModal: VoidFunction) => {
     return () => {
       window.removeEventListener('popstate', handleCloseModal);
     };
-  }, []);
+  }, [closeModal]);
 };
 
 export default useCloseOnRouterBack;
