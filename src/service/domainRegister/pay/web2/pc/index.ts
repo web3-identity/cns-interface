@@ -7,14 +7,15 @@ const postOrder = (commitmentHash: string, domain: string) =>
     path: `registers/order/${commitmentHash}`,
     method: 'POST',
     params: {
-      trade_provider: 'wechat',
-      trade_type: 'native',
+      // trade_provider: 'wechat',
+      // trade_type: 'native',
+      trade_provider: 'alipay',
+      trade_type: 'h5',
       description: domain,
     },
   });
 
 const getOrder = (commitmentHash: string) => fetchApi({ path: `registers/order/${commitmentHash}`, method: 'GET' });
-
 
 export const getOrderStatus = (commitmentHash: string) =>
   fetchApi<Response>({ path: `registers/order/${commitmentHash}`, method: 'GET' }).then((res) => {
@@ -39,11 +40,13 @@ export const refreshRegisterOrder = (domain: string) => {
 };
 
 interface Response {
-  code_url: string;
+  code_url?: string;
+  h5_url: string;
   commit_hash: string;
   trade_state: string;
   refund_state: string;
   tx_state: string;
+  trade_provider: 'alipay' | 'wechat';
 }
 
 const makeOrderQuery = selectorFamily<Response, string>({
@@ -84,5 +87,10 @@ const makeOrderQuery = selectorFamily<Response, string>({
 });
 
 export const useMakeOrder = (domain: string) => useRecoilValue(makeOrderQuery(domain));
-export const usePrefetchMakeOrder = () => useRecoilCallback(({ snapshot }) => (domain: string) => snapshot.getPromise(makeOrderQuery(domain)));
+export const usePrefetchMakeOrder = () =>
+  useRecoilCallback(
+    ({ snapshot }) =>
+      (domain: string) =>
+        snapshot.getPromise(makeOrderQuery(domain))
+  );
 export const useRefreshMakeOrder = (domain: string) => useRecoilRefresher_UNSTABLE(makeOrderQuery(domain));

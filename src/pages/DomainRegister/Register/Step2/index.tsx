@@ -76,11 +76,12 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
                 </>
               ) : (
                 <>
-                  <span className="i-ri:wechat-pay-fill mx-4px text-24px text-#09BB07 -translate-y-1px" />
-                  微信扫码
+                  {/* <span className="i-ri:wechat-pay-fill mx-4px text-24px text-#09BB07 -translate-y-1px" /> */}
+                  {/* <span className="i-fa6-brands:alipay mx-4px text-24px text-#009FE9 -translate-y-1px" /> */}
+                  {' '}支付宝扫码
                 </>
               )}
-              支付用户名注册费
+              {' '}支付用户名注册费
             </p>
             <p className="mt-2px flex items-center">
               请在
@@ -93,7 +94,7 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
               <Button fullWidth>
                 <>
                   <span className="i-ri:wechat-pay-fill mx-4px text-24px text-#09BB07 -translate-y-1px" />
-                  微信支付
+                  支付宝支付
                 </>
               </Button>
             )} */}

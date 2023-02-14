@@ -33,7 +33,7 @@ export const commitRegistration = async ({ domain, durationYears }: Params) => {
     const commitmentHash: string = await fetchChain({
       params: [
         {
-          data: Web3Controller.func.encodeFunctionData('makeCommitment', commitParams),
+          data: Web3Controller.func.encodeFunctionData('makeCommitment(string,address,uint256,bytes32,address,bytes[],bool,uint16,uint64)', commitParams),
           from: account,
           to: Web3Controller.address,
         },

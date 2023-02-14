@@ -20,32 +20,32 @@ const createContract = (address: string, ABI: ContractInterface) => {
 };
 
 export const Web3Controller = createContract(
-  isProduction ? 'cfxtest:acde0h4f9nz70h146d4p0wbbx38zamwhue3uce1ndt' : 'cfxtest:acde0h4f9nz70h146d4p0wbbx38zamwhue3uce1ndt',
+  isProduction ? 'cfxtest:aca1858y5a9fnyx9rxd1c9knr517cd0e6afzzhgj01' : 'cfxtest:aca1858y5a9fnyx9rxd1c9knr517cd0e6afzzhgj01',
   Web3ControllerABI
 );
 
 export const PublicResolver = createContract(
-  isProduction ? 'cfxtest:acfcb2fv6t8xrxyyx3x1atwmdrhh5xvfd21zsje216' : 'cfxtest:acfcb2fv6t8xrxyyx3x1atwmdrhh5xvfd21zsje216',
+  isProduction ? 'cfxtest:acbfyf69zaxau5a23w10dgyrmb0hrz4p9pewn6sejp' : 'cfxtest:acbfyf69zaxau5a23w10dgyrmb0hrz4p9pewn6sejp',
   PublicResolverABI
 );
 
 export const NameWrapper = createContract(
-  isProduction ? 'cfxtest:acbttry22rsx7k54ms6hbkc0c8tf680u5pc0r31ef5' : 'cfxtest:acbttry22rsx7k54ms6hbkc0c8tf680u5pc0r31ef5',
+  isProduction ? 'cfxtest:acapc3y2j7atme3bawvaex18hs36tn40uu5h6j3mtu' : 'cfxtest:acapc3y2j7atme3bawvaex18hs36tn40uu5h6j3mtu',
   NameWrapperABI
 );
 
 export const BaseRegistrar = createContract(
-  isProduction ? 'cfxtest:acbp262fvjzva1raef4n3e5yyszy9spsc20cmztnya' : 'cfxtest:acbp262fvjzva1raef4n3e5yyszy9spsc20cmztnya',
+  isProduction ? 'cfxtest:acg08bujp0kmsup1zk11c9mad7zd6648eynbcjtndm' : 'cfxtest:acg08bujp0kmsup1zk11c9mad7zd6648eynbcjtndm',
   BaseRegistrarABI
 );
 
 export const ReverseRegistrar = createContract(
-  isProduction ? 'cfxtest:acfmezysbf86jy3jnw835bnamxp08dxzd61w5ur8hy' : 'cfxtest:acfmezysbf86jy3jnw835bnamxp08dxzd61w5ur8hy',
+  isProduction ? 'cfxtest:acfarpzehntpre0thg8x7dp0ajw4ms328pe1mm17vd' : 'cfxtest:acfarpzehntpre0thg8x7dp0ajw4ms328pe1mm17vd',
   ReverseRegistrarABI
 );
 
 export const ReverseRecords = createContract(
-  isProduction ? 'cfxtest:acccv089mvek41rsmjyf1yyg922phjd0ppt16hfuv1' : 'cfxtest:acccv089mvek41rsmjyf1yyg922phjd0ppt16hfuv1',
+  isProduction ? 'cfxtest:acgddsj3kah2f4f4c6959bvc4732f4juyj90h0zmg2' : 'cfxtest:acgddsj3kah2f4f4c6959bvc4732f4juyj90h0zmg2',
   ReverseRecordsABI
 );
 

@@ -26,7 +26,7 @@ const ModalContent: React.FC<Props> = ({ domain }) => {
   const isNotYourDomain = isOwner === false || !account;
 
   return (
-    <div className={cx("relative mt-16px text-14px text-grey-normal-hover text-opacity-50", isNotYourDomain ? 'h-308px' : 'h-264px')}>
+    <div className={cx("relative mt-16px text-14px text-grey-normal-hover text-opacity-50", isNotYourDomain ? 'h-308px' : 'h-248px lt-md:h-264px')}>
       <Domain domain={domain} className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-34px p-8px bg-purple-dark-active" />
       {renewStep === RenewStep.InputDurationYears && <InputDurationYears domain={domain} refreshDomainExpire={refreshDomainExpire} />}
       {renewStep === RenewStep.WaitRenewPay && payMethod === 'web2' && <QRCode_web2pc domain={domain} />}

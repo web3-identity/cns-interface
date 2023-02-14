@@ -40,15 +40,13 @@
     "recoil": "^0.7.6",
     "recoil-nexus": "^0.4.0",
     "reseter.css": "^2.0.0",
-    "zustand": "^4.3.2"
+    "zustand": "^4.3.3"
   },
   "devDependencies": {
-    "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
-    "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
-    "@iconify/json": "^2.2.18",
+    "@iconify/json": "^2.2.21",
     "@types/lodash-es": "^4.17.6",
     "@types/mersenne-twister": "^1.1.2",
-    "@types/react": "^18.0.27",
+    "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.10",
     "@unocss/preset-icons": "^0.47.6",
     "@unocss/preset-wind": "^0.47.6",

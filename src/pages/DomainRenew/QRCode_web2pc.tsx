@@ -42,8 +42,9 @@ const QRCode: React.FC<{ domain: string; refreshMakeRenewOrder: VoidFunction, re
   }, [makeRenewOrder?.id]);
 
   return (
-    <div className="relative w-100px h-100px p-6px rounded-8px bg-white cursor-pointer hover:bg-black hover:bg-opacity-30 group" onClick={refreshMakeRenewOrder}>
-      <QRCodeCreate className="group-hover:opacity-30  pointer-events-none" size={88} value={makeRenewOrder?.code_url || ''} viewBox={`0 0 88 88`} />
+    <div className="relative w-100px h-100px p-6px rounded-8px bg-white cursor-pointer hover:bg-black hover:bg-opacity-30 overflow-hidden group" onClick={refreshMakeRenewOrder}>
+      {makeRenewOrder?.trade_provider === 'wechat' && <QRCodeCreate className="group-hover:opacity-30  pointer-events-none" size={88} value={makeRenewOrder?.code_url || ''} viewBox={`0 0 88 88`} />}
+      {makeRenewOrder?.trade_provider === 'alipay' && <iframe className="w-100px h-100px group-hover:opacity-30 pointer-events-none border-none overflow-hidden" src={makeRenewOrder?.h5_url || ''} />}
       <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-14px text-grey-normal font-bold opacity-0 group-hover:opacity-100 whitespace-nowrap">刷新二维码</span>
     </div>
   );
@@ -64,9 +65,10 @@ const QRCodePay: React.FC<{ domain: string; }> = ({ domain }) => {
       </div>
       <div className="flex flex-col justify-center items-center py-14px bg-#26233E leading-24px">
         <p className='px-20px text-center'>
-          请使用
-          <span className="i-ri:wechat-pay-fill mx-4px text-24px text-#09BB07 -translate-y-1px" />
-          微信扫码 支付用户名注册费
+          请使用{' '}
+          {/* <span className="i-ri:wechat-pay-fill mx-4px text-24px text-#09BB07 -translate-y-1px" /> */}
+          {/* <span className="i-fa6-brands:alipay mx-4px text-24px text-#009FE9 -translate-y-1px" /> */}
+          支付宝扫码 支付用户名注册费
         </p>
         <p className="mt-2px flex items-center">
           请在

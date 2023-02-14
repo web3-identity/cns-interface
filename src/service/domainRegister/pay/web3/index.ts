@@ -21,7 +21,7 @@ export const web3Pay = async ({ domain, durationYears }: Params) => {
     const params = [domain, hexAccount, durationSeconds, commitInfo.secret, PublicResolver.hexAddress, [commitInfo.setAddrData], true, 0, commitInfo.wrapperExpiry];
 
     await sendTransaction({
-      data: Web3Controller.func.encodeFunctionData('register', params),
+      data: Web3Controller.func.encodeFunctionData('register(string,address,uint256,bytes32,address,bytes[],bool,uint16,uint64)', params),
       from: account!,
       to: Web3Controller.address,
       value: payPrice.toHexMinUnit(),

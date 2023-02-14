@@ -18,8 +18,10 @@ const renewOrder = (domain: string, durationYears: number) => {
     path: `renews/order`,
     method: 'POST',
     params: {
-      trade_provider: 'wechat',
-      trade_type: 'native',
+      // trade_provider: 'wechat',
+      // trade_type: 'native',
+      trade_provider: 'alipay',
+      trade_type: 'h5',
       fuses: 0,
       wrapper_expiry: wrapperExpiry,
       cns_name: domain,
@@ -39,11 +41,13 @@ export const getRenewOrderStatus = (id: number) =>
 
 interface Response {
   id: number;
-  code_url: string;
+  code_url?: string;
+  h5_url: string;
   commit_hash: string;
   trade_state: string;
   refund_state: string;
   tx_state: string;
+  trade_provider: 'alipay' | 'wechat';
 }
 
 const renewOrderId = atomFamily<number | string, string>({
