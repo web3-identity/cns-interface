@@ -73,7 +73,7 @@ const QRCodePay: React.FC<{ domain: string }> = ({ domain }) => {
 
   return (
     <div className="mx-auto flex flex-col w-288px rounded-12px bg-violet-normal-hover overflow-hidden lt-md:w-full">
-      <div className="relative mx-auto my-20px w-100px h-100px flex flex-col justify-center items-center">
+      <div className="relative mx-auto my-20px w-full h-100px flex flex-col justify-center items-center">
         <Loading />
         <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} domain={domain} />} onReset={refreshMakeRenewOrder}>
           <Suspense fallback={null}>
@@ -108,11 +108,11 @@ const ErrorBoundaryFallback: React.FC<FallbackProps & { domain: string }> = ({ d
   const isNetworkError = errorMessage.includes('Failed to fetch');
 
   return (
-    <div className="h-full flex flex-col justify-center items-center">
+    <div className="absolute left-0 top-0 w-full h-full flex flex-col justify-center items-center bg-violet-normal-hover">
       <ToolTip text={errorMessage}>
         <p className="mb-16px flex items-center">
           {isNetworkError ? '网络错误' : '发生了意料之外的错误'}
-          <span className="i-ep:warning ml-2px text-18px" />
+          <span className="i-ep:warning ml-2px text-18px flex-shrink-0" />
         </p>
       </ToolTip>
 
