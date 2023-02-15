@@ -7,7 +7,7 @@ const useCloseOnRouterBack = (closeModal: VoidFunction) => {
 
     const handleCloseModal = () => {
       closeModal?.();
-    }
+    };
 
     window.addEventListener('popstate', handleCloseModal);
     return () => {
