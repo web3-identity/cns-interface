@@ -53,7 +53,7 @@ const QRCode: React.FC<{ domain: string; refreshMakeRenewOrder: VoidFunction; re
   return (
     <div
       className={cx(
-        'absolute left-0 top-0 w-100px h-100px p-6px rounded-8px bg-white cursor-pointer hover:bg-black overflow-hidden group',
+        'absolute top-0 left-1/2 -translate-x-1/2 w-100px h-100px p-6px rounded-8px bg-white cursor-pointer hover:bg-black overflow-hidden group',
         isIframeLoaded ? 'opacity-100 ' : 'opacity-0 pointer-events-none'
       )}
       onClick={refreshMakeRenewOrder}
