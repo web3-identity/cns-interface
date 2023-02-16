@@ -30,7 +30,7 @@ const OrderMaker: React.FC<{ domain: string; refreshMakeOrder: VoidFunction }> =
 
   if (isMobile) {
     return (
-      <Button fullWidth target="_self" href={url} className="absolute left-0 top-0">
+      <Button fullWidth target="_blank" href={url} className="absolute left-0 top-0">
         <span className="i-fa6-brands:alipay mx-4px text-24px text-#009FE9" />
         支付宝支付
       </Button>

@@ -30,7 +30,7 @@ const ConnectWallet: React.FC<ComponentProps<'div'> & { icon: string; name: stri
 const ConnectModalContent: React.FC = () => {
   return (
     <div className="flex justify-center items-center gap-20px pt-20px pb-22px lt-md:justify-center">
-      <ConnectWallet connect={() => connect('fluent')} icon={fluentImg} name="Fluent" />
+      {!isMobile && <ConnectWallet connect={() => connect('fluent')} icon={fluentImg} name="Fluent" />}
       <ConnectWallet connect={() => connect('anyweb')} icon={anywebImg} name="AnyWeb" />
       <ConnectWallet connect={() => connect('cellar')} icon="https://file.maytek.cn/20230110/cellar/4dbfea68b5/logo_20230110100227A001.png" name="Cellar" />
     </div>
