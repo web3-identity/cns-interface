@@ -11,7 +11,7 @@ const ConnectWallet: React.FC<ComponentProps<'div'> & { icon: string; name: stri
       onClick={async () => {
         try {
           await connect();
-          if (name === 'Cellar') {
+          if (name !== 'Fluent') {
             hideAllModal();
             hideAllToast();
             history.back();

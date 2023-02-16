@@ -72,7 +72,7 @@ export const connect = async () =>
 export const disconnect = async () =>
   provider
     .request({
-      method: 'anyweb_revoke',
+      method: 'anyweb_logout',
     })
 
 export const sendTransaction = (params: Parameters<typeof send>[0]) =>

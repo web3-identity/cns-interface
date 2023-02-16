@@ -24,7 +24,6 @@ const shortenCfxAddress = (address: string) => {
     throw new Error('Only shorten the conflux address not containing type');
   }
   const { netId } = decode(address);
-  console.log(netId)
   const secondStr = getEllipsStr(arr[1], 3, netId === CFX_MAINNET_NETID ? 8 : 4);
 
   return `${arr[0]}:${secondStr}`;

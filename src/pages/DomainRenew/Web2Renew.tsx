@@ -115,10 +115,7 @@ export default Web2Renew;
 
 const Loading: React.FC = () =>
   isMobile ? (
-    <Button loading className="absolute w-200px left-1/2 top-1/2 -translate-1/2 pointer-events-none">
-      <span className="i-fa6-brands:alipay mx-4px text-24px text-#009FE9" />
-      支付宝支付
-    </Button>
+    <Button loading className="absolute w-200px left-1/2 top-1/2 -translate-1/2 pointer-events-none" />
   ) : (
     <Delay mode="opacity">
       <Spin className="text-60px" />
