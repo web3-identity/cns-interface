@@ -110,8 +110,8 @@ const ModalContent: React.FC<Props> = ({ domain }) => {
       <div className="relative">
         <Input
           id="new-domain-owner"
-          size={isMobile() ? 'small' : 'normal'}
-          className={cx(isMobile() ? '!pl-12px' : '!pl-16px')}
+          size={isMobile ? 'small' : 'normal'}
+          className={cx(isMobile ? '!pl-12px' : '!pl-16px')}
           wrapperClassName="border-2px border-purple-normal rounded-8px"
           placeholder="输入 .Web3 名称 或者 Conflux Core 地址"
           value={inputValue}
@@ -201,7 +201,7 @@ const DomainAddress: React.FC<Props & { setValidateStatus: Function; setTransfer
 };
 
 const showDomainTransferModal = (params: Props) => {
-  if (isMobile()) {
+  if (isMobile) {
     showDrawer({ Content: <ModalContent {...params} />, title: '用户名转让' });
   } else {
     showModal({ Content: <ModalContent {...params} />, title: '用户名转让' });

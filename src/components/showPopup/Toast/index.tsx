@@ -28,7 +28,7 @@ const ToastComponent: React.FC<{ content: string | React.ReactNode | Function; d
         <div className={cx('flex items-center px-24px py-16px', { 'text-#FF9900': type === 'warning', 'text-green-normal': type === 'success' })}>
           {showClose && (
             <span
-              className={cx('i-ep:close-bold absolute right-6px top-6px text-14px cursor-pointer lt-mobile:opacity-100', !isMobile() && 'opacity-0 group-hover:opacity-100 transition-opacity')}
+              className={cx('i-ep:close-bold absolute right-6px top-6px text-14px cursor-pointer lt-mobile:opacity-100', !isMobile && 'opacity-0 group-hover:opacity-100 transition-opacity')}
               onClick={hide}
             />
           )}

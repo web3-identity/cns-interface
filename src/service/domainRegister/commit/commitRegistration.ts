@@ -7,7 +7,7 @@ import { yearsToSeconds } from '@utils/date';
 import waitAsyncResult, { isTransactionReceipt } from '@utils/waitAsyncResult';
 import { Web3Controller, PublicResolver } from '@contracts/index';
 import { createSetAddrData } from '@service/domainRegistrar/setRegistrarAddress';
-import { postCommitmentToBackend } from './web2Additional/pc';
+import { postCommitmentToBackend } from './web2Additional';
 import { setCommitInfo } from '../';
 
 const isCommitReceipt = (commitmentHash: string) =>

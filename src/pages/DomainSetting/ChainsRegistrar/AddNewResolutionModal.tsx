@@ -126,7 +126,7 @@ const ChainSelect: React.FC<{ selectableChains: Array<string>; selectChain: Func
 };
 
 const showAddNewResolutionModal = (params: Props) => {
-  if (isMobile()) {
+  if (isMobile) {
     showDrawer({ Content: <ModalContent {...params} />, title: '新增解析地址' });
   } else {
     showModal({ Content: <ModalContent {...params} />, title: '新增解析地址' });

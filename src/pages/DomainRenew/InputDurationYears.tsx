@@ -38,7 +38,7 @@ const InputDurationYears: React.FC<{ domain: string; refreshDomainExpire: VoidFu
             onClick={() => startTransition(decrease)}
             className={cx(
               'mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover md:text-opacity-50 md:bg-purple-dark-hover md:hover:bg-purple-dark cursor-pointer transition-colors disabled:pointer-events-none lt-md:mt-0px lt-md:bg-transparent lt-md:w-56px lt-md:h-56px lt-md:text-#8A8A9D lt-md:justify-center lt-md:items-center',
-              !isMobile() && 'lt-md:hover-bg-#8A8A9D22',
+              !isMobile && 'lt-md:hover-bg-#8A8A9D22',
               inWeb3Renew && 'opacity-50'
             )}
             disabled={inWeb3Renew}
@@ -57,7 +57,7 @@ const InputDurationYears: React.FC<{ domain: string; refreshDomainExpire: VoidFu
             onClick={() => startTransition(increase)}
             className={cx(
               'mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover md:text-opacity-50 md:bg-purple-dark-hover md:hover:bg-purple-dark cursor-pointer transition-colors disabled:pointer-events-none lt-md:mt-0px lt-md:bg-transparent lt-md:w-56px lt-md:h-56px lt-md:text-#8A8A9D lt-md:justify-center lt-md:items-center',
-              !isMobile() && 'lt-md:hover-bg-#8A8A9D22',
+              !isMobile && 'lt-md:hover-bg-#8A8A9D22',
               inWeb3Renew && 'opacity-50'
             )}
             disabled={inWeb3Renew}
@@ -69,7 +69,7 @@ const InputDurationYears: React.FC<{ domain: string; refreshDomainExpire: VoidFu
 
       <Button
         loading={inWeb3Renew}
-        className={cx("mt-40px mx-auto flex! w-152px lt-md:w-full", isMobile() ? 'lt-md:mt-48px' : 'lt-md:mt-40px')}
+        className={cx("mt-40px mx-auto flex! w-152px lt-md:w-full", isMobile ? 'lt-md:mt-48px' : 'lt-md:mt-40px')}
         onClick={() => {
           if (payMethod === 'web3') {
             web3Renew({ domain, durationYears, refreshDomainExpire });

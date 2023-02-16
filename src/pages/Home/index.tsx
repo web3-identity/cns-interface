@@ -15,10 +15,10 @@ const Home: React.FC = () => {
       <StatusSearch where='home'/>
 
       <picture className="absolute -top-32px lt-md:-top-164px left-1/2 -translate-x-1/2 w-1512px -z-1 pointer-events-none lt-md:w-full select-none" draggable="false">
-        {!isMobile() && <source srcSet={homeBgWebp} type="image/webp" className='lt-md:display-none'/>}
-        {!isMobile() && <img className="w-full lt-md:display-none" src={homeBg} alt="background image" />}
-        {isMobile() && <source srcSet={homeBgWebpMobile} type="image/webp" />}
-        {isMobile() && <img className="w-full" src={homeBgMobile} alt="background image" />}
+        {!isMobile && <source srcSet={homeBgWebp} type="image/webp" className='lt-md:display-none'/>}
+        {!isMobile && <img className="w-full lt-md:display-none" src={homeBg} alt="background image" />}
+        {isMobile && <source srcSet={homeBgWebpMobile} type="image/webp" />}
+        {isMobile && <img className="w-full" src={homeBgMobile} alt="background image" />}
       </picture>
     </PageWrapper>
   );

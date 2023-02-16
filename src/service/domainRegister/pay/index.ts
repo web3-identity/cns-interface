@@ -1,6 +1,6 @@
 export * from './price';
 export * from './web3';
-export * from './web2/pc';
+export * from './web2';
 import { atomFamily, useRecoilValue } from 'recoil';
 import { setRecoil, getRecoil } from 'recoil-nexus';
 import { persistAtomWithDefault } from '@utils/recoilUtils';

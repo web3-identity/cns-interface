@@ -46,6 +46,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<Props>>(
           className
         ),
         ref: _forwardRef,
+        rel: props.href ?'noopener noreferrer' : undefined,
         ...props,
       },
       <>

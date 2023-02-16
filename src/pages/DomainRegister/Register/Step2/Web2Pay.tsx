@@ -8,13 +8,14 @@ import ToolTip from '@components/Tooltip';
 import Spin from '@components/Spin';
 import useInTranscation from '@hooks/useInTranscation';
 import { backToStep1 } from '@service/domainRegister';
-import { useMakeOrder, useRefreshMakeOrder, refreshRegisterOrder as _refreshRegisterOrder } from '@service/domainRegister/pay/web2/pc';
+import { useMakeOrder, useRefreshMakeOrder, refreshRegisterOrder as _refreshRegisterOrder } from '@service/domainRegister/pay/web2';
 import useIsIframeLoaded from '@hooks/useIsIframeLoaded';
+import isMobile from '@utils/isMobie';
 
-const QRCode: React.FC<{ domain: string; refreshMakeOrder: VoidFunction }> = ({ domain, refreshMakeOrder }) => {
+const OrderMaker: React.FC<{ domain: string; refreshMakeOrder: VoidFunction }> = ({ domain, refreshMakeOrder }) => {
   const makeOrder = useMakeOrder(domain);
   const { inTranscation, execTranscation: refreshRegisterOrder } = useInTranscation(_refreshRegisterOrder);
-
+  console.log(makeOrder)
   useEffect(() => {
     const timer = setInterval(async () => {
       await refreshRegisterOrder(domain);
@@ -24,8 +25,17 @@ const QRCode: React.FC<{ domain: string; refreshMakeOrder: VoidFunction }> = ({ 
     return () => clearInterval(timer);
   }, []);
 
-  const url = (makeOrder?.trade_provider === 'wechat' ? makeOrder?.code_url : makeOrder?.h5_url) ?? '';
+  const url = (isMobile ? makeOrder?.wap_url : makeOrder?.trade_provider === 'wechat' ? makeOrder?.code_url : makeOrder?.h5_url) ?? '';
   const [iframeEle, isIframeLoaded] = useIsIframeLoaded(url);
+
+  if (isMobile) {
+    return (
+      <Button fullWidth target="_blank" href={url} className="absolute left-0 top-0">
+        <span className="i-fa6-brands:alipay mx-4px text-24px text-#009FE9" />
+        支付宝支付
+      </Button>
+    );
+  }
 
   return (
     <div
@@ -47,44 +57,54 @@ const QRCode: React.FC<{ domain: string; refreshMakeOrder: VoidFunction }> = ({ 
   );
 };
 
-const QRCodePay: React.FC<{ domain: string }> = ({ domain }) => {
+const Web2Pay: React.FC<{ domain: string }> = ({ domain }) => {
   const refreshMakeOrder = useRefreshMakeOrder(domain);
 
   return (
-    <div className="relative mx-auto my-20px w-full h-100px flex flex-col justify-center items-center">
+    <div className={cx(isMobile ? 'relative w-full min-h-40px' : 'relative mx-auto my-20px w-full h-100px flex flex-col justify-center items-center')}>
       <Loading />
       <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} domain={domain} />} onReset={refreshMakeOrder}>
         <Suspense fallback={null}>
-          <QRCode domain={domain} refreshMakeOrder={refreshMakeOrder} />
+          <OrderMaker domain={domain} refreshMakeOrder={refreshMakeOrder} />
         </Suspense>
       </ErrorBoundary>
     </div>
   );
 };
 
-export default QRCodePay;
+export default Web2Pay;
 
-const Loading: React.FC = () => <Spin className="text-60px" />;
+const Loading: React.FC = () =>
+  isMobile ? (
+    <Button fullWidth loading className="absolute bottom-0 pointer-events-none">
+      <span className="i-fa6-brands:alipay mx-4px text-24px text-#009FE9" />
+      支付宝支付
+    </Button>
+  ) : (
+    <Delay mode="opacity">
+      <Spin className="text-60px" />
+    </Delay>
+  );
 
 const ErrorBoundaryFallback: React.FC<FallbackProps & { domain: string }> = ({ domain, error, resetErrorBoundary }) => {
   const errorMessage = String(error);
   const isNetworkError = errorMessage.includes('Failed to fetch');
 
   return (
-    <div className="absolute left-0 top-0 h-full w-full flex flex-col justify-center items-center bg-violet-normal-hover lt-md:bg-purple-dark-active">
+    <div className={cx('w-full flex flex-col justify-center items-center bg-violet-normal-hover lt-md:bg-purple-dark-active', !isMobile && 'absolute left-0 top-0 h-full')}>
       <ToolTip text={errorMessage}>
-        <p className="mb-16px flex items-center">
-          {isNetworkError ? '网络错误' : '发生了意料之外的错误'}
+        <p className={cx('mb-16px flex items-center underline underline-offset-3px', isMobile && 'mt-16px')}>
+          {isNetworkError ? '网络错误' : `发生了意料之外的错误${isMobile ? '，点此查看' : ''}`}
           <span className="i-ep:warning ml-2px text-18px flex-shrink-0" />
         </p>
       </ToolTip>
 
       {isNetworkError ? (
-        <Button onClick={resetErrorBoundary} size="small">
+        <Button onClick={resetErrorBoundary} size={!isMobile ? 'small' : 'normal'} fullWidth={isMobile}>
           刷新二维码
         </Button>
       ) : (
-        <Button onClick={() => backToStep1(domain)} size="small">
+        <Button onClick={() => backToStep1(domain)} size={!isMobile ? 'small' : 'normal'} fullWidth={isMobile}>
           回到第一步
         </Button>
       )}

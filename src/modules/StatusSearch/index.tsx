@@ -57,7 +57,7 @@ const StatusSearch: React.FC<Props & ComponentProps<'div'>> = ({ where, classNam
           size={isSmall ? 'normal' : 'medium'}
           prefixIcon={!isSmall ? 'i-charm:search' : ''}
           placeholder="获取您的.web3"
-          autoFocus={where === 'home' && !isMobile()}
+          autoFocus={where === 'home' && !isMobile}
           {...register('domain', { required: true })}
         />
         {!domain && (

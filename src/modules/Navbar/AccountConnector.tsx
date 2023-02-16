@@ -38,7 +38,7 @@ const ConnectModalContent: React.FC = () => {
 };
 
 const showAccountConnector = () => {
-  if (isMobile()) {
+  if (isMobile) {
     showDrawer({ Content: <ConnectModalContent />, title: '连接钱包' });
   } else {
     showModal({ Content: <ConnectModalContent />, className: '!max-w-370px', title: '连接钱包' }) as string;

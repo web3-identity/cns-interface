@@ -7,7 +7,8 @@ import payMethod from '@service/payMethod';
 import { ReactComponent as FluentIcon } from '@assets/icons/fluent.svg';
 import { RegisterBox } from '@pages/DomainRegister';
 import useInTranscation from '@hooks/useInTranscation';
-import QRCode from './QRCode_web2pc';
+import isMobile from '@utils/isMobie';
+import Web2Pay from './Web2Pay';
 import PayPrice from '../PayPrice';
 
 const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ domain, commitInfo }) => {
@@ -65,24 +66,25 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
               买
             </Button>
           )}
-          {payMethod === 'web2' && <QRCode domain={domain} />}
+          {payMethod === 'web2' && !isMobile && <Web2Pay domain={domain} />}
           <div className="flex-1 flex flex-col justify-center items-center bg-#26233E leading-24px lt-md:bg-transparent">
-            <p>
-              请使用
-              {payMethod === 'web3' ? (
-                <>
-                  <FluentIcon className="ml-4px mr-2px w-24px h-24px translate-y-6px" />
-                  Fluent钱包{' '}
-                </>
-              ) : (
-                <>
-                  {/* <span className="i-ri:wechat-pay-fill mx-4px text-24px text-#09BB07 -translate-y-1px" /> */}
-                  {/* <span className="i-fa6-brands:alipay mx-4px text-24px text-#009FE9 -translate-y-1px" /> */}
-                  {' '}支付宝扫码
-                </>
-              )}
-              {' '}支付用户名注册费
-            </p>
+            {!isMobile && (
+              <p>
+                请使用
+                {payMethod === 'web3' ? (
+                  <>
+                    <FluentIcon className="ml-4px mr-2px w-24px h-24px translate-y-6px" />
+                    Fluent钱包{' '}
+                  </>
+                ) : (
+                  <>
+                    {/* <span className="i-ri:wechat-pay-fill mx-4px text-24px text-#09BB07 -translate-y-1px" /> */}
+                    {/* <span className="i-fa6-brands:alipay mx-4px text-24px text-#009FE9 -translate-y-1px" /> */} 支付宝扫码
+                  </>
+                )}{' '}
+                支付用户名注册费
+              </p>
+            )}
             <p className="mt-2px flex items-center">
               请在
               <span ref={remainTimeDOM} className="contain-content inline-block mx-4px text-center text-grey-normal lt-md:text-14px lt-md:leading-24px">
@@ -90,14 +92,7 @@ const Step2: React.FC<{ domain: string; commitInfo: CommitInfo | null }> = ({ do
               </span>
               内完成支付
             </p>
-            {/* {isMobile() && (
-              <Button fullWidth>
-                <>
-                  <span className="i-ri:wechat-pay-fill mx-4px text-24px text-#09BB07 -translate-y-1px" />
-                  支付宝支付
-                </>
-              </Button>
-            )} */}
+            {isMobile && <Web2Pay domain={domain} />}
           </div>
         </div>
       </div>

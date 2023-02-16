@@ -1,6 +1,7 @@
 import { selectorFamily, useRecoilValue, useRecoilRefresher_UNSTABLE, useRecoilCallback } from 'recoil';
 import { fetchApi } from '@utils/fetch';
 import { commitInfoState, getCommitInfo } from '@service/domainRegister/commit';
+import isMobile from '@utils/isMobie';
 
 const postOrder = (commitmentHash: string, domain: string) =>
   fetchApi({
@@ -10,7 +11,7 @@ const postOrder = (commitmentHash: string, domain: string) =>
       // trade_provider: 'wechat',
       // trade_type: 'native',
       trade_provider: 'alipay',
-      trade_type: 'h5',
+      trade_type: isMobile ? 'wap' : 'h5',
       description: domain,
     },
   });
@@ -40,8 +41,12 @@ export const refreshRegisterOrder = (domain: string) => {
 };
 
 interface Response {
+  // wechat pay
   code_url?: string;
-  h5_url: string;
+  // alipay pc
+  h5_url?: string;
+  // alipay mobile
+  wap_url?: string;
   commit_hash: string;
   trade_state: string;
   refund_state: string;

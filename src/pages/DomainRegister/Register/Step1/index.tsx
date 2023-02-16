@@ -51,7 +51,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
                 onClick={() => startTransition(decrease)}
                 className={cx(
                   'mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover md:text-opacity-50 md:bg-purple-dark-hover md:hover:bg-purple-dark cursor-pointer transition-colors disabled:pointer-events-none lt-md:mt-0px lt-md:bg-transparent lt-md:w-56px lt-md:h-56px lt-md:text-#8A8A9D lt-md:justify-center lt-md:items-center',
-                  !isMobile() && 'lt-md:hover-bg-#8A8A9D22'
+                  !isMobile && 'lt-md:hover-bg-#8A8A9D22'
                 )}
                 disabled={inTranscation}
               >
@@ -69,7 +69,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
                 onClick={() => startTransition(increase)}
                 className={cx(
                   'mt-6px w-24px h-24px p-0 rounded-4px border-none text-grey-normal-hover md:text-opacity-50 md:bg-purple-dark-hover md:hover:bg-purple-dark cursor-pointer transition-colors disabled:pointer-events-none lt-md:mt-0px lt-md:bg-transparent lt-md:w-56px lt-md:h-56px lt-md:text-#8A8A9D lt-md:justify-center lt-md:items-center',
-                  !isMobile() && 'lt-md:hover-bg-#8A8A9D22'
+                  !isMobile && 'lt-md:hover-bg-#8A8A9D22'
                 )}
                 disabled={inTranscation}
               >

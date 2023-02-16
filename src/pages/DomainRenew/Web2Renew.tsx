@@ -7,12 +7,12 @@ import Delay from '@components/Delay';
 import ToolTip from '@components/Tooltip';
 import Spin from '@components/Spin';
 import { resetRenewStep } from '@service/domainRenew';
-import { useMakeRenewOrder, useRefreshMakeRenewOrder, useMonitorWeb2PcRenewPayStatus, useRecordOrderId, resetRenewOrderId } from '@service/domainRenew/web2/pc';
+import { useMakeRenewOrder, useRefreshMakeRenewOrder, useMonitorWeb2PcRenewPayStatus, useRecordOrderId, resetRenewOrderId } from '@service/domainRenew/web2';
 import timerNotifier from '@utils/timerNotifier';
 import useIsIframeLoaded from '@hooks/useIsIframeLoaded';
 import isMobile from '@utils/isMobie';
 
-const QRCode: React.FC<{ domain: string; refreshMakeRenewOrder: VoidFunction; remainTimeDOM: MutableRefObject<HTMLSpanElement> }> = ({
+const OrderMaker: React.FC<{ domain: string; refreshMakeRenewOrder: VoidFunction; remainTimeDOM: MutableRefObject<HTMLSpanElement> }> = ({
   domain,
   remainTimeDOM,
   refreshMakeRenewOrder,
@@ -47,8 +47,17 @@ const QRCode: React.FC<{ domain: string; refreshMakeRenewOrder: VoidFunction; re
     };
   }, [makeRenewOrder?.id]);
 
-  const url = (makeRenewOrder?.trade_provider === 'wechat' ? makeRenewOrder?.code_url : makeRenewOrder?.h5_url) ?? '';
+  const url = (isMobile ? makeRenewOrder?.wap_url : makeRenewOrder?.trade_provider === 'wechat' ? makeRenewOrder?.code_url : makeRenewOrder?.h5_url) ?? '';
   const [iframeEle, isIframeLoaded] = useIsIframeLoaded(url);
+
+  if (isMobile) {
+    return (
+      <Button fullWidth target="_blank" href={url} className="w-200px">
+        <span className="i-fa6-brands:alipay mx-4px text-24px text-#009FE9" />
+        支付宝支付
+      </Button>
+    );
+  }
 
   return (
     <div
@@ -67,7 +76,7 @@ const QRCode: React.FC<{ domain: string; refreshMakeRenewOrder: VoidFunction; re
   );
 };
 
-const QRCodePay: React.FC<{ domain: string }> = ({ domain }) => {
+const Web2Renew: React.FC<{ domain: string }> = ({ domain }) => {
   const refreshMakeRenewOrder = useRefreshMakeRenewOrder(domain);
   const remainTimeDOM = useRef<HTMLSpanElement>(null!);
 
@@ -77,16 +86,19 @@ const QRCodePay: React.FC<{ domain: string }> = ({ domain }) => {
         <Loading />
         <ErrorBoundary fallbackRender={(fallbackProps) => <ErrorBoundaryFallback {...fallbackProps} domain={domain} />} onReset={refreshMakeRenewOrder}>
           <Suspense fallback={null}>
-            <QRCode domain={domain} refreshMakeRenewOrder={refreshMakeRenewOrder} remainTimeDOM={remainTimeDOM} />
+            <OrderMaker domain={domain} refreshMakeRenewOrder={refreshMakeRenewOrder} remainTimeDOM={remainTimeDOM} />
           </Suspense>
         </ErrorBoundary>
       </div>
       <div className="flex flex-col justify-center items-center py-14px bg-#26233E leading-24px">
-        <p className="px-20px text-center">
-          请使用 {/* <span className="i-ri:wechat-pay-fill mx-4px text-24px text-#09BB07 -translate-y-1px" /> */}
-          {/* <span className="i-fa6-brands:alipay mx-4px text-24px text-#009FE9 -translate-y-1px" /> */}
-          支付宝扫码 支付用户名注册费
-        </p>
+        {!isMobile && (
+          <p className="px-20px text-center">
+            请使用 {/* <span className="i-ri:wechat-pay-fill mx-4px text-24px text-#09BB07 -translate-y-1px" /> */}
+            {/* <span className="i-fa6-brands:alipay mx-4px text-24px text-#009FE9 -translate-y-1px" /> */}
+            支付宝扫码 支付用户名注册费
+          </p>
+        )}
+
         <p className="mt-2px flex items-center">
           请在
           <span ref={remainTimeDOM} className="contain-content inline-block mx-4px text-center text-grey-normal lt-md:text-14px lt-md:leading-24px">
@@ -99,29 +111,39 @@ const QRCodePay: React.FC<{ domain: string }> = ({ domain }) => {
   );
 };
 
-export default QRCodePay;
+export default Web2Renew;
 
-const Loading: React.FC = () => <Spin className="text-60px" />;
+const Loading: React.FC = () =>
+  isMobile ? (
+    <Button loading className="absolute w-200px left-1/2 top-1/2 -translate-1/2 pointer-events-none">
+      <span className="i-fa6-brands:alipay mx-4px text-24px text-#009FE9" />
+      支付宝支付
+    </Button>
+  ) : (
+    <Delay mode="opacity">
+      <Spin className="text-60px" />
+    </Delay>
+  );
 
 const ErrorBoundaryFallback: React.FC<FallbackProps & { domain: string }> = ({ domain, error, resetErrorBoundary }) => {
   const errorMessage = String(error);
   const isNetworkError = errorMessage.includes('Failed to fetch');
 
   return (
-    <div className="absolute left-0 top-0 w-full h-full flex flex-col justify-center items-center bg-violet-normal-hover">
+    <div className="absolute left-0 top-0 h-full w-full flex flex-col justify-center items-center bg-violet-normal-hover">
       <ToolTip text={errorMessage}>
-        <p className="mb-16px flex items-center">
+        <p className="mb-16px flex items-center underline underline-offset-3px">
           {isNetworkError ? '网络错误' : '发生了意料之外的错误'}
           <span className="i-ep:warning ml-2px text-18px flex-shrink-0" />
         </p>
       </ToolTip>
 
       {isNetworkError ? (
-        <Button onClick={resetErrorBoundary} size="small">
+        <Button onClick={resetErrorBoundary} size='small'>
           刷新二维码
         </Button>
       ) : (
-        <Button onClick={() => resetRenewStep(domain)} size="small">
+        <Button onClick={() => resetRenewStep(domain)} size='small'>
           回到第一步
         </Button>
       )}

@@ -8,7 +8,8 @@ import { getAsyncResult } from '@utils/waitAsyncResult';
 import { yearsToSeconds } from '@utils/date';
 import { registerDurationYearsState } from '@pages/DomainRegister/Register/Step1';
 import { useRefreshDomainExpire } from '@service/domainInfo';
-import { getRenewStep, setRenewStep, RenewStep } from '../../index';
+import isMobile from '@utils/isMobie';
+import { getRenewStep, setRenewStep, RenewStep } from '../index';
 
 const renewOrder = (domain: string, durationYears: number) => {
   const durationSeconds = yearsToSeconds(durationYears);
@@ -21,7 +22,7 @@ const renewOrder = (domain: string, durationYears: number) => {
       // trade_provider: 'wechat',
       // trade_type: 'native',
       trade_provider: 'alipay',
-      trade_type: 'h5',
+      trade_type: isMobile ? 'wap' : 'h5',
       fuses: 0,
       wrapper_expiry: wrapperExpiry,
       cns_name: domain,
@@ -41,8 +42,12 @@ export const getRenewOrderStatus = (id: number) =>
 
 interface Response {
   id: number;
+  // wechat pay
   code_url?: string;
-  h5_url: string;
+  // alipay pc
+  h5_url?: string;
+  // alipay mobile
+  wap_url?: string;
   commit_hash: string;
   trade_state: string;
   refund_state: string;

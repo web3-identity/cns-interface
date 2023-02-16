@@ -9,7 +9,7 @@ interface Props extends ComponentProps<'span'> {
   useTooltip?: boolean;
 }
 
-const CfxAddress: React.FC<Props> = ({ address, ellipsis = true, useTooltip = !isMobile(), ...props }) => {
+const CfxAddress: React.FC<Props> = ({ address, ellipsis = true, useTooltip = !isMobile, ...props }) => {
   if (!useTooltip) return <span {...props}>{ellipsis ? shortenAddress(address) : address}</span>;
   return (
     <ToolTip text={address} delay={[444, 0]} interactive>
