@@ -33,8 +33,8 @@ export const refreshRegisterOrder = (domain: string) => {
     path: `registers/order/refresh-url/${commitInfo.commitmentHash}`,
     method: 'PUT',
     params: {
-      trade_provider: 'wechat',
-      trade_type: 'native',
+      trade_provider: 'alipay',
+      trade_type: isMobile ? 'wap' : 'h5',
       description: domain,
     },
   });
