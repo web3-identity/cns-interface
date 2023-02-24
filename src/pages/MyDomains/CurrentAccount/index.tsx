@@ -80,15 +80,15 @@ const AccountContent: React.FC<{}> = ({}) => {
 
 const AccountLoading: React.FC = () => {
   return (
-    <Delay>
-      <Spin className="!absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-36px" />
+    <Delay mode='opacity' className='mx-auto my-29px'>
+      <Spin className="text-36px" />
     </Delay>
   );
 };
 
 const ErrorBoundaryFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => (
-  <div className="inline-block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ">
-    <p className="mb-6px text-center text-error-normal text-14px">网络错误</p>
+  <div className="flex flex-col w-fit mx-auto my-15px">
+    <p className="mb-16px text-center text-error-normal text-14px">网络错误</p>
     <Button size="small" onClick={resetErrorBoundary}>
       重试
     </Button>
