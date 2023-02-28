@@ -5,6 +5,7 @@ import Delay from '@components/Delay';
 import Spin from '@components/Spin';
 import payMethod from '@service/payMethod';
 import { commitRegistration as _commitRegistration, usePayPrice, useRefreshPayPrice } from '@service/domainRegister';
+import isProduction from '@utils/isProduction';
 
 const PrideFetch: React.FC<{ domain: string; }> = ({ domain }) => {
   const payPrice = usePayPrice(domain);
@@ -13,7 +14,7 @@ const PrideFetch: React.FC<{ domain: string; }> = ({ domain }) => {
     return <>{Math.round(+payPrice?.toDecimalStandardUnit())}</>;
   }
 
-  return <>{payPrice?.toDecimalStandardUnit(2, 18)}</>;
+  return <>{payPrice?.toDecimalStandardUnit(2, isProduction ? 18 : 8)}</>;
 };
 
 const Loading: React.FC<{ isPending?: boolean }> = ({ isPending }) => (
