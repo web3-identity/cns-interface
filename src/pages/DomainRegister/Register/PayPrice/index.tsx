@@ -13,7 +13,7 @@ const PrideFetch: React.FC<{ domain: string; }> = ({ domain }) => {
     return <>{Math.round(+payPrice?.toDecimalStandardUnit())}</>;
   }
 
-  return <>{payPrice?.toDecimalStandardUnit(2, 8)}</>;
+  return <>{payPrice?.toDecimalStandardUnit(2, 18)}</>;
 };
 
 const Loading: React.FC<{ isPending?: boolean }> = ({ isPending }) => (
