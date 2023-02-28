@@ -16,22 +16,12 @@ export const randomSecret = () => {
 };
 
 export const getNameHash: (name: string) => string = LRUCacheFunction(_getNameHash, 'getNameHash');
-
-export const dnsNameNotationDecode = (message: string) => {
-  const labels = [];
-  while (message.length > 0) {
-    const length = message.charCodeAt(0);
-    if (length === 0 && message.length !== 1) {
-      throw new Error('Invalid DNS name notation');
-    }
-    if (length === 0) {
-      break;
-    }
-    const label = message.slice(1, length + 1);
-    labels.push(label);
-    message = message.slice(length + 1);
-  }
-  return labels.join('.');
+export const dnsNameNotationDecode = (domain: string) => {
+  let tmp = Array.from(domain).slice(1);
+  tmp = tmp.slice(0, tmp.length - 1);
+  const dot = tmp.findIndex((c) => c === '\x04');
+  return tmp.slice(0, dot).join('') + '.' + tmp.slice(dot + 1).join('');
 };
+
 
 export const getDomainLabel = (domain: string) => domain?.split('.')?.[0];
