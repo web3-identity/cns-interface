@@ -31,16 +31,20 @@ const waitAsyncResult = <T extends () => Promise<any>>(fetcher: T, maxWaitTime: 
     const generator = maxWaitTime === 0 ? endlessGenerator() : Array.from({ length: Math.floor(maxWaitTime / interval) });
 
     for await (const _ of generator) {
-      if (isStop) {
-        reject(new Error('Wait async stop'));
-        return;
+      try {
+        if (isStop) {
+          reject(new Error('Wait async stop'));
+          return;
+        }
+        const res = await fetcher();
+        if (res) {
+          resolve(res);
+          return;
+        }
+      } catch (_) {
+      } finally {
+        await waitSeconds(interval);
       }
-      const res = await fetcher();
-      if (res) {
-        resolve(res);
-        return;
-      }
-      await waitSeconds(interval);
     }
     reject(new Error('Wait async timeout'));
   });
