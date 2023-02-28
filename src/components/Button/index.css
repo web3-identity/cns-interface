@@ -1,6 +1,6 @@
 /** common **/
 .button {
-  @apply relative inline-flex justify-center items-center whitespace-nowrap outline-none transition-colors font-bold cursor-pointer;
+  @apply relative inline-flex justify-center items-center whitespace-nowrap outline-none transition-colors transition-opacity font-bold no-underline cursor-pointer;
 }
 
 button.button {
@@ -15,18 +15,35 @@ button.absolute {
   @apply flex w-full;
 }
 
+.button--mini {
+  @apply text-[14px] h-[28px] px-[20px] rounded-6px leading-28px;
+}
+
 .button--small {
-  @apply text-[16px] h-[44px] px-[32px] rounded-10px leading-44px;
+  @apply text-[14px] h-[32px] px-[24px] rounded-8px leading-32px;
 }
 
 .button--normal {
-  @apply text-[16px] h-[44px] px-[32px] rounded-10px leading-44px;
+  @apply text-[16px] h-[48px] px-[32px] rounded-10px leading-48px;
 }
 
 .button--medium {
   @apply text-[28px] h-[60px] px-[72px] rounded-16px leading-60px;
 }
 
+@media screen and (max-width: 767px) {
+  .button--mini {
+    @apply h-[32px];
+  }
+
+  .button--normal {
+    @apply px-18px text-16px h-40px leading-40px rounded-8px;
+  }
+
+  .button--medium {
+    @apply px-18px text-16px h-40px leading-40px rounded-8px;
+  }
+}
 
 /** disabled & loading **/
 .button.is-disabled,
@@ -40,7 +57,7 @@ button.absolute {
 
 button.button.is-disabled:not(.is-loading),
 a.button.is-disabled:not(.is-loading) {
-  @apply bg-#F0F1F1 text-#A9ABB2 border-transparent;
+  @apply bg-grey-normal-hover bg-opacity-50 text-grey-normal border-transparent;
 }
 
 a.button--text.is-disabled,
@@ -62,6 +79,52 @@ button.button--text.is-disabled {
   @apply bg-purple-normal-hover text-grey-normal-hover;
 }
 
+.button--contained.button--gradient {
+  @apply text-#110F1B;
+  background: linear-gradient(94.26deg, #6667ab 0%, #f0eee9 51.35%, #96d8de 100%);
+}
+
+.button--contained.button--gradient:hover,
+.button--contained.button--gradient:focus-visible {
+  background: linear-gradient(94.26deg, #6667ab 0%, #f0eee9 51.35%, #96d8de 100%);
+}
+
+/* text button */
+.button--text {
+  @apply border-none;
+}
+
+.button--text.button--purple {
+  @apply bg-transparent bg-opacity-100 text-purple-normal;
+}
+
+.button--text.button--purple:hover,
+.button--text.button--purple:focus-visible {
+  @apply bg-purple-normal bg-opacity-10 text-purple-normal-hover;
+}
+
+.button--text.button--white {
+  @apply bg-transparent bg-opacity-100 text-grey-normal;
+}
+
+.button--text.button--white:hover,
+.button--text.button--white:focus-visible {
+  @apply bg-grey-normal bg-opacity-10 text-grey-normal-hover;
+}
+
+/* outlined button */
+.button--outlined {
+  @apply bg-transparent;
+}
+
+.button--outlined.button--purple {
+  @apply border border-purple-normal text-grey-normal;
+}
+
+.button--outlined.button--purple:hover,
+.button--outlined.button--purple:focus-visible {
+  @apply border-purple-normal-hover text-grey-normal-hover;
+}
 
 .button__content {
   @apply inline-flex items-center h-full;
@@ -74,7 +137,7 @@ button.button--text.is-disabled {
 }
 
 .button__loading {
-  @apply !absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[calc(50%-0.14em)] text-[1.6em];
+  @apply !absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-1.6em;
 }
 
 /** start end icon **/

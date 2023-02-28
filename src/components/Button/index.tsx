@@ -1,13 +1,13 @@
-import React, { createElement, forwardRef, type ReactNode, type PropsWithChildren } from 'react';
+import React, { createElement, forwardRef, type ReactNode, type PropsWithChildren, type ComponentProps } from 'react';
 import cx from 'clsx';
 import Spin from '@components/Spin';
 import renderReactNode from '@utils/renderReactNode';
 import './index.css';
 
-export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'contained';
-  color?: 'purple';
-  size?: 'small' | 'normal' | 'medium';
+export interface Props extends ComponentProps<'button'> {
+  variant?: 'contained' | 'text' | 'outlined';
+  color?: 'purple' | 'gradient' | 'white';
+  size?: 'mini' | 'small' | 'normal' | 'medium';
   fullWidth?: boolean;
   loading?: boolean | 'start' | 'end';
   icon?: ReactNode;
@@ -46,6 +46,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<Props>>(
           className
         ),
         ref: _forwardRef,
+        rel: props.href ?'noopener noreferrer' : undefined,
         ...props,
       },
       <>
@@ -58,7 +59,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<Props>>(
         )}
         {!children && icon && <span className="button__icon">{renderReactNode(icon)}</span>}
         {endIcon && <span className="button__icon">{renderReactNode(endIcon)}</span>}
-        {loading === true && <Spin className="button__loading" />}
+        {loading === true && <Spin className="button__loading" theme="light" />}
       </>
     );
   }

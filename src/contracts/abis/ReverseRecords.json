@@ -1,0 +1,4 @@
+[
+  "constructor(address)",
+  "function getNames(address[]) view returns (string[])"
+]

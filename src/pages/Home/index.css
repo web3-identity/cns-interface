@@ -1,0 +1,18 @@
+@media screen and (max-height: 767px) {
+  .home-page-wrapper {
+    @apply justify-center;
+  }
+}
+
+@media screen and (min-height: 768px) {
+  .home-page-wrapper {
+    @apply pt-200px;
+  }
+}
+
+
+@media screen and (max-width: 460px) {
+  .home-page-wrapper {
+    @apply justify-start pt-100px;
+  }
+}

@@ -1,6 +1,5 @@
-const isMobile = () => {
-  const ua = navigator.userAgent
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)
-}
+const ua = navigator.userAgent;
 
-export default isMobile
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+
+export default isMobile;

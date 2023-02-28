@@ -1,4 +1,4 @@
-import { cloneElement, CSSProperties, HTMLAttributes, useRef } from 'react';
+import { cloneElement, useRef, type CSSProperties, type ComponentProps } from 'react';
 import { a, useTransition } from '@react-spring/web';
 import cx from 'clsx';
 import { transitionAnimation, TransitionAnimationType } from '@components/Animation';
@@ -14,7 +14,7 @@ export interface ItemProps {
 }
 
 export type Props<T> = OverWrite<
-  HTMLAttributes<HTMLDivElement>,
+  ComponentProps<'div'>,
   {
     list: T[];
     mainDirection?: 'x' | 'y';

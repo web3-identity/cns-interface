@@ -1,4 +1,4 @@
-import { useEffect, type HTMLAttributes } from 'react';
+import { useEffect, type ComponentProps } from 'react';
 import { a, useTransition } from '@react-spring/web';
 import classNames from 'clsx';
 import { lock, clearBodyLocks } from '@utils/body-scroll-lock';
@@ -6,7 +6,7 @@ import { lock, clearBodyLocks } from '@utils/body-scroll-lock';
 type OverWrite<T, U> = Omit<T, keyof U> & U;
 
 export type Props = OverWrite<
-  HTMLAttributes<HTMLDivElement>,
+  ComponentProps<'div'>,
   {
     open: boolean;
   }
@@ -18,6 +18,7 @@ const Mask = ({ open, className, style, ...props }: Props) => {
     enter: { opacity: 1 },
     leave: { opacity: 0 },
     reverse: open,
+    config: { clamp: true },
   });
 
   useEffect(() => {
@@ -28,11 +29,7 @@ const Mask = ({ open, className, style, ...props }: Props) => {
   return transitions(
     (styles, item) =>
       item && (
-        <a.div
-          className={classNames('fixed left-0 top-0 w-full h-full bg-black bg-opacity-40 z-[200] contain-strict', className)}
-          style={{ ...style, ...styles }}
-          {...props}
-        />
+        <a.div className={classNames('fixed left-0 top-0 w-full h-full bg-#110f1b bg-opacity-80 z-[200] contain-strict', className)} style={{ ...style, ...styles }} {...props} />
       )
   );
 };

@@ -1,0 +1,8 @@
+.toast-item-wrapper {
+  @apply mobile:mb-12px lt-mobile:mb-6px pointer-events-auto;
+  box-shadow: 0px 4px 8px rgba(22, 20, 35, 0.25);
+}
+
+.toast-wrapper {
+  @apply !w-full !items-end xl:max-w-1232px lt-xl:px-24px lt-md:px-12px lt-tiny:px-6px md:top-112px lt-md:top-68px lt-mobile:top-16px left-50% -translate-x-50% pointer-events-none;
+}

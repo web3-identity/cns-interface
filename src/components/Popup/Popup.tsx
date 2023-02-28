@@ -4,7 +4,6 @@ import { uniqueId } from 'lodash-es';
 import runAsync from '@utils/runAsync';
 import Mask from '@components/Mask';
 import List, { type ItemProps } from '../List';
-import './index.css';
 
 export interface PopupProps extends ItemProps {
   Content: React.ReactNode | Function;
@@ -63,7 +62,7 @@ const PopupContainer = forwardRef<PopupMethods>((_, ref) => {
   const [listClassName, setListClassName] = useState<string | undefined>(undefined);
   const [itemWrapperStyle, setItemWrapperStyle] = useState<CSSProperties | undefined>(undefined);
   const [itemWrapperClassName, setItemWrapperClassName] = useState<string | undefined>(undefined);
-  const [animatedSize, setAnimatedSize] = useState(true);
+  const [animatedSize, setAnimatedSize] = useState(false);
   const popupListRef = useRef<PopupProps[]>([]);
   useEffect(() => {
     popupListRef.current = popupList;
@@ -118,21 +117,6 @@ const PopupContainer = forwardRef<PopupMethods>((_, ref) => {
     setMaskClickHandler(() => func);
   }, []);
 
-  useEffect(() => {
-    const handleKeypress = (evt: KeyboardEvent) => {
-      if (evt?.key !== 'Escape') return;
-      popupListRef.current.forEach((popup) => {
-        if (popup.pressEscToClose) {
-          popPopup(popup.key);
-          popup?.onClose?.();
-        }
-      });
-    };
-    document.addEventListener('keydown', handleKeypress);
-
-    return () => document.removeEventListener('keydown', handleKeypress);
-  }, []);
-
   useImperativeHandle(ref, () => ({
     show: pushPopup,
     hide: popPopup,
@@ -151,7 +135,7 @@ const PopupContainer = forwardRef<PopupMethods>((_, ref) => {
     <div>
       <Mask open={openMask} className={maskClassName} style={maskStyle} onClick={maskClickHandler} />
       <List
-        className={cx('fixed flex flex-col items-center w-fit left-[50%] top-[30%] translate-x-[-50%] z-[201]', listClassName)}
+        className={cx('fixed flex flex-col items-center w-fit z-[201]', listClassName)}
         list={popupList}
         animatedSize={animatedSize}
         style={listStyle}

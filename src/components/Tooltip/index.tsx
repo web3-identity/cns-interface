@@ -1,19 +1,30 @@
 import React from 'react';
 import Popper, { type Props } from '@components/Popper';
 
-const ToolTip: React.FC<Omit<Props, 'Content'> & { text?: string; }> = ({
+const ToolTip: React.FC<Omit<Props, 'Content'> & { text?: string }> = ({
   children,
   text,
   placement = 'top',
-  animationType = 'zoom',
+  animationType = 'fade',
   arrow = true,
   delay = 180,
-  interactiveDebounce = 100,
-  trigger = 'mouseenter click',
+  trigger = 'mouseenter',
+  visible,
+  interactive = true,
   ...props
 }) => {
   return (
-    <Popper placement={placement} animationType={animationType} arrow={arrow} Content={text} delay={delay} trigger={trigger} interactiveDebounce={interactiveDebounce} {...props}>
+    <Popper
+      visible={visible}
+      placement={placement}
+      animationType={animationType}
+      arrow={arrow}
+      Content={text}
+      delay={delay}
+      trigger={typeof visible === 'boolean' ? undefined : trigger}
+      interactive={interactive}
+      {...props}
+    >
       {children}
     </Popper>
   );

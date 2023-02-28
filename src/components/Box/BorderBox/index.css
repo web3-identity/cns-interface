@@ -1,0 +1,30 @@
+.border-box {
+  @apply border-2px transition-colors;
+}
+
+.border-box--none {
+  @apply !border-none;
+}
+
+.border-box--transparent {
+  @apply border-transparent;
+}
+
+.border-box--purple {
+  @apply border-purple-normal;
+}
+
+.border-box--gradient {
+  @apply border-transparent;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: linear-gradient(to right, #24203b, #24203b), linear-gradient(90.83deg, #6667ab 12.22%, #bbbbbb 59.3%, #96d8de 89.06%);
+}
+
+.border-box--gradient.border-box--withInput {
+  background-image: linear-gradient(to right, #24203b, #24203b), linear-gradient(90.83deg, #6667abcc 12.22%, #bbbbbbcc 59.3%, #96d8decc 89.06%);
+}
+
+.border-box--gradient.border-box--withInput:focus-within {
+  background-image: linear-gradient(to right, #24203b, #24203b), linear-gradient(90.83deg, #6667ab 12.22%, #bbbbbb 59.3%, #96d8de 89.06%);
+}

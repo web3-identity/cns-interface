@@ -1,0 +1,78 @@
+html {
+  font-family: 'SF Pro Display';
+  scroll-behavior: smooth;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('./assets/fonts/SFProDisplay-Regular.woff2') format('woff2');
+  font-style: normal;
+  font-weight: normal;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('./assets/fonts/SFProDisplay-Bold.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: auto;
+}
+
+body {
+  @apply m-0 p-0 overflow-hidden;
+  background: linear-gradient(180deg, #302C4D 0%, #110F1B 100%);
+}
+
+.main-scroller {
+  @apply w-100vw h-100vh overflow-x-hidden;
+}
+
+.main-scroller > .scrollbar__content {
+  @apply overflow-x-hidden;
+}
+
+.scrollbar__thumbPlaceholder--horizontal {
+  @apply !display-none;
+}
+
+.scrollbar__thumb {
+  @apply bg-white;
+}
+
+ul,
+ol {
+  padding-inline-start: 0;
+  padding-inline-start: 0;
+}
+
+p {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  appearance: none !important;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.dropdown-shadow {
+  box-shadow: 0px 4px 8px rgba(22, 20, 35, 0.25);
+}
+
+.contain-content {
+  contain: content;
+}
+
+.contain-strict {
+  contain: strict;
+}
+
+.contain-size {
+  contain: size style paint;
+}

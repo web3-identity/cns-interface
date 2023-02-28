@@ -24,7 +24,9 @@ dist-ssr
 *.sw?
 
 
+.gitkeep
 pnpm-lock.yaml
-yarn.lock
 stats.html
+package-lock.json
+yarn.lock
 __unconfig_vite.config.ts
