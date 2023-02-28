@@ -162,9 +162,9 @@ const DomainItem = ({
         >
           {accountReverseRegistrar === domain ? '已设为展示' : '设为展示'}
         </Button>
-        {/* <Button variant="text" className="lt-md:display-none mr-24px" onClick={() => showDomainRenewModal({ domain })}>
+        <Button variant="text" className="lt-md:display-none mr-24px" onClick={() => showDomainRenewModal({ domain })}>
           续费
-        </Button> */}
+        </Button>
 
         <GotoDomainSettingButton domain={domain} />
 
