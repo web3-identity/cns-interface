@@ -198,9 +198,9 @@ const DomainExpire: React.FC<{ domain: string }> = ({ domain }) => {
         )}
       </div>
 
-      <Button className="ml-auto lt-md:self-end" size="mini" onClick={() => showDomainRenewModal({ domain })}>
+      {/* <Button className="ml-auto lt-md:self-end" size="mini" onClick={() => showDomainRenewModal({ domain })}>
         续费
-      </Button>
+      </Button> */}
     </>
   );
 };
