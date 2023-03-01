@@ -15,15 +15,17 @@ if (isMobile) {
   document.styleSheets[0].insertRule('.scrollbar__thumbPlaceholder--vertical { display:none !important; }', 0);
 }
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <RecoilRoot initializeState={initializeRecoil}>
-    <RecoilNexus />
-    <ModalPopup.Provider />
-    <DrawerPopup.Provider />
-    <Toast.Provider />
-    <Router />
-  </RecoilRoot>
-);
+completeDetect().then(() => {
+  ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+    <RecoilRoot initializeState={initializeRecoil}>
+      <RecoilNexus />
+      <ModalPopup.Provider />
+      <DrawerPopup.Provider />
+      <Toast.Provider />
+      <Router />
+    </RecoilRoot>
+  );
+});
 
 if (location.hash) {
   history.replaceState(null, '', location.origin + location.pathname);
