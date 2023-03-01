@@ -18,7 +18,7 @@ interface Props {
   domain: string;
 }
 
-const pattern = /^[0-9A-Za-z]+(\.web3)?$/;
+const pattern = /^[\w\-\u{1F000}-\u{1FFFF}]+(\.web3)?$/u;
 const validateFormat = (address: string) => {
   if (address.startsWith('cfx:') || address.startsWith('cfxtest:')) {
     if (chainsEncoder['Conflux Core'].validate(address)) {
@@ -26,6 +26,7 @@ const validateFormat = (address: string) => {
     }
     return false;
   }
+  if (address?.startsWith('-') || address?.endsWith('-')) return false;
   if (pattern.test(address)) {
     return 'Domain';
   }

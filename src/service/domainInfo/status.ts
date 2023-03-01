@@ -10,16 +10,18 @@ export enum DomainStatus {
   Locked,
   Registered,
   NotOpen,
+  Illegal
 }
 
 const domainStatusQuery = selectorFamily<DomainStatus, string>({
   key: 'domainStatus',
   get: (domain: string) => async () => {
     try {
+      if (domain?.startsWith('-') || domain?.endsWith('-')) return DomainStatus.Illegal;
       const response = await fetchChain({
         params: [{ data: Web3Controller.func.encodeFunctionData('labelStatus', [domain]), to: Web3Controller.address }, 'latest_state'],
       });
-      
+
       return Number(response);
     } catch (err) {
       throw err;

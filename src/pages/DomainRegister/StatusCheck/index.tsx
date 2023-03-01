@@ -63,6 +63,9 @@ const statusMap = {
   [DomainStatus.NotOpen]: {
     text: '用户名未开放',
   },
+  [DomainStatus.Illegal]: {
+    text: '用户名不能以 - 开头或结尾',
+  },
 } as const;
 
 const Warning = () => (
