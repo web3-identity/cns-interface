@@ -107,6 +107,11 @@ const statusMap = {
     text: '未开放',
     color: 'text-#83828F',
   },
+  [DomainStatus.Illegal]: {
+    icon: StatusInvalid,
+    text: '用户名不能以 - 开头或结尾',
+    color: 'text-error-normal',
+  },
 } as const;
 
 const StatusContent: React.FC<Props> = ({ domain, where, isSmall }) => {

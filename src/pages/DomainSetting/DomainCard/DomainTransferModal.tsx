@@ -26,6 +26,7 @@ const validateFormat = (address: string) => {
     }
     return false;
   }
+  if (address?.startsWith('-') || address?.endsWith('-')) return false;
   if (pattern.test(address)) {
     return 'Domain';
   }
