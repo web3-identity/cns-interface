@@ -15,11 +15,7 @@ export const fetchDomainOwner = (domain: string) =>
     const [address] = NameWrapper.func.decodeFunctionResult('ownerOf', response);
     if (address === zeroAddress) return null;
     return convertHexToCfx(address, isProduction ? '1029' : '1');
-  }).catch((err) => {
-    const isIllegalChar = String(err).includes('Illegal char');
-    if (isIllegalChar) return null;
-    else throw err;
-  });
+  })
 
 const domainOwnerQuery = selectorFamily<string | null, string>({
   key: 'domainOwnerQuery',
@@ -27,7 +23,7 @@ const domainOwnerQuery = selectorFamily<string | null, string>({
     try {
       return await fetchDomainOwner(domain);
     } catch (err) {
-      const isIllegalChar = String(err).includes('Illegal char');
+      const isIllegalChar = String(err).includes('Illegal char') || String(err).includes('Failed to validate');
       if (isIllegalChar) return null;
       else throw err;
     }
