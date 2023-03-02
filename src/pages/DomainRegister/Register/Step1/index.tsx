@@ -6,6 +6,7 @@ import { setRecoil } from 'recoil-nexus';
 import Button from '@components/Button';
 import AuthConnectButton from '@modules/AuthConnectButton';
 import { useMinCommitLockTime, commitRegistration as _commitRegistration } from '@service/domainRegister';
+import { checkPayMethodValid } from '@service/payMethod';
 import useIsLtMd from '@hooks/useIsLtMd';
 import useInTranscation from '@hooks/useInTranscation';
 import { RegisterBox } from '@pages/DomainRegister';
@@ -100,7 +101,7 @@ const Step1: React.FC<{ domain: string }> = ({ domain }) => {
 const ActionButton: React.FC<{ className: string; inTranscation: boolean; domain: string; durationYears: number; commitRegistration: typeof _commitRegistration }> = memo(
   ({ inTranscation, domain, durationYears, className, commitRegistration }) => (
     <AuthConnectButton className={className}>
-      <Button className={className} loading={inTranscation} onClick={() => commitRegistration({ domain, durationYears })}>
+      <Button className={className} loading={inTranscation} onClick={() => checkPayMethodValid(() => commitRegistration({ domain, durationYears }))}>
         申请
       </Button>
     </AuthConnectButton>
